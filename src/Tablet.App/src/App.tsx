@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {AppShell} from './components/AppShell';
-import type {AlarmTone} from './components/AlarmTicker';
+import {AlarmBarState} from './components/AlarmBar';
 import {useLineSettings} from './hooks/useLineSettings';
 import {useManualRuntime, type ManualRuntime} from './hooks/useManualRuntime';
 import type {AppPage} from './navigation/appPages';
@@ -30,31 +30,31 @@ const compactPlcError = (errorText: string): string => {
   return normalizedText || 'Lỗi PLC';
 };
 
-const buildAlarmState = (runtime: ManualRuntime): {text: string; tone: AlarmTone} => {
+const buildAlarmBarModel = (runtime: ManualRuntime): {text: string; state: AlarmBarState} => {
   if (runtime.errorText) {
     return {
-      tone: 'fault',
+      state: AlarmBarState.Error,
       text: `PLC ERROR | ${compactPlcError(runtime.errorText)}`,
     };
   }
 
   if (runtime.activeJogTag) {
     return {
-      tone: 'warning',
+      state: AlarmBarState.Warning,
       text: `JOG ACTIVE | ${runtime.activeJogTag}`,
     };
   }
 
   if (!runtime.isConnected) {
     return {
-      tone: 'fault',
+      state: AlarmBarState.Error,
       text: `PLC OFFLINE | Active ${runtime.selectedLine.name} | Waiting for PLC data`,
     };
   }
 
   return {
-    tone: 'ok',
-    text: `SYSTEM READY | Active ${runtime.selectedLine.name} | ${runtime.lastUpdatedText || 'PLC online'}`,
+    state: AlarmBarState.Normal,
+    text: `${runtime.lastUpdatedText && /preview/i.test(runtime.lastUpdatedText) ? 'preview data' : runtime.lastUpdatedText || 'preview data'} | SYSTEM READY | AC`,
   };
 };
 
@@ -63,7 +63,7 @@ const App = () => {
   const lineSettings = useLineSettings();
   const runtime = useManualRuntime(lineSettings.lines);
   const screenMeta = screenMetadata[currentPage];
-  const alarmState = buildAlarmState(runtime);
+  const alarmBar = buildAlarmBarModel(runtime);
 
   const content = (() => {
     switch (currentPage) {
@@ -97,8 +97,8 @@ const App = () => {
       showHomeButton={currentPage !== 'navigation'}
       screenEyebrow={screenMeta.eyebrow}
       screenTitle={screenMeta.title}
-      alarmText={alarmState.text}
-      alarmTone={alarmState.tone}
+      alarmText={alarmBar.text}
+      alarmState={alarmBar.state}
       onHome={() => setCurrentPage('navigation')}
       currentPage={currentPage}
       onNavigate={setCurrentPage}>

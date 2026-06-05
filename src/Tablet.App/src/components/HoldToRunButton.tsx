@@ -1,16 +1,18 @@
 import React, {useCallback, useRef} from 'react';
 import {Pressable, StyleSheet, Text} from 'react-native';
-import {colors, radius} from '../styles/theme';
+import {colors, typography} from '../styles/theme';
 
 interface Props {
   label: string;
   disabled?: boolean;
   active?: boolean;
+  compact?: boolean;
+  size?: 'standard' | 'hero';
   onStart(): Promise<void> | void;
   onStop(): Promise<void> | void;
 }
 
-export const HoldToRunButton = ({label, disabled, active, onStart, onStop}: Props) => {
+export const HoldToRunButton = ({label, disabled, active, compact, size = 'standard', onStart, onStop}: Props) => {
   const pressedRef = useRef(false);
 
   const start = useCallback(() => {
@@ -39,11 +41,23 @@ export const HoldToRunButton = ({label, disabled, active, onStart, onStop}: Prop
       onResponderTerminate={stop}
       style={({pressed}) => [
         styles.button,
+        compact && styles.buttonCompact,
+        size === 'hero' && styles.buttonHero,
+        size === 'hero' && compact && styles.buttonHeroCompact,
         active && styles.active,
         disabled && styles.disabled,
         pressed && !disabled && styles.pressed,
       ]}>
-      <Text style={[styles.text, active && styles.activeText, disabled && styles.disabledText]} numberOfLines={1}>
+      <Text
+        style={[
+          styles.text,
+          compact && styles.textCompact,
+          size === 'hero' && styles.textHero,
+          size === 'hero' && compact && styles.textHeroCompact,
+          active && styles.activeText,
+          disabled && styles.disabledText,
+        ]}
+        numberOfLines={1}>
         {label}
       </Text>
     </Pressable>
@@ -52,15 +66,27 @@ export const HoldToRunButton = ({label, disabled, active, onStart, onStop}: Prop
 
 const styles = StyleSheet.create({
   button: {
-    minHeight: 56,
+    minHeight: 48,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1.5,
-    borderRadius: radius.button,
-    borderColor: colors.borderStrong,
-    backgroundColor: colors.raised,
+    borderRadius: 4,
+    borderColor: '#2083C9',
+    backgroundColor: '#114A7B',
     paddingHorizontal: 12,
+  },
+  buttonCompact: {
+    minHeight: 38,
+    paddingHorizontal: 8,
+  },
+  buttonHero: {
+    minHeight: 66,
+    borderColor: '#2A91D6',
+    backgroundColor: '#15538A',
+  },
+  buttonHeroCompact: {
+    minHeight: 38,
   },
   active: {
     backgroundColor: colors.runningSurface,
@@ -68,10 +94,10 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: colors.running,
-    fontWeight: '600',
+    fontWeight: typography.weights.semibold,
   },
   disabled: {
-    opacity: 0.3,
+    opacity: 0.45,
   },
   disabledText: {
     color: colors.textDisabled,
@@ -82,9 +108,19 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.text,
+    fontFamily: typography.fontFamily,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: typography.weights.bold,
     textTransform: 'uppercase',
     letterSpacing: 0,
+  },
+  textCompact: {
+    fontSize: 12,
+  },
+  textHero: {
+    fontSize: 27,
+  },
+  textHeroCompact: {
+    fontSize: 16,
   },
 });

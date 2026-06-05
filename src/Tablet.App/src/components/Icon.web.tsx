@@ -14,6 +14,7 @@ export type IconName =
   | 'save'
   | 'play'
   | 'refresh'
+  | 'check'
   | 'chevron-down'
   | 'chevron-right';
 
@@ -152,6 +153,13 @@ export const Icon = ({ name, color, size = 24 }: Props) => {
           <path d="M2.5 22v-6h6" />
           <path d="M2 12a10 10 0 0 1 15-8.66L21.5 8" />
           <path d="M22 12a10 10 0 0 1-15 8.66L2.5 16" />
+        </svg>
+      );
+
+    case 'check':
+      return (
+        <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="20 6 9 17 4 12" />
         </svg>
       );
 

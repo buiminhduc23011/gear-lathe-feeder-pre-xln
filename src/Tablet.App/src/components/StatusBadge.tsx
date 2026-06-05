@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {colors, radius} from '../styles/theme';
+import {colors, radius, typography} from '../styles/theme';
 
 type BadgeTone = 'ok' | 'fault' | 'warning' | 'info' | 'idle';
 
@@ -47,8 +47,9 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   text: {
+    fontFamily: typography.fontFamily,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: typography.weights.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0,
   },

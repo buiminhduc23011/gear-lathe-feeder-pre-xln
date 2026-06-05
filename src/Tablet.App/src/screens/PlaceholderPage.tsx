@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {colors, radius, spacing} from '../styles/theme';
+import {colors, radius, spacing, typography} from '../styles/theme';
 
 interface Props {
   title: string;
@@ -57,15 +57,16 @@ const styles = StyleSheet.create({
   },
   statusLabel: {
     color: colors.textMuted,
+    fontFamily: typography.fontFamily,
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: typography.weights.medium,
     letterSpacing: 0,
   },
   statusValue: {
     color: colors.text,
-    fontFamily: 'monospace',
+    fontFamily: typography.fontFamily,
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: typography.weights.semibold,
     letterSpacing: 0,
   },
 });

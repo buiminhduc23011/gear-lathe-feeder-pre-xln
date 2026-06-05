@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
+import type {ImageSourcePropType} from 'react-native';
 
 export type IconName =
   | 'home'
@@ -15,6 +16,7 @@ export type IconName =
   | 'save'
   | 'play'
   | 'refresh'
+  | 'check'
   | 'chevron-down'
   | 'chevron-right';
 
@@ -24,7 +26,37 @@ interface Props {
   size?: number;
 }
 
+const iconImages: Record<IconName, ImageSourcePropType> = {
+  home: require('../assets/icons/home.png'),
+  menu: require('../assets/icons/menu.png'),
+  apps: require('../assets/icons/apps.png'),
+  auto: require('../assets/icons/auto.png'),
+  manual: require('../assets/icons/manual.png'),
+  io: require('../assets/icons/io.png'),
+  history: require('../assets/icons/history.png'),
+  settings: require('../assets/icons/settings.png'),
+  plus: require('../assets/icons/plus.png'),
+  delete: require('../assets/icons/delete.png'),
+  save: require('../assets/icons/save.png'),
+  play: require('../assets/icons/play.png'),
+  refresh: require('../assets/icons/refresh.png'),
+  check: require('../assets/icons/check.png'),
+  'chevron-down': require('../assets/icons/chevron-down.png'),
+  'chevron-right': require('../assets/icons/chevron-right.png'),
+};
+
 export const Icon = ({ name, color, size = 24 }: Props) => {
+  const imageSource = iconImages[name];
+  if (imageSource) {
+    return (
+      <Image
+        resizeMode="contain"
+        source={imageSource}
+        style={{width: size, height: size, tintColor: color}}
+      />
+    );
+  }
+
   const half = size / 2;
   const stroke = Math.max(1.5, size / 12);
 
@@ -65,12 +97,42 @@ export const Icon = ({ name, color, size = 24 }: Props) => {
       );
 
     case 'auto':
-      // Cycle ring with a directional arrow.
+      // Two circular arrows, matching the web refresh-style auto icon.
       return (
         <View style={[styles.iconCanvas, { width: size, height: size }]}>
-          <View style={[styles.circleOutline, { borderColor: color, borderWidth: stroke, width: size * 0.74, height: size * 0.74, borderRadius: size * 0.37 }]} />
-          <View style={[styles.autoArrowHead, { borderLeftColor: color, borderLeftWidth: stroke * 3, borderTopWidth: stroke * 2.2, borderBottomWidth: stroke * 2.2, right: size * 0.04, top: size * 0.17, transform: [{ rotate: '-20deg' }] }]} />
-          <View style={[styles.autoDot, { backgroundColor: color, width: stroke * 2.8, height: stroke * 2.8, borderRadius: stroke * 1.4, left: size * 0.24, bottom: size * 0.12 }]} />
+          <View style={[styles.autoArc, {
+            borderTopColor: color,
+            borderRightColor: color,
+            borderWidth: stroke,
+            width: size * 0.82,
+            height: size * 0.82,
+            borderRadius: size * 0.41,
+            transform: [{ rotate: '-24deg' }],
+          }]} />
+          <View style={[styles.autoArc, {
+            borderBottomColor: color,
+            borderLeftColor: color,
+            borderWidth: stroke,
+            width: size * 0.82,
+            height: size * 0.82,
+            borderRadius: size * 0.41,
+            transform: [{ rotate: '-24deg' }],
+          }]} />
+          <View style={[styles.autoArrowCorner, {
+            right: size * 0.04,
+            top: size * 0.03,
+          }]}>
+            <View style={[styles.autoArrowLine, { backgroundColor: color, width: size * 0.23, height: stroke, top: size * 0.16 }]} />
+            <View style={[styles.autoArrowLine, { backgroundColor: color, width: stroke, height: size * 0.23, right: size * 0.16 }]} />
+          </View>
+          <View style={[styles.autoArrowCorner, {
+            left: size * 0.04,
+            bottom: size * 0.03,
+            transform: [{ rotate: '180deg' }],
+          }]}>
+            <View style={[styles.autoArrowLine, { backgroundColor: color, width: size * 0.23, height: stroke, top: size * 0.16 }]} />
+            <View style={[styles.autoArrowLine, { backgroundColor: color, width: stroke, height: size * 0.23, right: size * 0.16 }]} />
+          </View>
         </View>
       );
 
@@ -124,7 +186,7 @@ export const Icon = ({ name, color, size = 24 }: Props) => {
       );
 
     case 'io':
-      // Industrial Terminal block with Input channels (left) and Output channels (right)
+      // Terminal block with ports and horizontal signal paths.
       return (
         <View style={[styles.iconCanvas, { width: size, height: size }]}>
           <View style={{
@@ -137,6 +199,21 @@ export const Icon = ({ name, color, size = 24 }: Props) => {
             justifyContent: 'center',
             alignItems: 'center'
           }}>
+            {[0.22, 0.5, 0.78].map((position) => (
+              <View
+                key={position}
+                style={{
+                  position: 'absolute',
+                  left: size * 0.18,
+                  right: size * 0.18,
+                  top: size * position,
+                  height: stroke * 0.7,
+                  borderRadius: stroke,
+                  backgroundColor: color,
+                  opacity: 0.62,
+                }}
+              />
+            ))}
             {/* Middle line */}
             <View style={{
               borderLeftColor: color,
@@ -159,9 +236,19 @@ export const Icon = ({ name, color, size = 24 }: Props) => {
       );
 
     case 'history':
-      // History event logs clock with anticlockwise retro curve
+      // Clock with rewind corner, matching the web history icon.
       return (
         <View style={[styles.iconCanvas, { width: size, height: size }]}>
+          <View style={[styles.historyRewindVertical, { backgroundColor: color, width: stroke, height: size * 0.2, left: size * 0.11, top: size * 0.1 }]} />
+          <View style={[styles.historyRewindHorizontal, { backgroundColor: color, width: size * 0.2, height: stroke, left: size * 0.11, top: size * 0.28 }]} />
+          <View style={[styles.historyRewindHead, {
+            borderRightColor: color,
+            borderRightWidth: stroke * 2.6,
+            borderTopWidth: stroke * 1.8,
+            borderBottomWidth: stroke * 1.8,
+            left: size * 0.06,
+            top: size * 0.21,
+          }]} />
           <View style={[styles.circleOutline, { borderColor: color, borderWidth: stroke, width: size * 0.9, height: size * 0.9, borderRadius: size * 0.45 }]}>
             <View style={[styles.clockHandHour, { backgroundColor: color, width: stroke, height: half * 0.5, bottom: half * 0.45, left: half * 0.45, transform: [{ translateY: -half * 0.25 }] }]} />
             <View style={[styles.clockHandMinute, { backgroundColor: color, height: stroke, width: half * 0.6, bottom: half * 0.45, left: half * 0.45, transform: [{ translateX: half * 0.3 }] }]} />
@@ -247,6 +334,21 @@ export const Icon = ({ name, color, size = 24 }: Props) => {
         </View>
       );
 
+    case 'check':
+      return (
+        <View style={{ width: size, height: size, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{
+            borderBottomColor: color,
+            borderBottomWidth: stroke * 1.6,
+            borderRightColor: color,
+            borderRightWidth: stroke * 1.6,
+            width: size * 0.5,
+            height: size * 0.28,
+            transform: [{ rotate: '45deg' }],
+          }} />
+        </View>
+      );
+
     case 'chevron-down':
       // Chevron-down angle bracket
       return (
@@ -299,6 +401,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  autoArc: {
+    position: 'absolute',
+    borderLeftColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderTopColor: 'transparent',
+    borderRightColor: 'transparent',
+  },
+  autoArrowCorner: {
+    position: 'absolute',
+    width: '35%',
+    height: '35%',
+  },
+  autoArrowLine: {
+    position: 'absolute',
+    borderRadius: 999,
+  },
   iconCanvas: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -344,6 +462,7 @@ const styles = StyleSheet.create({
   },
   arrowShaft: {},
   arrowHeadRight: {
+    position: 'absolute',
     width: 0,
     height: 0,
     borderTopColor: 'transparent',
@@ -373,6 +492,21 @@ const styles = StyleSheet.create({
   clockHandMinute: {
     position: 'absolute',
     borderRadius: 2,
+  },
+  historyRewindVertical: {
+    position: 'absolute',
+    borderRadius: 2,
+  },
+  historyRewindHorizontal: {
+    position: 'absolute',
+    borderRadius: 2,
+  },
+  historyRewindHead: {
+    position: 'absolute',
+    width: 0,
+    height: 0,
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
   },
   gearBody: {
     justifyContent: 'center',

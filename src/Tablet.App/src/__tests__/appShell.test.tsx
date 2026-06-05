@@ -1,15 +1,16 @@
 import React from 'react';
 import {fireEvent, render} from '@testing-library/react-native';
 import {Text} from 'react-native';
+import {AlarmBarState} from '../components/AlarmBar';
 import {AppShell} from '../components/AppShell';
 
 describe('app shell header', () => {
-  it('uses an icon home button and keeps line controls out of the header', () => {
+  it('uses the logo as home and repeats alarm content for the marquee', () => {
     const onHome = jest.fn();
     const screen = render(
       <AppShell
         alarmText="PLC ERROR | Door guard open"
-        alarmTone="fault"
+        alarmState={AlarmBarState.Error}
         isConnected={false}
         onHome={onHome}
         showHomeButton>
@@ -23,7 +24,10 @@ describe('app shell header', () => {
     expect(screen.queryByText('LINE-HMI')).toBeNull();
     expect(screen.queryByText('ENDPOINT')).toBeNull();
     expect(screen.queryByText('LINE')).toBeNull();
-    expect(screen.getByText('ALARM')).toBeTruthy();
+    expect(screen.getAllByText('ALARM')).toHaveLength(2);
+    expect(screen.getByTestId('alarm-marquee-track')).toBeTruthy();
+    expect(screen.getByTestId('alarm-marquee-copy-primary')).toBeTruthy();
+    expect(screen.getByTestId('alarm-marquee-copy-duplicate')).toBeTruthy();
     expect(screen.getByLabelText('ALARM: PLC ERROR | Door guard open')).toBeTruthy();
   });
 });

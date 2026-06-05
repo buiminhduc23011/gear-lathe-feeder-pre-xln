@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Pressable, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {Icon} from '../components/Icon';
-import {colors, radius, spacing} from '../styles/theme';
+import {colors, radius, spacing, typography} from '../styles/theme';
 import type {LineConfig} from '../types/plc';
 
 interface Props {
@@ -258,8 +258,9 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     color: colors.primaryStrong,
+    fontFamily: typography.fontFamily,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: typography.weights.semibold,
     letterSpacing: 0,
     textTransform: 'uppercase',
   },
@@ -287,14 +288,16 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     color: colors.text,
+    fontFamily: typography.fontFamily,
     fontSize: 22,
-    fontWeight: '600',
+    fontWeight: typography.weights.semibold,
     letterSpacing: 0,
   },
   railSubtitle: {
     color: colors.textSecondary,
+    fontFamily: typography.fontFamily,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: typography.weights.medium,
     letterSpacing: 0,
   },
   lineList: {
@@ -332,8 +335,9 @@ const styles = StyleSheet.create({
   lineName: {
     flex: 1,
     color: colors.text,
+    fontFamily: typography.fontFamily,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: typography.weights.semibold,
     letterSpacing: 0,
   },
   lineNameSelected: {
@@ -346,8 +350,9 @@ const styles = StyleSheet.create({
     borderRadius: radius.badge,
     backgroundColor: colors.runningSurface,
     color: colors.running,
+    fontFamily: typography.fontFamily,
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: typography.weights.semibold,
     letterSpacing: 0,
     textAlign: 'center',
     paddingHorizontal: spacing.xs,
@@ -355,9 +360,9 @@ const styles = StyleSheet.create({
   },
   lineEndpoint: {
     color: colors.textSecondary,
+    fontFamily: typography.fontFamily,
     fontSize: 13,
-    fontFamily: 'monospace',
-    fontWeight: '600',
+    fontWeight: typography.weights.medium,
     letterSpacing: 0,
   },
   formPanel: {
@@ -379,15 +384,16 @@ const styles = StyleSheet.create({
   },
   formTitle: {
     color: colors.text,
+    fontFamily: typography.fontFamily,
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: typography.weights.semibold,
     letterSpacing: 0,
   },
   formMeta: {
     color: colors.textSecondary,
+    fontFamily: typography.fontFamily,
     fontSize: 15,
-    fontFamily: 'monospace',
-    fontWeight: '600',
+    fontWeight: typography.weights.medium,
     letterSpacing: 0,
   },
   formGrid: {
@@ -402,8 +408,9 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     color: colors.textSecondary,
+    fontFamily: typography.fontFamily,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: typography.weights.medium,
     letterSpacing: 0,
   },
   input: {
@@ -413,8 +420,9 @@ const styles = StyleSheet.create({
     borderRadius: radius.button,
     backgroundColor: colors.recessed,
     color: colors.text,
+    fontFamily: typography.fontFamily,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: typography.weights.medium,
     letterSpacing: 0,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
@@ -438,8 +446,9 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     color: colors.running,
+    fontFamily: typography.fontFamily,
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: typography.weights.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0,
   },
@@ -461,8 +470,9 @@ const styles = StyleSheet.create({
   },
   deleteButtonText: {
     color: colors.fault,
+    fontFamily: typography.fontFamily,
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: typography.weights.semibold,
     textTransform: 'uppercase',
     letterSpacing: 0,
   },
@@ -479,7 +489,8 @@ const styles = StyleSheet.create({
   },
   validationText: {
     color: colors.fault,
+    fontFamily: typography.fontFamily,
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: typography.weights.medium,
   },
 });
