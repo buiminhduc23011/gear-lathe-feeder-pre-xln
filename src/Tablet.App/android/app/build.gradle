@@ -1,0 +1,43 @@
+plugins {
+    id("com.android.application")
+    id("com.facebook.react")
+}
+
+react {
+    autolinkLibrariesWithApp()
+    debuggableVariants = []
+}
+
+def enableProguardInReleaseBuilds = false
+def jscFlavor = "io.github.react-native-community:jsc-android:2026004.+"
+
+android {
+    namespace "com.gearlinetablet"
+    compileSdk rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.gearlinetablet"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "0.1.0"
+    }
+
+    buildTypes {
+        debug {}
+        release {
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+}
+
+dependencies {
+    implementation("com.facebook.react:react-android")
+
+    if (hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation jscFlavor
+    }
+}
