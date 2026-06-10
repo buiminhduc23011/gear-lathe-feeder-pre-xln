@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 import {act, render} from '@testing-library/react-native';
 import {Text} from 'react-native';
-import {useManualRuntime} from '../hooks/useManualRuntime';
+import {areSnapshotsEqual, useManualRuntime} from '../hooks/useManualRuntime';
 import type {LineConfig} from '../types/plc';
 
 const line: LineConfig = {
@@ -53,5 +53,11 @@ describe('useManualRuntime polling', () => {
       await Promise.resolve();
     });
     screen.unmount();
+  });
+
+  it('detects unchanged PLC snapshots by value', () => {
+    expect(areSnapshotsEqual({'input.x00': true, 'output.y07': false}, {'output.y07': false, 'input.x00': true})).toBe(true);
+    expect(areSnapshotsEqual({'input.x00': true}, {'input.x00': false})).toBe(false);
+    expect(areSnapshotsEqual({'input.x00': true}, {'input.x00': true, 'output.y00': false})).toBe(false);
   });
 });

@@ -94,20 +94,6 @@ export const NavigationPage = ({onNavigate}: Props) => {
           {formatCurrentDateTime(currentDateTime)}
         </Text>
       </View>
-      <View style={[styles.healthGraphic, isCompact && styles.healthGraphicCompact]} pointerEvents="none">
-        <View style={[styles.gearLarge, isCompact && styles.gearLargeCompact]}>
-          <Icon name="settings" color="rgba(18, 164, 255, 0.5)" size={isCompact ? 82 : 102} />
-        </View>
-        <View style={[styles.gearSmall, isCompact && styles.gearSmallCompact]}>
-          <Icon name="settings" color="rgba(18, 164, 255, 0.35)" size={isCompact ? 50 : 62} />
-        </View>
-        <View style={[styles.gearMid, isCompact && styles.gearMidCompact]}>
-          <Icon name="settings" color="rgba(18, 164, 255, 0.28)" size={isCompact ? 58 : 74} />
-        </View>
-        <View style={[styles.checkRing, isCompact && styles.checkRingCompact]}>
-          <Icon name="check" color={colors.running} size={isCompact ? 46 : 60} />
-        </View>
-      </View>
     </View>
     <View style={[styles.grid, isCompact && styles.gridCompact]}>
       {appPages.map(page => {
@@ -130,15 +116,14 @@ export const NavigationPage = ({onNavigate}: Props) => {
               pressed && styles.buttonPressed,
             ]}>
             <View style={[styles.accentBar, {backgroundColor: accent}]} />
-            <View style={[styles.tileGlow, {backgroundColor: accent}]} />
             <View style={[styles.tileCenter, isCompact && styles.tileCenterCompact]}>
               <View style={[styles.iconBay, isCompact && styles.iconBayCompact, {borderColor: accent}]}>
                 <Icon name={pageIcons[page.key]} color={accent} size={iconSize} />
               </View>
-              <Text adjustsFontSizeToFit minimumFontScale={0.76} numberOfLines={1} style={[styles.buttonLabel, isCompact && styles.buttonLabelCompact]}>
+              <Text ellipsizeMode="tail" numberOfLines={1} style={[styles.buttonLabel, isCompact && styles.buttonLabelCompact]}>
                 {page.label}
               </Text>
-              <Text adjustsFontSizeToFit minimumFontScale={0.78} style={[styles.buttonDescription, isCompact && styles.buttonDescriptionCompact]} numberOfLines={2}>
+              <Text ellipsizeMode="tail" style={[styles.buttonDescription, isCompact && styles.buttonDescriptionCompact]} numberOfLines={2}>
                 {details.description}
               </Text>
             </View>
@@ -179,10 +164,6 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(18, 164, 255, 0.3)',
     borderRadius: 43,
     backgroundColor: 'rgba(18, 164, 255, 0.11)',
-    shadowColor: colors.primary,
-    shadowOpacity: 0.24,
-    shadowRadius: 16,
-    shadowOffset: {width: 0, height: 0},
   },
   welcomeIconFrameCompact: {
     width: 68,
@@ -205,9 +186,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: typography.weights.semibold,
     letterSpacing: 0,
-    textShadowColor: 'rgba(255, 255, 255, 0.24)',
-    textShadowOffset: {width: 0, height: 0},
-    textShadowRadius: 8,
   },
   welcomeTitleCompact: {
     fontSize: 25,
@@ -223,67 +201,6 @@ const styles = StyleSheet.create({
   welcomeSubtitleCompact: {
     fontSize: 18,
     lineHeight: 24,
-  },
-  healthGraphic: {
-    width: 340,
-    height: 116,
-    position: 'relative',
-  },
-  healthGraphicCompact: {
-    width: 250,
-    height: 98,
-  },
-  gearLarge: {
-    position: 'absolute',
-    right: 128,
-    top: 4,
-  },
-  gearLargeCompact: {
-    right: 96,
-    top: 2,
-  },
-  gearSmall: {
-    position: 'absolute',
-    right: 86,
-    top: 8,
-  },
-  gearSmallCompact: {
-    right: 60,
-    top: 4,
-  },
-  gearMid: {
-    position: 'absolute',
-    right: 28,
-    top: 36,
-  },
-  gearMidCompact: {
-    right: 12,
-    top: 32,
-  },
-  checkRing: {
-    position: 'absolute',
-    right: 80,
-    top: 42,
-    width: 82,
-    height: 82,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 4,
-    borderColor: colors.running,
-    borderRadius: 41,
-    backgroundColor: 'rgba(4, 17, 31, 0.85)',
-    shadowColor: colors.running,
-    shadowOpacity: 0.38,
-    shadowRadius: 18,
-    shadowOffset: {width: 0, height: 0},
-  },
-  checkRingCompact: {
-    right: 60,
-    top: 34,
-    width: 66,
-    height: 66,
-    borderRadius: 33,
-    borderWidth: 4,
   },
   grid: {
     flex: 1,
@@ -305,10 +222,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingHorizontal: spacing.lg,
     paddingVertical: 18,
-    shadowColor: colors.primary,
-    shadowOpacity: 0.2,
-    shadowRadius: 18,
-    shadowOffset: {width: 0, height: 8},
   },
   buttonCompact: {
     paddingHorizontal: spacing.sm,
@@ -323,15 +236,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-  },
-  tileGlow: {
-    position: 'absolute',
-    top: -60,
-    left: -40,
-    width: 180,
-    height: 180,
-    borderRadius: 90,
-    opacity: 0.12,
   },
   tileCenter: {
     flex: 1,
@@ -351,10 +255,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderRadius: 53,
     backgroundColor: 'rgba(4, 17, 31, 0.38)',
-    shadowColor: colors.primary,
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
-    shadowOffset: {width: 0, height: 0},
   },
   iconBayCompact: {
     width: 76,
@@ -372,9 +272,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
     maxWidth: '100%',
     textAlign: 'center',
-    textShadowColor: 'rgba(255, 255, 255, 0.24)',
-    textShadowOffset: {width: 0, height: 0},
-    textShadowRadius: 8,
   },
   buttonLabelCompact: {
     minHeight: 25,

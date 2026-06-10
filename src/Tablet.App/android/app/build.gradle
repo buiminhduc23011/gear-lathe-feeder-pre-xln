@@ -10,6 +10,8 @@ react {
 
 def enableProguardInReleaseBuilds = false
 def jscFlavor = "io.github.react-native-community:jsc-android:2026004.+"
+def resolvedVersionCode = (project.findProperty("appVersionCode") ?: "100").toInteger()
+def resolvedVersionName = (project.findProperty("appVersionName") ?: "1.0.0").toString()
 
 android {
     namespace "com.gearlinetablet"
@@ -19,15 +21,22 @@ android {
         applicationId "com.gearlinetablet"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "0.1.0"
+        versionCode resolvedVersionCode
+        versionName resolvedVersionName
     }
 
     buildTypes {
         debug {}
         release {
+            signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "app-gear-${new Date().format("HHmm-ddMMyyyy")}.apk"
         }
     }
 }

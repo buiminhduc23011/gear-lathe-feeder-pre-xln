@@ -18,7 +18,7 @@ export const ManualOriginTab = ({actions, isConnected, controller, compact}: Pro
       <View key={action.config.commandTag} testID="manual-origin-card" style={[manualStyles.homeCard, compact && manualStyles.homeCardCompact]}>
         <View style={[manualStyles.cardHeader, compact && manualStyles.cardHeaderCompact]}>
           <View style={manualStyles.titleBlock}>
-            <Text adjustsFontSizeToFit minimumFontScale={0.72} style={[manualStyles.cardTitle, compact && manualStyles.cardTitleCompact]} numberOfLines={1}>
+            <Text ellipsizeMode="tail" style={[manualStyles.cardTitle, compact && manualStyles.cardTitleCompact]} numberOfLines={1}>
               {action.config.title}
             </Text>
           </View>

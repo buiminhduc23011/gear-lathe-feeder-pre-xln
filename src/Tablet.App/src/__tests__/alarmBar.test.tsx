@@ -10,7 +10,8 @@ describe('alarm bar', () => {
   ])('renders %s state with the expected label', (state, label) => {
     const screen = render(<AlarmBar state={state} text="Machine message" />);
 
-    expect(screen.getAllByText(label)).toHaveLength(2);
+    expect(screen.getAllByText(label)).toHaveLength(1);
+    expect(screen.getByTestId('alarm-content')).toBeTruthy();
     expect(screen.getByLabelText(`${label}: Machine message`)).toBeTruthy();
   });
 });

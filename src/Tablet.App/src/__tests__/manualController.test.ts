@@ -77,4 +77,20 @@ describe('ManualController', () => {
 
     expect(plc.writes).toEqual([{tagName: 'manual.move_x_forward', value: false}]);
   });
+
+  it('detects stale jog tags before clearing them', () => {
+    const plc = new FakePlc({'manual.move_x_forward': true});
+    const controller = new ManualController(tabletAppConfig.manualScreen, plc);
+
+    expect(controller.hasStaleJogTag()).toBe(true);
+  });
+
+  it('skips clearing when no stale jog tags are present', async () => {
+    const plc = new FakePlc();
+    const controller = new ManualController(tabletAppConfig.manualScreen, plc);
+
+    await controller.clearStaleJogTags();
+
+    expect(plc.writes).toHaveLength(0);
+  });
 });

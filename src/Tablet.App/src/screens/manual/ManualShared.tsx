@@ -46,10 +46,6 @@ export const manualStyles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: 'rgba(17, 31, 40, 0.94)',
     padding: 18,
-    shadowColor: '#000',
-    shadowOpacity: 0.28,
-    shadowRadius: 8,
-    shadowOffset: {width: 0, height: 4},
   },
   homeCardCompact: {
     minWidth: 0,
@@ -125,9 +121,6 @@ export const manualStyles = StyleSheet.create({
     fontSize: 27,
     fontWeight: typography.weights.semibold,
     letterSpacing: 0,
-    textShadowColor: 'rgba(255, 255, 255, 0.12)',
-    textShadowOffset: {width: 0, height: 0},
-    textShadowRadius: 3,
   },
   cardTitleCompact: {
     fontSize: 17,

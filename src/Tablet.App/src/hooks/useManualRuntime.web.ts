@@ -83,9 +83,9 @@ const createPreviewSnapshot = (): PlcSnapshot => {
 
   return {
     ...snapshot,
-    'input.x0_09': true,
-    'output.y0_06': true,
-    'output.y0_07': true,
+    'input.x09': true,
+    'output.y06': true,
+    'output.y07': true,
     'manual.is_homed_x': true,
     'manual.is_homed_y': true,
     'manual.is_homed_z': true,

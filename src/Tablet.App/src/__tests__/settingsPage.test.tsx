@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {fireEvent, render} from '@testing-library/react-native';
+import {act, fireEvent, render} from '@testing-library/react-native';
 import {SettingsPage} from '../screens/SettingsPage';
 import type {LineConfig} from '../types/plc';
 
@@ -8,7 +8,7 @@ const line2: LineConfig = {id: 'line2', name: 'Line 2', host: '192.168.1.20', po
 const line3: LineConfig = {id: 'line3', name: 'Line 3', host: '192.168.1.30', port: 505, slaveId: 3, pollIntervalMs: 100};
 
 describe('settings line page', () => {
-  it('saves edited line connection values', () => {
+  it('saves edited line connection values', async () => {
     const onSaveLine = jest.fn();
     const screen = render(
       <SettingsPage
@@ -19,6 +19,7 @@ describe('settings line page', () => {
         selectedLineId="line1"
       />,
     );
+    await act(async () => undefined);
 
     fireEvent.changeText(screen.getByDisplayValue('127.0.0.1'), '192.168.1.10');
     fireEvent.changeText(screen.getByDisplayValue('503'), '1503');
@@ -31,7 +32,7 @@ describe('settings line page', () => {
     });
   });
 
-  it('adds and deletes lines through callbacks', () => {
+  it('adds and deletes lines through callbacks', async () => {
     const onAddLine = jest.fn(() => line3);
     const onDeleteLine = jest.fn((lineId: string) => [line1].filter(line => line.id !== lineId));
 
@@ -58,6 +59,7 @@ describe('settings line page', () => {
     };
 
     const screen = render(<Wrapper />);
+    await act(async () => undefined);
 
     fireEvent.press(screen.getByText('Thêm line'));
     expect(onAddLine).toHaveBeenCalledTimes(1);
@@ -66,7 +68,7 @@ describe('settings line page', () => {
     expect(onDeleteLine).toHaveBeenCalledWith('line3');
   });
 
-  it('selects the active line from the settings line list', () => {
+  it('selects the active line from the settings line list', async () => {
     const onSelectLine = jest.fn();
     const screen = render(
       <SettingsPage
@@ -78,6 +80,7 @@ describe('settings line page', () => {
         selectedLineId="line2"
       />,
     );
+    await act(async () => undefined);
 
     fireEvent.press(screen.getByText('Line 1'));
     expect(onSelectLine).toHaveBeenCalledWith('line1');

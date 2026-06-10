@@ -34,6 +34,10 @@ describe('PLC address parser', () => {
     expect(createBinding(tag('X9'))).toMatchObject({area: 'discrete', startAddress: 0x6000 + 9, span: 1});
   });
 
+  it('parses Y outputs as Delta AS coils', () => {
+    expect(createBinding(tag('Y47'))).toMatchObject({area: 'coil', startAddress: 0xa000 + 47, span: 1});
+  });
+
   it('rejects unsupported bit ranges', () => {
     expect(() => createBinding(tag('D5032.16'))).toThrow(/outside the supported D-word bit range/);
   });

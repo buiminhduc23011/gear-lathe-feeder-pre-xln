@@ -18,6 +18,26 @@ export interface ManualRuntime {
   refreshNow(): Promise<void>;
 }
 
+export const areSnapshotsEqual = (left: PlcSnapshot, right: PlcSnapshot): boolean => {
+  if (left === right) {
+    return true;
+  }
+
+  const leftKeys = Object.keys(left);
+  const rightKeys = Object.keys(right);
+  if (leftKeys.length !== rightKeys.length) {
+    return false;
+  }
+
+  for (const key of leftKeys) {
+    if (!Object.prototype.hasOwnProperty.call(right, key) || !Object.is(left[key], right[key])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export const useManualRuntime = (
   configuredLines: LineConfig[] = tabletAppConfig.lines,
   transportFactory?: PlcTransportFactory,
@@ -34,10 +54,45 @@ export const useManualRuntime = (
   const refreshInFlightRef = useRef<Promise<void> | null>(null);
   const nextPollAtRef = useRef(0);
   const snapshotRef = useRef<PlcSnapshot>({});
+  const isConnectedRef = useRef(isConnected);
+  const lastUpdatedTextRef = useRef(lastUpdatedText);
+  const errorTextRef = useRef(errorText);
+  const lastUpdatedAtRef = useRef(0);
 
   const updateSnapshot = useCallback((nextSnapshot: PlcSnapshot) => {
+    if (areSnapshotsEqual(snapshotRef.current, nextSnapshot)) {
+      return;
+    }
+
     snapshotRef.current = nextSnapshot;
     setSnapshot(nextSnapshot);
+  }, []);
+
+  const setConnectedState = useCallback((nextIsConnected: boolean) => {
+    if (isConnectedRef.current === nextIsConnected) {
+      return;
+    }
+
+    isConnectedRef.current = nextIsConnected;
+    setIsConnected(nextIsConnected);
+  }, []);
+
+  const setLastUpdatedState = useCallback((nextText: string) => {
+    if (lastUpdatedTextRef.current === nextText) {
+      return;
+    }
+
+    lastUpdatedTextRef.current = nextText;
+    setLastUpdatedText(nextText);
+  }, []);
+
+  const setErrorState = useCallback((nextText: string) => {
+    if (errorTextRef.current === nextText) {
+      return;
+    }
+
+    errorTextRef.current = nextText;
+    setErrorText(nextText);
   }, []);
 
   const controller = useMemo(() => {
@@ -66,14 +121,18 @@ export const useManualRuntime = (
       try {
         const nextSnapshot = await clientRef.current.readAll();
         updateSnapshot(nextSnapshot);
-        setIsConnected(clientRef.current.isConnected);
-        setLastUpdatedText(`Last updated ${new Date().toLocaleTimeString()}`);
-        setErrorText('');
+        setConnectedState(clientRef.current.isConnected);
+        const now = Date.now();
+        if (now - lastUpdatedAtRef.current >= 1000) {
+          lastUpdatedAtRef.current = now;
+          setLastUpdatedState(`Last updated ${new Date().toLocaleTimeString()}`);
+        }
+        setErrorState('');
         nextPollAtRef.current = 0;
-        await controller.clearStaleJogTags();
+        await controller.clearStaleJogTags(nextSnapshot);
       } catch (error) {
-        setIsConnected(false);
-        setErrorText(error instanceof Error ? error.message : String(error));
+        setConnectedState(false);
+        setErrorState(error instanceof Error ? error.message : String(error));
         nextPollAtRef.current = Date.now() + Math.max(selectedLine.pollIntervalMs, 1000);
       }
     })();
@@ -86,7 +145,7 @@ export const useManualRuntime = (
         refreshInFlightRef.current = null;
       }
     }
-  }, [controller, selectedLine.pollIntervalMs, updateSnapshot]);
+  }, [controller, selectedLine.pollIntervalMs, setConnectedState, setErrorState, setLastUpdatedState, updateSnapshot]);
 
   useEffect(() => {
     if (!lines.some(line => line.id === selectedLineId)) {
@@ -98,9 +157,11 @@ export const useManualRuntime = (
     const client = new PlcClient(selectedLine, tabletAppConfig.tags, transportFactory);
     clientRef.current = client;
     updateSnapshot(client.snapshot());
+    isConnectedRef.current = false;
+    lastUpdatedAtRef.current = 0;
     setIsConnected(false);
-    setLastUpdatedText('Waiting for PLC data');
-    setErrorText('');
+    setLastUpdatedState('Waiting for PLC data');
+    setErrorState('');
 
     let disposed = false;
     const tick = async () => {

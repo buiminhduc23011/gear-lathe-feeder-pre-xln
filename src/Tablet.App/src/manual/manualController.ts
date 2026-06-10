@@ -121,12 +121,11 @@ export class ManualController {
     }
   }
 
-  async clearStaleJogTags(): Promise<void> {
+  async clearStaleJogTags(snapshot: PlcSnapshot = this.plc.snapshot()): Promise<void> {
     if (!this.plc.isConnected) {
       return;
     }
 
-    const snapshot = this.plc.snapshot();
     for (const axis of this.config.axes) {
       for (const tagName of [axis.negativeJogTag, axis.positiveJogTag]) {
         if (tagName !== this.activeJogTagName && readBool(snapshot, tagName)) {
@@ -134,6 +133,22 @@ export class ManualController {
         }
       }
     }
+  }
+
+  hasStaleJogTag(snapshot: PlcSnapshot = this.plc.snapshot()): boolean {
+    if (!this.plc.isConnected) {
+      return false;
+    }
+
+    for (const axis of this.config.axes) {
+      for (const tagName of [axis.negativeJogTag, axis.positiveJogTag]) {
+        if (tagName !== this.activeJogTagName && readBool(snapshot, tagName)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   private canExecuteOneShot(tagName: string): boolean {

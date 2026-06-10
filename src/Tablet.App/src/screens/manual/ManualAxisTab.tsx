@@ -38,7 +38,7 @@ const AxisCard = ({
     <View testID="manual-axis-card" style={[manualStyles.axisCard, compact && manualStyles.axisCardCompact]}>
       <View style={[manualStyles.cardHeader, compact && manualStyles.cardHeaderCompact]}>
         <View style={manualStyles.titleBlock}>
-          <Text adjustsFontSizeToFit minimumFontScale={0.72} style={[manualStyles.cardTitle, compact && manualStyles.cardTitleCompact]} numberOfLines={1}>
+          <Text ellipsizeMode="tail" style={[manualStyles.cardTitle, compact && manualStyles.cardTitleCompact]} numberOfLines={1}>
             {axis.config.displayName}
           </Text>
           <View style={manualStyles.positionRow}>

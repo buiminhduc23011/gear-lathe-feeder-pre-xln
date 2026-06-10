@@ -1,15 +1,42 @@
-import React, {useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {AppShell} from './components/AppShell';
+import {ioChannels} from './config/io';
 import {AlarmBarState} from './components/AlarmBar';
 import {useLineSettings} from './hooks/useLineSettings';
 import {useManualRuntime, type ManualRuntime} from './hooks/useManualRuntime';
 import type {AppPage} from './navigation/appPages';
+import {IOPage} from './screens/IOPage';
 import {ManualPage} from './screens/ManualPage';
 import {NavigationPage} from './screens/NavigationPage';
 import {PlaceholderPage} from './screens/PlaceholderPage';
 import {SettingsPage} from './screens/SettingsPage';
+import type {PlcSnapshot} from './types/plc';
 
 type AppScreen = AppPage | 'navigation';
+
+const ioSnapshotTagNames = ioChannels.flatMap(channel => channel.points.map(point => point.tagName));
+
+const useStableSnapshotSelection = (source: PlcSnapshot, tagNames: readonly string[]): PlcSnapshot => {
+  const selectedRef = useRef<PlcSnapshot>({});
+  const previous = selectedRef.current;
+  let changed = Object.keys(previous).length !== tagNames.length;
+  const next: PlcSnapshot = {};
+
+  for (const tagName of tagNames) {
+    const value = source[tagName];
+    next[tagName] = value;
+    if (!Object.prototype.hasOwnProperty.call(previous, tagName) || !Object.is(previous[tagName], value)) {
+      changed = true;
+    }
+  }
+
+  if (!changed) {
+    return previous;
+  }
+
+  selectedRef.current = next;
+  return next;
+};
 
 // Simplified screen metadata mapping for HMI header
 const screenMetadata: Record<AppScreen, {eyebrow: string; title: string}> = {
@@ -21,40 +48,17 @@ const screenMetadata: Record<AppScreen, {eyebrow: string; title: string}> = {
   settings: {eyebrow: 'GEAR LINE', title: 'Cài đặt'},
 };
 
-const compactPlcError = (errorText: string): string => {
-  const normalizedText = errorText.replace(/\s+/g, ' ').trim();
-  if (/connect|ECONNREFUSED|ENETUNREACH|EHOSTUNREACH|timed out/i.test(normalizedText)) {
-    return 'Mất kết nối PLC';
-  }
-
-  return normalizedText || 'Lỗi PLC';
-};
-
-const buildAlarmBarModel = (runtime: ManualRuntime): {text: string; state: AlarmBarState} => {
-  if (runtime.errorText) {
+export const buildAlarmBarModel = (runtime: ManualRuntime): {text: string; state: AlarmBarState} => {
+  if (runtime.isConnected) {
     return {
-      state: AlarmBarState.Error,
-      text: `PLC ERROR | ${compactPlcError(runtime.errorText)}`,
-    };
-  }
-
-  if (runtime.activeJogTag) {
-    return {
-      state: AlarmBarState.Warning,
-      text: `JOG ACTIVE | ${runtime.activeJogTag}`,
-    };
-  }
-
-  if (!runtime.isConnected) {
-    return {
-      state: AlarmBarState.Error,
-      text: `PLC OFFLINE | Active ${runtime.selectedLine.name} | Waiting for PLC data`,
+      state: AlarmBarState.Normal,
+      text: 'Đã kết nối PLC thực tế',
     };
   }
 
   return {
-    state: AlarmBarState.Normal,
-    text: `${runtime.lastUpdatedText && /preview/i.test(runtime.lastUpdatedText) ? 'preview data' : runtime.lastUpdatedText || 'preview data'} | SYSTEM READY | AC`,
+    state: AlarmBarState.Error,
+    text: 'Chưa kết nối PLC thực tế',
   };
 };
 
@@ -64,30 +68,45 @@ const App = () => {
   const runtime = useManualRuntime(lineSettings.lines);
   const screenMeta = screenMetadata[currentPage];
   const alarmBar = buildAlarmBarModel(runtime);
+  const ioSnapshot = useStableSnapshotSelection(runtime.snapshot, ioSnapshotTagNames);
+  const handleHome = useCallback(() => setCurrentPage('navigation'), []);
+  const navigationContent = useMemo(() => <NavigationPage onNavigate={setCurrentPage} />, []);
+  const autoContent = useMemo(() => <PlaceholderPage />, []);
+  const historyContent = useMemo(() => <PlaceholderPage />, []);
+  const manualContent = useMemo(() => <ManualPage runtime={runtime} />, [runtime]);
+  const ioContent = useMemo(() => <IOPage snapshot={ioSnapshot} />, [ioSnapshot]);
+  const settingsContent = useMemo(() => (
+    <SettingsPage
+      lines={lineSettings.lines}
+      onAddLine={lineSettings.addLine}
+      onDeleteLine={lineSettings.deleteLine}
+      onSelectLine={runtime.selectLine}
+      onSaveLine={lineSettings.saveLine}
+      selectedLineId={runtime.selectedLine.id}
+    />
+  ), [
+    lineSettings.addLine,
+    lineSettings.deleteLine,
+    lineSettings.lines,
+    lineSettings.saveLine,
+    runtime.selectLine,
+    runtime.selectedLine.id,
+  ]);
 
   const content = (() => {
     switch (currentPage) {
       case 'navigation':
-        return <NavigationPage onNavigate={setCurrentPage} />;
+        return navigationContent;
       case 'manual':
-        return <ManualPage runtime={runtime} />;
+        return manualContent;
       case 'auto':
-        return <PlaceholderPage title="Tự động" />;
+        return autoContent;
       case 'io':
-        return <PlaceholderPage title="Giám sát IO" />;
+        return ioContent;
       case 'history':
-        return <PlaceholderPage title="Lịch sử" />;
+        return historyContent;
       case 'settings':
-        return (
-          <SettingsPage
-            lines={lineSettings.lines}
-            onAddLine={lineSettings.addLine}
-            onDeleteLine={lineSettings.deleteLine}
-            onSelectLine={runtime.selectLine}
-            onSaveLine={lineSettings.saveLine}
-            selectedLineId={runtime.selectedLine.id}
-          />
-        );
+        return settingsContent;
     }
   })();
 
@@ -99,7 +118,7 @@ const App = () => {
       screenTitle={screenMeta.title}
       alarmText={alarmBar.text}
       alarmState={alarmBar.state}
-      onHome={() => setCurrentPage('navigation')}
+      onHome={handleHome}
       currentPage={currentPage}
       onNavigate={setCurrentPage}>
       {content}

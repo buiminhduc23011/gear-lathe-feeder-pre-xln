@@ -5,7 +5,7 @@ import {AlarmBarState} from '../components/AlarmBar';
 import {AppShell} from '../components/AppShell';
 
 describe('app shell header', () => {
-  it('uses the logo as home and repeats alarm content for the marquee', () => {
+  it('uses the logo as home and renders static alarm content', () => {
     const onHome = jest.fn();
     const screen = render(
       <AppShell
@@ -24,10 +24,8 @@ describe('app shell header', () => {
     expect(screen.queryByText('LINE-HMI')).toBeNull();
     expect(screen.queryByText('ENDPOINT')).toBeNull();
     expect(screen.queryByText('LINE')).toBeNull();
-    expect(screen.getAllByText('ALARM')).toHaveLength(2);
-    expect(screen.getByTestId('alarm-marquee-track')).toBeTruthy();
-    expect(screen.getByTestId('alarm-marquee-copy-primary')).toBeTruthy();
-    expect(screen.getByTestId('alarm-marquee-copy-duplicate')).toBeTruthy();
+    expect(screen.getAllByText('ALARM')).toHaveLength(1);
+    expect(screen.getByTestId('alarm-content')).toBeTruthy();
     expect(screen.getByLabelText('ALARM: PLC ERROR | Door guard open')).toBeTruthy();
   });
 });

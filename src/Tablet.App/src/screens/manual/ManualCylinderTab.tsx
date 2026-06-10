@@ -19,7 +19,7 @@ export const ManualCylinderTab = ({cylinders, isConnected, controller, compact}:
         <View style={[manualStyles.cardHeader, compact && manualStyles.cardHeaderCompact]}>
           <View style={manualStyles.titleBlock}>
             <View style={manualStyles.titleInlineRow}>
-              <Text adjustsFontSizeToFit minimumFontScale={0.72} style={[manualStyles.cardTitle, manualStyles.inlineTitle, compact && manualStyles.cardTitleCompact]} numberOfLines={1}>
+              <Text ellipsizeMode="tail" style={[manualStyles.cardTitle, manualStyles.inlineTitle, compact && manualStyles.cardTitleCompact]} numberOfLines={1}>
                 {cylinder.config.title}
               </Text>
               <Text style={[manualStyles.inlineSubtitle, compact && manualStyles.inlineSubtitleCompact]} numberOfLines={1}>
