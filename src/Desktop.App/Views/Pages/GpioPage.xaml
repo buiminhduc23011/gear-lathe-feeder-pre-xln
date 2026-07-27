@@ -76,11 +76,19 @@
         </Style>
     </UserControl.Resources>
 
-    <shared:PageScaffold PageTitle="Giám sát IO" PageSubtitle="Theo dõi inputs, outputs và bảng tag PLC.">
+    <shared:PageScaffold
+        BodyVerticalScrollBarVisibility="Disabled"
+        PageSubtitle="Theo dõi inputs, outputs và bảng tag PLC."
+        PageTitle="Giám sát IO">
         <shared:PageScaffold.BodyContent>
             <Border Style="{StaticResource SectionCard}">
-                <StackPanel>
-                    <StackPanel Margin="0,0,0,16" Orientation="Horizontal">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="0,0,0,16" Orientation="Horizontal">
                         <ToggleButton
                             Command="{Binding SelectInputTabCommand}"
                             Content="Input"
@@ -99,6 +107,7 @@
                     </StackPanel>
 
                     <ScrollViewer
+                        Grid.Row="1"
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding IsInputTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                         <ItemsControl ItemsSource="{Binding Inputs}">
@@ -119,6 +128,7 @@
                     </ScrollViewer>
 
                     <ScrollViewer
+                        Grid.Row="1"
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding IsOutputTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                         <ItemsControl ItemsSource="{Binding Outputs}">
@@ -138,30 +148,14 @@
                         </ItemsControl>
                     </ScrollViewer>
 
-                    <Grid>
-                        <Grid.Style>
-                            <Style TargetType="Grid">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsDataPlcTabSelected}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsLine1TabSelected}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsLine2TabSelected}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
+                    <Grid Grid.Row="1" Visibility="{Binding IsDataPlcTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <Grid Margin="0,0,0,14">
+                        <Grid Grid.Row="0" Margin="0,0,0,14">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="340" />
                                 <ColumnDefinition Width="*" />
@@ -172,8 +166,6 @@
                                 hc:InfoElement.Placeholder="Tìm theo Tag, địa chỉ, mô tả..."
                                 Style="{StaticResource FilterToolbarTextBox}"
                                 Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
-
-                    
                         </Grid>
 
                         <DataGrid
@@ -190,7 +182,7 @@
                                 <DataGridTemplateColumn Width="100" Header="Status">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock  Style="{StaticResource TagStatusText}" Text="{Binding Status}" />
+                                            <TextBlock Style="{StaticResource TagStatusText}" Text="{Binding Status}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -243,7 +235,7 @@
                             </StackPanel>
                         </DockPanel>
                     </Grid>
-                </StackPanel>
+                </Grid>
             </Border>
         </shared:PageScaffold.BodyContent>
     </shared:PageScaffold>
