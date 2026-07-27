@@ -1,13 +1,41 @@
-**/node_modules/
-**/dist/
+# Build and Output Directories
 **/bin/
 **/obj/
-**/.tmp/
+**/dist/
 **/build/
-.vs/
-.vscode/
+**/.tmp/
+**/node_modules/
 
-# Local environment
+# Visual Studio & IDE Caches
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+*.workspace
+*.cache
+
+# JetBrains Rider
+.idea/
+
+# Local Environment & Logs
 .env
 .env.*
 !.env.example
+*.log
+*.sqlite
+*.db
+
+# OS Generated Files
+Thumbs.db
+[Dd]esktop.ini
+.DS_Store
+
+# Publish artifacts
+publish/
