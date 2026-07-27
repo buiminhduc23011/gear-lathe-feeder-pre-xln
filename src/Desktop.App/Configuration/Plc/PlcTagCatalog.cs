@@ -435,63 +435,147 @@ public static class PlcTagCatalog
 
     public static class Manual
     {
+        // --- Trục X ---
         public static readonly PlcTagDefinition MoveXForward = CreateBit("manual.move_x_forward", "M2000", "Tiến trục X");
         public static readonly PlcTagDefinition MoveXBackward = CreateBit("manual.move_x_backward", "M2001", "Lùi trục X");
-        public static readonly PlcTagDefinition HomeX = CreateBit("manual.home_x", "M2002", "Về góc trục X");
+        public static readonly PlcTagDefinition HomeX = CreateBit("manual.home_x", "M2002", "Về gốc trục X");
         public static readonly PlcTagDefinition MoveXToPoint = CreateBit("manual.move_x_to_point", "M2003", "Chạy điểm vị trí trục X");
         public static readonly PlcTagDefinition ManualSpeedX = CreateWord("manual.manual_speed_x", "D5150", PlcTagDataType.Float, "Tốc độ Manual trục X (mm/s)");
-        public static readonly PlcTagDefinition MovePointX = CreateWord("manual.move_point_x", "D5152", PlcTagDataType.Float, "Vị trí chạy điểm trục X (mm)");
+        public static readonly PlcTagDefinition MovePointX = CreateWord("manual.move_point_x", "D5152", PlcTagDataType.Float, "Vị trí chạy điểm (mm)");
         public static readonly PlcTagDefinition CurrentPositionX = CreateWord("manual.current_position_x", "D5154", PlcTagDataType.Float, "Vị trí hiện tại trục X (hiển thị) (mm)");
-        public static readonly PlcTagDefinition IsHomingX = CreateBit("manual.is_homing_x", "M2040", "Đang về Home X");
-        public static readonly PlcTagDefinition IsHomedX = CreateBit("manual.is_homed_x", "M2041", "Đã về Home X");
+        public static readonly PlcTagDefinition IsHomingX = CreateBit("manual.is_homing_x", "M2050", "Đang về Home X");
+        public static readonly PlcTagDefinition IsHomedX = CreateBit("manual.is_homed_x", "M2051", "Đã về Home X");
+        public static readonly PlcTagDefinition IsRunningToPointX = CreateBit("manual.is_running_to_point_x", "M2052", "Đang chạy điểm trục X");
 
-        public static readonly PlcTagDefinition MoveYLeft = CreateBit("manual.move_y_left", "M2004", "Trái trục Y");
-        public static readonly PlcTagDefinition MoveYRight = CreateBit("manual.move_y_right", "M2005", "Phải trục Y");
-        public static readonly PlcTagDefinition HomeY = CreateBit("manual.home_y", "M2006", "Về góc trục Y");
-        public static readonly PlcTagDefinition MoveYToPoint = CreateBit("manual.move_y_to_point", "M2007", "Chạy điểm vị trí trục Y");
-        public static readonly PlcTagDefinition ManualSpeedY = CreateWord("manual.manual_speed_y", "D5156", PlcTagDataType.Float, "Tốc độ Manual trục Y (mm/s)");
-        public static readonly PlcTagDefinition MovePointY = CreateWord("manual.move_point_y", "D5158", PlcTagDataType.Float, "Vị trí chạy điểm trục Y (mm)");
-        public static readonly PlcTagDefinition CurrentPositionY = CreateWord("manual.current_position_y", "D5160", PlcTagDataType.Float, "Vị trí hiện tại trục Y (hiển thị) (mm)");
-        public static readonly PlcTagDefinition IsHomingY = CreateBit("manual.is_homing_y", "M2042", "Đang về Home Y");
-        public static readonly PlcTagDefinition IsHomedY = CreateBit("manual.is_homed_y", "M2043", "Đã về Home Y");
+        // --- Trục Z ---
+        public static readonly PlcTagDefinition MoveZRight = CreateBit("manual.move_z_right", "M2004", "Phải trục Z");
+        public static readonly PlcTagDefinition MoveZLeft = CreateBit("manual.move_z_left", "M2005", "Trái trục Z");
+        public static readonly PlcTagDefinition HomeZ = CreateBit("manual.home_z", "M2006", "Về gốc trục Z");
+        public static readonly PlcTagDefinition MoveZToPoint = CreateBit("manual.move_z_to_point", "M2007", "Chạy điểm vị trí trục Z");
+        public static readonly PlcTagDefinition ManualSpeedZ = CreateWord("manual.manual_speed_z", "D5156", PlcTagDataType.Float, "Tốc độ Manual trục Z (mm/s)");
+        public static readonly PlcTagDefinition MovePointZ = CreateWord("manual.move_point_z", "D5158", PlcTagDataType.Float, "Vị trí chạy điểm trục Z( mm )");
+        public static readonly PlcTagDefinition CurrentPositionZ = CreateWord("manual.current_position_z", "D5160", PlcTagDataType.Float, "Vị trí hiện tại trục Z ( hiển thị ) ( mm )");
+        public static readonly PlcTagDefinition IsHomingZ = CreateBit("manual.is_homing_z", "M2054", "Đang về Home Z");
+        public static readonly PlcTagDefinition IsHomedZ = CreateBit("manual.is_homed_z", "M2055", "Đã về Home Z");
+        public static readonly PlcTagDefinition IsRunningToPointZ = CreateBit("manual.is_running_to_point_z", "M2056", "Đang chạy điểm trục Z");
 
-        public static readonly PlcTagDefinition MoveZUp = CreateBit("manual.move_z_up", "M2008", "Lên trục Z");
-        public static readonly PlcTagDefinition MoveZDown = CreateBit("manual.move_z_down", "M2009", "Xuống trục Z");
-        public static readonly PlcTagDefinition HomeZ = CreateBit("manual.home_z", "M2010", "Về góc trục Z");
-        public static readonly PlcTagDefinition MoveZToPoint = CreateBit("manual.move_z_to_point", "M2011", "Chạy điểm vị trí trục Z");
-        public static readonly PlcTagDefinition ManualSpeedZ = CreateWord("manual.manual_speed_z", "D5162", PlcTagDataType.Float, "Tốc độ Manual trục Z (mm/s)");
-        public static readonly PlcTagDefinition MovePointZ = CreateWord("manual.move_point_z", "D5164", PlcTagDataType.Float, "Vị trí chạy điểm trục Z (mm)");
-        public static readonly PlcTagDefinition CurrentPositionZ = CreateWord("manual.current_position_z", "D5166", PlcTagDataType.Float, "Vị trí hiện tại trục Z (hiển thị) (mm)");
-        public static readonly PlcTagDefinition IsHomingZ = CreateBit("manual.is_homing_z", "M2044", "Đang về Home Z");
-        public static readonly PlcTagDefinition IsHomedZ = CreateBit("manual.is_homed_z", "M2045", "Đã về Home Z");
+        // --- Trục Nâng ---
+        public static readonly PlcTagDefinition MoveLifterUp = CreateBit("manual.move_lifter_up", "M2008", "lên trục cấp phôi");
+        public static readonly PlcTagDefinition MoveLifterDown = CreateBit("manual.move_lifter_down", "M2009", "Xuống trục cấp phôi");
+        public static readonly PlcTagDefinition HomeLifter = CreateBit("manual.home_lifter", "M2010", "Về gốc trục cấp phôi");
+        public static readonly PlcTagDefinition MoveLifterToPoint = CreateBit("manual.move_lifter_to_point", "M2011", "Chạy điểm vị trí trục cấp phôi");
+        public static readonly PlcTagDefinition ManualSpeedLifter = CreateWord("manual.manual_speed_lifter", "D5162", PlcTagDataType.Float, "Tốc độ Manual trục cấp phôi ( mm/s)( Không cho nhập, mặc định)");
+        public static readonly PlcTagDefinition MovePointLifter = CreateWord("manual.move_point_lifter", "D5164", PlcTagDataType.Float, "Vị trí chạy điểm trục cấp phôi( mm )");
+        public static readonly PlcTagDefinition CurrentPositionLifter = CreateWord("manual.current_position_lifter", "D5166", PlcTagDataType.Float, "Vị trí hiện tại trục cấp phôi ( hiển thị ) ( mm )");
+        public static readonly PlcTagDefinition IsHomingLifter = CreateBit("manual.is_homing_lifter", "M2058", "Đang về Home trục cấp phôi");
+        public static readonly PlcTagDefinition IsHomedLifter = CreateBit("manual.is_homed_lifter", "M2059", "Đã về Home trục cấp phôi");
+        public static readonly PlcTagDefinition IsRunningToPointLifter = CreateBit("manual.is_running_to_point_lifter", "M2060", "Đang chạy điểm trục cấp phôi");
 
-        public static readonly PlcTagDefinition ToolClampIn = CreateBit("manual.tool_clamp_in", "M2012", "Xilanh tay tool kẹp vào");
-        public static readonly PlcTagDefinition ToolClampOut = CreateBit("manual.tool_clamp_out", "M2013", "Xilanh tay tool mở ra");
-        public static readonly PlcTagDefinition ToolRotate0 = CreateBit("manual.tool_rotate_0", "M2014", "Xilanh tay tool điểm 0");
-        public static readonly PlcTagDefinition ToolRotate90 = CreateBit("manual.tool_rotate_90", "M2015", "Xilanh tay tool quay 90");
-        public static readonly PlcTagDefinition ClampCart1 = CreateBit("manual.clamp_cart_1", "M2016", "Xilanh kẹp xe hàng 1");
-        public static readonly PlcTagDefinition UnclampCart1 = CreateBit("manual.unclamp_cart_1", "M2017", "Xilanh mở xe hàng 1");
-        public static readonly PlcTagDefinition ClampCart2 = CreateBit("manual.clamp_cart_2", "M2018", "Xilanh kẹp xe hàng 2");
-        public static readonly PlcTagDefinition UnclampCart2 = CreateBit("manual.unclamp_cart_2", "M2019", "Xilanh mở xe hàng 2");
-        public static readonly PlcTagDefinition HomeAll = CreateBit("manual.home_all", "M2020", "Home ALL");
-        public static readonly PlcTagDefinition HomeRotateCylinder = CreateBit("manual.home_rotate_cylinder", "M2023", "Home Xilanh Xoay");
-        public static readonly PlcTagDefinition HomeToolClampCylinder = CreateBit("manual.home_tool_clamp_cylinder", "M2024", "Home Xilanh kẹp tay tool");
-        public static readonly PlcTagDefinition BuzzerOnOff = CreateBit("manual.buzzer_on_off", "M2030", "Bật tắt còi");
-        public static readonly PlcTagDefinition LightCurtainOnOff = CreateBit("manual.light_curtain_on_off", "M2031", "Tắt bật Light Curtain");
+        // --- Bàn xoay ---
+        public static readonly PlcTagDefinition MoveRotaryForward = CreateBit("manual.move_rotary_forward", "M2012", "Quay thuận bàn xoay");
+        public static readonly PlcTagDefinition MoveRotaryReverse = CreateBit("manual.move_rotary_reverse", "M2013", "Quay nghịch bàn xoay");
+        public static readonly PlcTagDefinition HomeRotary = CreateBit("manual.home_rotary", "M2014", "Về gốc bàn xoay");
+        public static readonly PlcTagDefinition MoveRotaryToPoint = CreateBit("manual.move_rotary_to_point", "M2015", "Chạy điểm bàn xoay");
+        public static readonly PlcTagDefinition ManualSpeedRotary = CreateWord("manual.manual_speed_rotary", "D5168", PlcTagDataType.Float, "Tốc độ Manual bàn xoay ( không cho nhập, mặc định)");
+        public static readonly PlcTagDefinition MovePointRotary = CreateWord("manual.move_point_rotary", "D5170", PlcTagDataType.Float, "Vị trí chạy điểm Góc bàn xoay( mm )0,90,180,270");
+        public static readonly PlcTagDefinition CurrentPositionRotary = CreateWord("manual.current_position_rotary", "D5172", PlcTagDataType.Float, "Vị trí hiện tại bàn xoay");
+        public static readonly PlcTagDefinition IsHomingRotary = CreateBit("manual.is_homing_rotary", "M2062", "Đang về Home bàn xoay");
+        public static readonly PlcTagDefinition IsHomedRotary = CreateBit("manual.is_homed_rotary", "M2063", "Đã về Home bàn xoay");
+        public static readonly PlcTagDefinition IsRunningToPointRotary = CreateBit("manual.is_running_to_point_rotary", "M2064", "Đang chạy điểm bàn xoay");
 
-        public static readonly PlcTagDefinition Cart1OpenedSignal = CreateBit("manual.cart_1_opened_signal", "M2046", "Tín hiệu đã mở kẹp xe hàng 1");
-        public static readonly PlcTagDefinition Cart1ClosedSignal = CreateBit("manual.cart_1_closed_signal", "M2047", "Tín hiệu đã kẹp xe hàng 1");
-        public static readonly PlcTagDefinition Cart2OpenedSignal = CreateBit("manual.cart_2_opened_signal", "M2048", "Tín hiệu đã mở kẹp xe hàng 2");
-        public static readonly PlcTagDefinition Cart2ClosedSignal = CreateBit("manual.cart_2_closed_signal", "M2049", "Tín hiệu đã kẹp tool");
-        public static readonly PlcTagDefinition ToolClosedSignal = CreateBit("manual.tool_closed_signal", "M2050", "Tín hiệu đã kẹp Tool");
-        public static readonly PlcTagDefinition ToolOpenedSignal = CreateBit("manual.tool_opened_signal", "M2051", "Tín hiệu đã mở kẹp Tool");
-        public static readonly PlcTagDefinition RotatedTo0Signal = CreateBit("manual.rotated_to_0_signal", "M2052", "Tín hiệu đã quay về 0");
-        public static readonly PlcTagDefinition RotatedTo90Signal = CreateBit("manual.rotated_to_90_signal", "M2053", "Tín hiệu đã quay về 90");
-        public static readonly PlcTagDefinition HomeRotateCylinderDone = CreateBit("manual.home_rotate_cylinder_done", "M2056", "Đã về home xilanh xoay");
-        public static readonly PlcTagDefinition HomeToolClampDone = CreateBit("manual.home_tool_clamp_done", "M2057", "Đã về home kẹp tay tool");
-        public static readonly PlcTagDefinition IsRunningToPointX = CreateBit("manual.is_running_to_point_x", "M2058", "Đang chạy điểm trục X");
-        public static readonly PlcTagDefinition IsRunningToPointY = CreateBit("manual.is_running_to_point_y", "M2059", "Đang chạy điểm trục Y");
-        public static readonly PlcTagDefinition IsRunningToPointZ = CreateBit("manual.is_running_to_point_z", "M2060", "Đang chạy điểm trục Z");
+        // --- Xilanh Kẹp Xe ---
+        public static readonly PlcTagDefinition ClampCart = CreateBit("manual.clamp_cart", "M2016", "Kẹp Xilanh Kẹp Xe");
+        public static readonly PlcTagDefinition UnclampCart = CreateBit("manual.unclamp_cart", "M2017", "Mở Xilanh Kẹp Xe");
+        public static readonly PlcTagDefinition CartClampedSignal = CreateBit("manual.cart_clamped_signal", "M2066", "Đã kẹp xe");
+        public static readonly PlcTagDefinition CartUnclampedSignal = CreateBit("manual.cart_unclamped_signal", "M2067", "Đã mở kẹp xe");
+
+        // --- Xilanh Nâng Động cơ bàn xoay ---
+        public static readonly PlcTagDefinition LiftMotorUp = CreateBit("manual.lift_motor_up", "M2018", "Nâng Xilanh động cơ bàn xoay");
+        public static readonly PlcTagDefinition LiftMotorDown = CreateBit("manual.lift_motor_down", "M2019", "Hạ Xilanh động cơ bàn xoay");
+        public static readonly PlcTagDefinition LiftMotorUpSignal = CreateBit("manual.lift_motor_up_signal", "M2068", "Đã nâng");
+        public static readonly PlcTagDefinition LiftMotorDownSignal = CreateBit("manual.lift_motor_down_signal", "M2069", "Đã Hạ");
+
+        // --- Xianh kẹp phôi đầu vào ---
+        public static readonly PlcTagDefinition InputClampPart = CreateBit("manual.input_clamp_part", "M2020", "Kẹp Xianh kẹp phôi đầu vào");
+        public static readonly PlcTagDefinition InputUnclampPart = CreateBit("manual.input_unclamp_part", "M2021", "Mở Xilanh Kẹp phôi đầu vào");
+        public static readonly PlcTagDefinition InputClampedSignal = CreateBit("manual.input_clamped_signal", "M2070", "Đã kẹp");
+        public static readonly PlcTagDefinition InputUnclampedSignal = CreateBit("manual.input_unclamped_signal", "M2071", "Đã mở kẹp");
+
+        // --- Xilanh Lật phôi đầu vào ---
+        public static readonly PlcTagDefinition InputRotate0 = CreateBit("manual.input_rotate_0", "M2022", "Xoay 0 Xilanh Lật phôi đầu vào");
+        public static readonly PlcTagDefinition InputRotate90 = CreateBit("manual.input_rotate_90", "M2023", "Xoay 90 Xilanh lật phôi đầu vào");
+        public static readonly PlcTagDefinition InputRotated0Signal = CreateBit("manual.input_rotated_0_signal", "M2072", "Đã xoay 0");
+        public static readonly PlcTagDefinition InputRotated90Signal = CreateBit("manual.input_rotated_90_signal", "M2073", "Đã xoay 90");
+
+        // --- Tay cấp phôi Rodal ---
+        public static readonly PlcTagDefinition RodalRotate0 = CreateBit("manual.rodal_rotate_0", "M2024", "Xoay 0 Cụm cấp phôi Rodal");
+        public static readonly PlcTagDefinition RodalRotate180 = CreateBit("manual.rodal_rotate_180", "M2025", "Xoay 180 Cụm cấp phôi Rodal");
+        public static readonly PlcTagDefinition RodalRotated0Signal = CreateBit("manual.rodal_rotated_0_signal", "M2074", "Đã xoay 0");
+        public static readonly PlcTagDefinition RodalRotated180Signal = CreateBit("manual.rodal_rotated_180_signal", "M2075", "Đã xoay 180");
+
+        // --- Xilanh lật sau máy tiện 2 ---
+        public static readonly PlcTagDefinition Lathe2FlipRotate0 = CreateBit("manual.lathe2_flip_rotate_0", "M2026", "Quay 0 Xilanh lật sau máy tiện 2");
+        public static readonly PlcTagDefinition Lathe2FlipRotate90 = CreateBit("manual.lathe2_flip_rotate_90", "M2027", "Quay 90 xilanh lật sau máy tiện 2");
+        public static readonly PlcTagDefinition Lathe2FlipRotated0Signal = CreateBit("manual.lathe2_flip_rotated_0_signal", "M2076", "Đã xoay 0");
+        public static readonly PlcTagDefinition Lathe2FlipRotated90Signal = CreateBit("manual.lathe2_flip_rotated_90_signal", "M2077", "đã quay 90");
+
+        // --- Xilanh tranfer sau tiện 2 ---
+        public static readonly PlcTagDefinition Lathe2TransferOut = CreateBit("manual.lathe2_transfer_out", "M2028", "Đi Ra--Xilanh tranfer sau tiện 2");
+        public static readonly PlcTagDefinition Lathe2TransferIn = CreateBit("manual.lathe2_transfer_in", "M2029", "Đi vào-- Xilanh tranfer sau tiện 2");
+        public static readonly PlcTagDefinition Lathe2TransferOutSignal = CreateBit("manual.lathe2_transfer_out_signal", "M2078", "Đã ra");
+        public static readonly PlcTagDefinition Lathe2TransferInSignal = CreateBit("manual.lathe2_transfer_in_signal", "M2079", "Đã vào");
+
+        // --- Xilanh Out phôi thành phẩm ---
+        public static readonly PlcTagDefinition ProductOutExtend = CreateBit("manual.product_out_extend", "M2030", "Đi Ra-- Xilanh Out phôi thành phẩm");
+        public static readonly PlcTagDefinition ProductOutRetract = CreateBit("manual.product_out_retract", "M2031", "Đi vào-- Xilanh Out phôi thành phẩm");
+        public static readonly PlcTagDefinition ProductOutExtendedSignal = CreateBit("manual.product_out_extended_signal", "M2080", "Đã ra");
+        public static readonly PlcTagDefinition ProductOutRetractedSignal = CreateBit("manual.product_out_retracted_signal", "M2081", "Đã Vào");
+
+        // --- Xilanh kẹp phôi thành phẩm ---
+        public static readonly PlcTagDefinition ProductClampPart = CreateBit("manual.product_clamp_part", "M2032", "Kẹp Xilanh kẹp phôi thành phẩm");
+        public static readonly PlcTagDefinition ProductUnclampPart = CreateBit("manual.product_unclamp_part", "M2033", "Mở Xilanh kẹp phôi thành phẩm");
+        public static readonly PlcTagDefinition ProductClampedSignal = CreateBit("manual.product_clamped_signal", "M2082", "Đã Kẹp");
+        public static readonly PlcTagDefinition ProductUnclampedSignal = CreateBit("manual.product_unclamped_signal", "M2083", "Đã mở kẹp");
+
+        // --- Tắt Còi ---
+        public static readonly PlcTagDefinition BuzzerOff = CreateBit("manual.buzzer_off", "M2090", "Tắt Còi");
+
+        // --- Backward Compatibility Aliases ---
+        public static readonly PlcTagDefinition MoveYLeft = MoveZLeft;
+        public static readonly PlcTagDefinition MoveYRight = MoveZRight;
+        public static readonly PlcTagDefinition HomeY = HomeZ;
+        public static readonly PlcTagDefinition MoveYToPoint = MoveZToPoint;
+        public static readonly PlcTagDefinition ManualSpeedY = ManualSpeedZ;
+        public static readonly PlcTagDefinition MovePointY = MovePointZ;
+        public static readonly PlcTagDefinition CurrentPositionY = CurrentPositionZ;
+        public static readonly PlcTagDefinition IsHomingY = IsHomingZ;
+        public static readonly PlcTagDefinition IsHomedY = IsHomedZ;
+        public static readonly PlcTagDefinition MoveZUp = MoveLifterUp;
+        public static readonly PlcTagDefinition MoveZDown = MoveLifterDown;
+        public static readonly PlcTagDefinition ToolClampIn = InputClampPart;
+        public static readonly PlcTagDefinition ToolClampOut = InputUnclampPart;
+        public static readonly PlcTagDefinition ToolRotate0 = InputRotate0;
+        public static readonly PlcTagDefinition ToolRotate90 = InputRotate90;
+        public static readonly PlcTagDefinition ClampCart1 = ClampCart;
+        public static readonly PlcTagDefinition UnclampCart1 = UnclampCart;
+        public static readonly PlcTagDefinition ClampCart2 = ClampCart;
+        public static readonly PlcTagDefinition UnclampCart2 = UnclampCart;
+        public static readonly PlcTagDefinition HomeAll = HomeX;
+        public static readonly PlcTagDefinition HomeRotateCylinder = InputRotate0;
+        public static readonly PlcTagDefinition HomeToolClampCylinder = InputClampPart;
+        public static readonly PlcTagDefinition BuzzerOnOff = BuzzerOff;
+        public static readonly PlcTagDefinition LightCurtainOnOff = BuzzerOff;
+        public static readonly PlcTagDefinition Cart1OpenedSignal = CartUnclampedSignal;
+        public static readonly PlcTagDefinition Cart1ClosedSignal = CartClampedSignal;
+        public static readonly PlcTagDefinition Cart2OpenedSignal = CartUnclampedSignal;
+        public static readonly PlcTagDefinition Cart2ClosedSignal = CartClampedSignal;
+        public static readonly PlcTagDefinition ToolClosedSignal = InputClampedSignal;
+        public static readonly PlcTagDefinition ToolOpenedSignal = InputUnclampedSignal;
+        public static readonly PlcTagDefinition RotatedTo0Signal = InputRotated0Signal;
+        public static readonly PlcTagDefinition RotatedTo90Signal = InputRotated90Signal;
+        public static readonly PlcTagDefinition HomeRotateCylinderDone = InputRotated0Signal;
+        public static readonly PlcTagDefinition HomeToolClampDone = InputClampedSignal;
+        public static readonly PlcTagDefinition IsRunningToPointY = IsRunningToPointZ;
     }
 
       public static class Alarms
