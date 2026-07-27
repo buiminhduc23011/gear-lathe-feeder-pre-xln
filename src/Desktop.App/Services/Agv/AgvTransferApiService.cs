@@ -60,7 +60,7 @@ public class AgvTransferApiService : IAgvTransferApiService, IDisposable
                 Position = (int)position
             };
 
-            var response = await _httpClient.PostAsJsonAsync("/api-system/create-command-trans-pinion", request, cancellationToken);
+            var response = await _httpClient.PostAsJsonAsync("/api-system/create-command-trans-gear-lathe-feeder", request, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
                 return (false, $"HTTP {(int)response.StatusCode}: {response.ReasonPhrase}");
@@ -93,7 +93,7 @@ public class AgvTransferApiService : IAgvTransferApiService, IDisposable
                 Position = (int)position
             };
 
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, "/api-system/check-status-command-trans-pinion")
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, "/api-system/check-status-command-trans-gear-lathe-feeder")
             {
                 Content = JsonContent.Create(request)
             };
@@ -144,7 +144,7 @@ public class AgvTransferApiService : IAgvTransferApiService, IDisposable
                 Position = (int)position
             };
 
-            var response = await _httpClient.PostAsJsonAsync("/api-system/confirm-command-trans-pinion", request, cancellationToken);
+            var response = await _httpClient.PostAsJsonAsync("/api-system/confirm-command-trans-gear-lathe-feeder", request, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
                 return (false, $"HTTP {(int)response.StatusCode}: {response.ReasonPhrase}");

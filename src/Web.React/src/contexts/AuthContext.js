@@ -2,9 +2,9 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 import { apiClient, API_ENDPOINTS, setAuthToken } from "../config/api";
 import { showInfoMessage } from "../utils/appMessage";
 
-const STORAGE_TOKEN_KEY = "pinion.auth.token";
-const STORAGE_USER_KEY = "pinion.auth.user";
-const STORAGE_EXPIRES_KEY = "pinion.auth.expiresAt";
+const STORAGE_TOKEN_KEY = "gear.auth.token";
+const STORAGE_USER_KEY = "gear.auth.user";
+const STORAGE_EXPIRES_KEY = "gear.auth.expiresAt";
 
 export const AuthContext = createContext({
   currentUser: null,

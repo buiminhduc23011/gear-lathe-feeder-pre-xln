@@ -46,9 +46,9 @@ function LoginPage() {
       <Card style={{ width: "100%", maxWidth: 460 }} styles={{ body: { padding: 32 } }}>
         <Space direction="vertical" size={16} style={{ display: "flex" }}>
           <Space align="center" size={16}>
-            <img src={logoSrc} alt="Pinion Robot" style={{ width: 56, height: 56, objectFit: "contain" }} />
+            <img src={logoSrc} alt="Gear Lathe Feeder Robot" style={{ width: 56, height: 56, objectFit: "contain" }} />
             <div>
-              <Text type="secondary">Pinion Robot</Text>
+              <Text type="secondary">Gear Lathe Feeder</Text>
               <Title level={3} style={{ margin: 0 }}>
                 Đăng nhập hệ thống
               </Title>
@@ -56,7 +56,7 @@ function LoginPage() {
           </Space>
 
           <Paragraph type="secondary" style={{ margin: 0 }}>
-            Phần mềm quản trị hệ thống Robot Pinion.
+            Phần mềm quản trị hệ thống Robot Gear Lathe Feeder.
           </Paragraph>
 
           {errorMessage ? (

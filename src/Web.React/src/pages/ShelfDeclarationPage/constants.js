@@ -7,7 +7,7 @@ export const NON_TERMINAL_STATUSES = ["Created", "AgvTaken", "Loaded", "InProduc
 
 export const STAGING_SLOT_OPTIONS = [1, 2, 3, 4];
 
-export const MACHINE_SLOT_OPTIONS = [1, 2];
+export const MACHINE_SLOT_OPTIONS = [1];
 
 export const JIG_TYPE_OPTIONS = [
   { value: 0, label: "0: Không xác định" },

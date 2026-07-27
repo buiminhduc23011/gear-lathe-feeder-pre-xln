@@ -180,7 +180,7 @@ describe("ShelfDeclarationPage", () => {
               {
                 machineId: 1,
                 machineCode: "PGR-01",
-                machineName: "Pinion Grinding Robot 01",
+                machineName: "Gear Lathe Feeder Robot 01",
                 stagingSlotIndices: [1, 2]
               }
             ]
@@ -292,7 +292,7 @@ describe("ShelfDeclarationPage", () => {
             data: {
               machineId: 1,
               machineCode: "PGR-01",
-              machineName: "Pinion Grinding Robot 01",
+              machineName: "Gear Lathe Feeder Robot 01",
               machineSlotIndex: 1,
               stagingSlotIndex: 1,
               hasActiveDeclaration: true,
@@ -308,7 +308,7 @@ describe("ShelfDeclarationPage", () => {
             data: {
               machineId: 1,
               machineCode: "PGR-01",
-              machineName: "Pinion Grinding Robot 01",
+              machineName: "Gear Lathe Feeder Robot 01",
               machineSlotIndex: 2,
               stagingSlotIndex: 2,
               hasActiveDeclaration: false,
@@ -332,7 +332,7 @@ describe("ShelfDeclarationPage", () => {
     render(<ShelfDeclarationPage />);
 
     expect((await screen.findAllByRole("heading", { name: /Khai|create/i })).length).toBeGreaterThan(0);
-    expect((await screen.findAllByText("Pinion Grinding Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     await waitFor(() => {
       expect(screen.getByTestId("staging-slot-1")).toHaveAttribute("aria-disabled", "false");
@@ -374,7 +374,7 @@ describe("ShelfDeclarationPage", () => {
   it("auto-generates and locks Order when the resolved model disables order input", async () => {
     render(<ShelfDeclarationPage />);
 
-    expect((await screen.findAllByText("Pinion Grinding Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
     expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
@@ -404,7 +404,7 @@ describe("ShelfDeclarationPage", () => {
   it("allows selecting an active manual slot to preview its declaration", async () => {
     render(<ShelfDeclarationPage />);
 
-    expect((await screen.findAllByText("Pinion Grinding Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
     expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
@@ -426,7 +426,7 @@ describe("ShelfDeclarationPage", () => {
   it("clears auto-generated Order when switching to a model that requires order input", async () => {
     render(<ShelfDeclarationPage />);
 
-    expect((await screen.findAllByText("Pinion Grinding Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
     expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
@@ -448,7 +448,7 @@ describe("ShelfDeclarationPage", () => {
 
     render(<ShelfDeclarationPage />);
 
-    expect((await screen.findAllByText("Pinion Grinding Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
     expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
@@ -485,7 +485,7 @@ describe("ShelfDeclarationPage", () => {
 
     render(<ShelfDeclarationPage />);
 
-    expect((await screen.findAllByText("Pinion Grinding Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
     expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
@@ -512,7 +512,7 @@ describe("ShelfDeclarationPage", () => {
 
     render(<ShelfDeclarationPage />);
 
-    expect((await screen.findAllByText("Pinion Grinding Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
     expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
@@ -540,7 +540,7 @@ describe("ShelfDeclarationPage", () => {
   it("allows inactive models in the order declaration flow", async () => {
     render(<ShelfDeclarationPage />);
 
-    expect((await screen.findAllByText("Pinion Grinding Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
     expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
@@ -571,7 +571,7 @@ describe("ShelfDeclarationPage", () => {
   it("does not advance from quantity when the typed value is not numeric", async () => {
     render(<ShelfDeclarationPage />);
 
-    expect((await screen.findAllByText("Pinion Grinding Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
     expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();

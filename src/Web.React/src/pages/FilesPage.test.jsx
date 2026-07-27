@@ -63,7 +63,7 @@ describe("FilesPage", () => {
             originalFileName: "report.txt",
             storedFileName: "report_20260323120000000.txt",
             size: 1024,
-            machineName: "Pinion Grinding Robot 01",
+            machineName: "Gear Lathe Feeder Robot 01",
             manufacturer: "STI",
             uploadedAtUtc: "2026-03-23T12:00:00Z",
             sentAtUtc: "2026-03-23T11:59:00Z",
@@ -76,8 +76,8 @@ describe("FilesPage", () => {
         data: [
           {
             machineId: 1,
-            machineCode: "PGR-01",
-            machineName: "Pinion Grinding Robot 01",
+            machineCode: "GLF-01",
+            machineName: "Gear Lathe Feeder Robot 01",
             manufacturer: "STI"
           }
         ]
@@ -87,7 +87,7 @@ describe("FilesPage", () => {
 
     expect(await screen.findByText("report.txt")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Upload tay/i })).toBeInTheDocument();
-    expect(screen.getByText("Pinion Grinding Robot 01")).toBeInTheDocument();
+    expect(screen.getByText("Gear Lathe Feeder Robot 01")).toBeInTheDocument();
     expect(screen.getAllByText("1 KB").length).toBeGreaterThan(0);
   });
 

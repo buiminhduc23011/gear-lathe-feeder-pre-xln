@@ -159,7 +159,7 @@ function MainLayout() {
       >
         <img 
           src={logoSrc} 
-          alt="Pinion Robot" 
+          alt="Gear Lathe Feeder" 
           style={{ 
             width: collapsed && !isMobile ? 40 : 48, 
             height: "auto",
@@ -169,7 +169,7 @@ function MainLayout() {
         {collapsed && !isMobile ? null : (
           <div style={{ minWidth: 0 }}>
             <Title level={4} style={{ margin: 0 }}>
-              Pinion Robot
+              Gear Lathe Feeder
             </Title>
 
           </div>
@@ -293,7 +293,7 @@ function MainLayout() {
         </Content>
 
         <Footer style={{ textAlign: "center", color: "#667085", background: "transparent", padding: "4px 12px 10px" }}>
-          Pinion Grinding Robot Web | Designed by STI.Automation Version {packageJson.version}
+          Gear Lathe Feeder Web | Designed by STI.Automation Version {packageJson.version}
         </Footer>
       </Layout>
     </Layout>

@@ -128,13 +128,14 @@ function MachineSettings() {
     [editingMachine?.machineId, machines]
   );
 
-  const selectedSlots = Form.useWatch("stagingSlotIndices", form) || [];
+  const selectedSlots = Form.useWatch("stagingSlotIndices", form);
+  const currentSelectedSlots = useMemo(() => selectedSlots || [], [selectedSlots]);
 
   const stagingSlotCheckboxOptions = useMemo(
     () => STAGING_SLOT_OPTIONS.map((slot) => {
       const isReserved = reservedSlotMap.has(slot);
-      const isSelected = selectedSlots.includes(slot);
-      const limitReached = selectedSlots.length >= 2;
+      const isSelected = currentSelectedSlots.includes(slot);
+      const limitReached = currentSelectedSlots.length >= 1;
 
       return {
         label: isReserved
@@ -144,7 +145,7 @@ function MachineSettings() {
         disabled: isReserved || (limitReached && !isSelected)
       };
     }),
-    [reservedSlotMap, selectedSlots]
+    [reservedSlotMap, currentSelectedSlots]
   );
 
   const closeModal = () => {
@@ -354,7 +355,7 @@ function MachineSettings() {
               <Form.Item
                 label="Staging slot"
                 name="stagingSlotIndices"
-                extra="Chọn đúng 2 slot. Slot đã thuộc máy khác sẽ bị khóa."
+                extra="Chọn slot staging gán cho máy. Slot đã thuộc máy khác sẽ bị khóa."
               >
                 <Checkbox.Group options={stagingSlotCheckboxOptions} />
               </Form.Item>

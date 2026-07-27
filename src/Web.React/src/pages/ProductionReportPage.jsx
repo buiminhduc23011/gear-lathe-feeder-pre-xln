@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import {
   Button,
-  Card,
   DatePicker,
   Empty,
   Input,
@@ -34,8 +33,7 @@ const STATUS_OPTIONS = [
 
 const SHELF_OPTIONS = [
   { value: 0, label: "Tất cả kệ" },
-  { value: 1, label: "Kệ 1" },
-  { value: 2, label: "Kệ 2" }
+  { value: 1, label: "Kệ 1" }
 ];
 
 function ProductionReportPage() {
@@ -49,7 +47,6 @@ function ProductionReportPage() {
   const [endDate, setEndDate] = useState(dayjs().endOf("day"));
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
 
   const fetchMachines = useCallback(async () => {
     const response = await apiClient.get(API_ENDPOINTS.machines);
@@ -66,11 +63,7 @@ function ProductionReportPage() {
       return;
     }
 
-    if (isManual) {
-      setRefreshing(true);
-    } else {
-      setLoading(true);
-    }
+    setLoading(true);
 
     try {
       const fromUtc = startDate ? startDate.startOf("day").toISOString() : undefined;
@@ -91,7 +84,6 @@ function ProductionReportPage() {
       message.error(getApiErrorMessage(error, fallback));
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, [machineId, shelfIndex, status, startDate, endDate]);
 

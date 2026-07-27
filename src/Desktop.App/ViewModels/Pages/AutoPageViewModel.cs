@@ -110,7 +110,6 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
     {
         IsGlobalAutoPaused = !IsGlobalAutoPaused;
         AgvService.Position1State.IsAutoCallPausedLocally = IsGlobalAutoPaused;
-        AgvService.Position2State.IsAutoCallPausedLocally = IsGlobalAutoPaused;
         Trace.WriteLine($"[AutoPage] Global auto-call pause: {(IsGlobalAutoPaused ? "TẮT" : "BẬT")}");
     }
 
@@ -340,15 +339,6 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
         {
             Trace.WriteLine($"[AutoPageViewModel] Failed to load active declaration for position 1: {ex}");
         }
-
-        try
-        {
-            await LoadActiveDeclarationForPositionAsync(AgvPosition.Position2);
-        }
-        catch (Exception ex)
-        {
-            Trace.WriteLine($"[AutoPageViewModel] Failed to load active declaration for position 2: {ex}");
-        }
     }
 
     private async Task LoadActiveDeclarationForPositionAsync(AgvPosition position)
@@ -414,11 +404,6 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
             s => { Ke1Tray1Rows = s.t1r; Ke1Tray1Cols = s.t1c; Ke1Tray2Rows = s.t2r; Ke1Tray2Cols = s.t2c; },
             (l1, l2) => { Ke1TrayLabel1 = l1; Ke1TrayLabel2 = l2; },
             Ke1Tray1Slots, Ke1Tray2Slots, Ke1Orders);
-
-        RebuildPositionSlots(AgvService.Position2State,
-            s => { Ke2Tray1Rows = s.t1r; Ke2Tray1Cols = s.t1c; Ke2Tray2Rows = s.t2r; Ke2Tray2Cols = s.t2c; },
-            (l1, l2) => { Ke2TrayLabel1 = l1; Ke2TrayLabel2 = l2; },
-            Ke2Tray1Slots, Ke2Tray2Slots, Ke2Orders);
     }
 
     private void RebuildPositionSlots(

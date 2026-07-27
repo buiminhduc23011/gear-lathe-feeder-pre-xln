@@ -38,7 +38,7 @@ function HomePage() {
     <div className="page-shell">
       <section className="page-hero">
         <div className="page-hero-main">
-          <Text className="page-kicker">PINION ROBOT</Text>
+          <Text className="page-kicker">GEAR LATHE FEEDER ROBOT</Text>
           <Title className="page-title">Web quản lý máy, người dùng và file tải lên</Title>
           <Paragraph className="page-description">
             Web này quản lý danh mục máy, tài khoản đăng nhập và toàn bộ file đã đi qua `FilesController`. Các thông

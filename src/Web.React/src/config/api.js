@@ -4,7 +4,7 @@ const AUTO_API_BASE_URL = "auto";
 
 let runtimeConfig = {
   API_BASE_URL: AUTO_API_BASE_URL,
-  APP_NAME: "Pinion Grinding Robot"
+  APP_NAME: "Gear Lathe Feeder Robot"
 };
 
 export const apiClient = axios.create({
