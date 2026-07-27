@@ -67,23 +67,26 @@
     </Style>
 
     <Style x:Key="IndustrialVerticalScrollThumb" TargetType="Thumb">
-        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="MinHeight" Value="48" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
                     <Border
                         x:Name="ThumbRoot"
-                        Margin="7,3"
-                        Background="{DynamicResource Brush.Border.Subtle}"
-                        CornerRadius="7"
+                        Margin="3,2"
+                        Background="{DynamicResource Brush.Text.Secondary}"
+                        CornerRadius="8"
+                        Opacity="0.75"
                         SnapsToDevicePixels="True" />
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="ThumbRoot" Property="Background" Value="{DynamicResource Brush.Border.Subtle}" />
+                            <Setter TargetName="ThumbRoot" Property="Opacity" Value="1.0" />
+                            <Setter TargetName="ThumbRoot" Property="Background" Value="{DynamicResource Brush.Action.Primary}" />
                         </Trigger>
                         <Trigger Property="IsDragging" Value="True">
-                            <Setter TargetName="ThumbRoot" Property="Margin" Value="5,3" />
-                            <Setter TargetName="ThumbRoot" Property="Background" Value="{StaticResource Brush.Text.Secondary}" />
+                            <Setter TargetName="ThumbRoot" Property="Margin" Value="2,2" />
+                            <Setter TargetName="ThumbRoot" Property="Opacity" Value="1.0" />
+                            <Setter TargetName="ThumbRoot" Property="Background" Value="{DynamicResource Brush.Action.Primary}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -92,23 +95,26 @@
     </Style>
 
     <Style x:Key="IndustrialHorizontalScrollThumb" TargetType="Thumb">
-        <Setter Property="MinWidth" Value="44" />
+        <Setter Property="MinWidth" Value="48" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
                     <Border
                         x:Name="ThumbRoot"
-                        Margin="3,7"
-                        Background="{DynamicResource Brush.Border.Subtle}"
-                        CornerRadius="7"
+                        Margin="2,3"
+                        Background="{DynamicResource Brush.Text.Secondary}"
+                        CornerRadius="8"
+                        Opacity="0.75"
                         SnapsToDevicePixels="True" />
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="ThumbRoot" Property="Background" Value="{DynamicResource Brush.Border.Subtle}" />
+                            <Setter TargetName="ThumbRoot" Property="Opacity" Value="1.0" />
+                            <Setter TargetName="ThumbRoot" Property="Background" Value="{DynamicResource Brush.Action.Primary}" />
                         </Trigger>
                         <Trigger Property="IsDragging" Value="True">
-                            <Setter TargetName="ThumbRoot" Property="Margin" Value="3,5" />
-                            <Setter TargetName="ThumbRoot" Property="Background" Value="{StaticResource Brush.Text.Secondary}" />
+                            <Setter TargetName="ThumbRoot" Property="Margin" Value="2,2" />
+                            <Setter TargetName="ThumbRoot" Property="Opacity" Value="1.0" />
+                            <Setter TargetName="ThumbRoot" Property="Background" Value="{DynamicResource Brush.Action.Primary}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -118,11 +124,11 @@
 
     <Style TargetType="ScrollBar">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+        <Setter Property="Stylus.IsFlicksEnabled" Value="True" />
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Vertical">
-                <Setter Property="Width" Value="20" />
-                <Setter Property="MinWidth" Value="20" />
+                <Setter Property="Width" Value="26" />
+                <Setter Property="MinWidth" Value="26" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ScrollBar">
@@ -133,15 +139,15 @@
                                 SnapsToDevicePixels="True">
                                 <Border
                                     x:Name="Rail"
-                                    Width="6"
+                                    Width="12"
                                     HorizontalAlignment="Center"
                                     Background="{DynamicResource Brush.Surface.Recessed}"
-                                    CornerRadius="3"
-                                    Opacity="0" />
+                                    CornerRadius="6"
+                                    Opacity="0.6" />
                                 <Track
                                     x:Name="PART_Track"
                                     IsDirectionReversed="True"
-                                    Opacity="0">
+                                    Opacity="1">
                                     <Track.DecreaseRepeatButton>
                                         <RepeatButton Command="ScrollBar.PageUpCommand" Style="{StaticResource IndustrialScrollBarTrackButton}" />
                                     </Track.DecreaseRepeatButton>
@@ -153,19 +159,13 @@
                                     </Track.IncreaseRepeatButton>
                                 </Track>
                             </Grid>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Rail" Property="Opacity" Value="1" />
-                                    <Setter TargetName="PART_Track" Property="Opacity" Value="1" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Trigger>
             <Trigger Property="Orientation" Value="Horizontal">
-                <Setter Property="Height" Value="20" />
-                <Setter Property="MinHeight" Value="20" />
+                <Setter Property="Height" Value="26" />
+                <Setter Property="MinHeight" Value="26" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ScrollBar">
@@ -176,15 +176,15 @@
                                 SnapsToDevicePixels="True">
                                 <Border
                                     x:Name="Rail"
-                                    Height="6"
+                                    Height="12"
                                     VerticalAlignment="Center"
                                     Background="{DynamicResource Brush.Surface.Recessed}"
-                                    CornerRadius="3"
-                                    Opacity="0" />
+                                    CornerRadius="6"
+                                    Opacity="0.6" />
                                 <Track
                                     x:Name="PART_Track"
                                     Orientation="Horizontal"
-                                    Opacity="0">
+                                    Opacity="1">
                                     <Track.DecreaseRepeatButton>
                                         <RepeatButton Command="ScrollBar.PageLeftCommand" Style="{StaticResource IndustrialScrollBarTrackButton}" />
                                     </Track.DecreaseRepeatButton>
@@ -196,12 +196,6 @@
                                     </Track.IncreaseRepeatButton>
                                 </Track>
                             </Grid>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Rail" Property="Opacity" Value="1" />
-                                    <Setter TargetName="PART_Track" Property="Opacity" Value="1" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
