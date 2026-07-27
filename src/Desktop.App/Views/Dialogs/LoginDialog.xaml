@@ -1,0 +1,214 @@
+<UserControl
+    x:Class="Desktop.App.Views.Dialogs.LoginDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:Desktop.App.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Desktop.App.ViewModels.Dialogs"
+    Width="440"
+    d:DataContext="{d:DesignInstance vm:LoginDialogViewModel}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
+        <!--  Shared template: both PasswordBox and plain TextBox use this so padding is identical  -->
+        <ControlTemplate x:Key="DialogInputTemplate" TargetType="Control">
+            <Border
+                x:Name="Root"
+                Padding="{TemplateBinding Padding}"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
+                <ScrollViewer
+                    x:Name="PART_ContentHost"
+                    VerticalAlignment="Center" />
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource Brush.Action.Primary}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style x:Key="DialogPasswordBox" TargetType="PasswordBox">
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border.Default}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="hc:BorderElement.CornerRadius" Value="{DynamicResource Radius.Button}" />
+            <Setter Property="FontFamily" Value="{DynamicResource FontFamily.App}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSize.Body}" />
+            <Setter Property="Padding" Value="6,0,40,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template" Value="{StaticResource DialogInputTemplate}" />
+        </Style>
+
+        <Style x:Key="DialogPlainPasswordBox" TargetType="TextBox">
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border.Default}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="hc:BorderElement.CornerRadius" Value="{DynamicResource Radius.Button}" />
+            <Setter Property="FontFamily" Value="{DynamicResource FontFamily.App}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSize.Body}" />
+            <Setter Property="Padding" Value="6,0,40,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="CaretBrush" Value="{DynamicResource Brush.Text.Primary}" />
+            <Setter Property="Template" Value="{StaticResource DialogInputTemplate}" />
+        </Style>
+
+        <!--  Eye toggle button: open eye = password hidden, crossed eye = password visible  -->
+        <Style x:Key="EyeToggleButton" TargetType="ToggleButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border
+                            x:Name="Root"
+                            Background="Transparent"
+                            CornerRadius="4">
+                            <Viewbox Width="16" Height="16">
+                                <Grid Width="24" Height="24">
+                                    <!-- Eye open: shown when password is hidden (IsChecked=False) -->
+                                    <Path
+                                        x:Name="EyeOpen"
+                                        Fill="{DynamicResource Brush.Text.Secondary}"
+                                        Data="M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5ZM12,17C9.24,17 7,14.76 7,12C7,9.24 9.24,7 12,7C14.76,7 17,9.24 17,12C17,14.76 14.76,17 12,17ZM12,9C10.34,9 9,10.34 9,12C9,13.66 10.34,15 12,15C13.66,15 15,13.66 15,12C15,10.34 13.66,9 12,9Z" />
+                                    <!-- Eye off: shown when password is visible (IsChecked=True) -->
+                                    <Path
+                                        x:Name="EyeOff"
+                                        Visibility="Collapsed"
+                                        Fill="{DynamicResource Brush.Text.Secondary}"
+                                        Data="M11.83,9L15,12.16C15,12.11 15,12.05 15,12C15,10.34 13.66,9 12,9C11.94,9 11.89,9 11.83,9ZM7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12C9,13.66 10.34,15 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17C9.24,17 7,14.76 7,12C7,11.21 7.2,10.47 7.53,9.8ZM2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.08L19.73,22L21,20.73L3.27,3ZM12,7A5,5 0 0,1 17,12C17,12.64 16.87,13.26 16.64,13.82L19.57,16.75C21.07,15.5 22.27,13.86 23,12C21.27,7.61 17,4.5 12,4.5C10.6,4.5 9.26,4.75 8,5.2L10.17,7.35C10.74,7.13 11.35,7 12,7Z" />
+                                </Grid>
+                            </Viewbox>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="EyeOpen" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="EyeOff" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Surface.Hover}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border
+        Background="{DynamicResource Brush.Surface.Panel}"
+        BorderBrush="{DynamicResource Brush.Border.Default}"
+        BorderThickness="1"
+        ClipToBounds="True"
+        CornerRadius="16">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  Top accent bar  -->
+            <Rectangle
+                Grid.Row="0"
+                Height="35"
+                VerticalAlignment="Top"
+                Fill="{DynamicResource Brush.Action.Primary}"
+                RadiusX="14"
+                RadiusY="14" />
+
+            <StackPanel Grid.Row="1" Margin="32,28,32,32">
+
+                <!--  Title  -->
+                <TextBlock Style="{StaticResource SectionTitleText}" Text="Đăng Nhập" />
+                <TextBlock
+                    Margin="0,4,0,0"
+                    Style="{StaticResource BodySecondaryText}"
+                    Text="Nhập thông tin tài khoản để tiếp tục." />
+
+                <!--  Username  -->
+                <TextBlock
+                    Margin="0,22,0,6"
+                    Style="{StaticResource BodySecondaryText}"
+                    Text="Tên đăng nhập" />
+                <TextBox
+                    hc:BorderElement.CornerRadius="8"
+                    Height="42"
+                    Background="White"
+                    Style="{StaticResource FilterToolbarTextBox}"
+                    Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" />
+
+                <!--  Password  -->
+                <TextBlock
+                    Margin="0,16,0,6"
+                    Style="{StaticResource BodySecondaryText}"
+                    Text="Mật khẩu" />
+                <Grid>
+                    <PasswordBox
+                        x:Name="PasswordBox"
+                        PasswordChanged="PasswordBox_PasswordChanged"
+                        Style="{StaticResource DialogPasswordBox}" />
+                    <TextBox
+                        x:Name="PasswordPlainBox"
+                        Style="{StaticResource DialogPlainPasswordBox}"
+                        TextChanged="PasswordPlainBox_TextChanged"
+                        Visibility="Collapsed" />
+                    <ToggleButton
+                        x:Name="PasswordToggle"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0,0,4,0"
+                        Checked="PasswordToggle_Checked"
+                        Unchecked="PasswordToggle_Unchecked"
+                        Style="{StaticResource EyeToggleButton}" />
+                </Grid>
+
+                <!--  Error message  -->
+                <TextBlock
+                    Margin="0,10,0,0"
+                    FontSize="{DynamicResource FontSize.Caption}"
+                    Foreground="{DynamicResource Brush.Status.Fault}"
+                    Text="{Binding ErrorMessage}"
+                    TextWrapping="Wrap"
+                    Visibility="{Binding HasError, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                <!--  Divider  -->
+                <Separator Margin="0,24,0,0" Background="{DynamicResource Brush.Border.Divider}" />
+
+                <!--  Buttons  -->
+                <StackPanel
+                    Margin="0,16,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <Button
+                        MinWidth="100"
+                        MinHeight="42"
+                        Margin="0,0,8,0"
+                        Command="{Binding CancelCommand}"
+                        Content="Hủy"
+                        Style="{StaticResource ButtonSecondary}" />
+                    <Button
+                        MinWidth="120"
+                        MinHeight="42"
+                        Command="{Binding LoginCommand}"
+                        Content="Đăng Nhập"
+                        Style="{StaticResource ButtonPrimary}" />
+                </StackPanel>
+
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

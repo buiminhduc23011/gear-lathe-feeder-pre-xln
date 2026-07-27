@@ -1,0 +1,102 @@
+<UserControl
+    x:Class="Desktop.App.Views.Pages.AgvHistoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="clr-namespace:Desktop.App.ViewModels.Pages"
+    xmlns:shared="clr-namespace:Desktop.App.Views.Shared"
+    d:DesignHeight="768"
+    d:DesignWidth="1024"
+    mc:Ignorable="d">
+
+    <shared:PageScaffold PageSubtitle="Xem lại lịch sử các yêu cầu gửi tới AGV server để đảo kệ." PageTitle="Lịch sử AGV">
+
+        <shared:PageScaffold.ActionContent>
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    Command="{Binding LoadDataCommand}"
+                    Content="Tải lại"
+                    Style="{StaticResource FilterToolbarSecondaryButton}" />
+            </StackPanel>
+        </shared:PageScaffold.ActionContent>
+
+        <shared:PageScaffold.BodyContent>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,0,0,16" Orientation="Horizontal">
+                    <StackPanel Margin="0,0,16,0" Orientation="Vertical">
+                        <TextBlock Style="{StaticResource ParameterLabel}" Text="Lọc ngày gọi" />
+                        <DatePicker
+                            Margin="0,6,0,0"
+                            SelectedDate="{Binding SelectedDate, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{StaticResource FilterToolbarDatePicker}" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,16,0" Orientation="Vertical">
+                        <TextBlock Style="{StaticResource ParameterLabel}" Text="Kệ hàng" />
+                        <ComboBox
+                            Margin="0,6,0,0"
+                            Width="160"
+                            SelectedIndex="{Binding SelectedPositionIndex, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{StaticResource FilterToolbarComboBox}">
+                            <ComboBoxItem Content="Tất cả kệ" />
+                            <ComboBoxItem Content="Kệ 1" />
+                            <ComboBoxItem Content="Kệ 2" />
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel VerticalAlignment="Bottom">
+                        <Button
+                            Command="{Binding LoadDataCommand}"
+                            Content="Lọc"
+                            Style="{StaticResource FilterToolbarPrimaryButton}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <DataGrid
+                    Grid.Row="1"
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding Items}"
+                    Style="{StaticResource IndustrialDataGrid}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding CreatedAtUtc, StringFormat='HH:mm:ss dd-MM-yyyy'}"
+                            Header="THỜI GIAN" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding PositionDisplay}"
+                            Header="KỆ YÊU CẦU" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding StatusDisplay}"
+                            Header="TRẠNG THÁI" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding MethodDisplay}"
+                            Header="PHƯƠNG THỨC" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding RemainingQty}"
+                            Header="CÒN LẠI KHI GỌI" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding DurationText}"
+                            Header="THỜI GIAN THỰC HIỆN" />
+                        <DataGridTextColumn
+                            Width="2*"
+                            Binding="{Binding Note}"
+                            Header="GHI CHÚ / LỖI" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </shared:PageScaffold.BodyContent>
+    </shared:PageScaffold>
+</UserControl>

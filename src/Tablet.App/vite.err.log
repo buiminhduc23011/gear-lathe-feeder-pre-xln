@@ -1,4 +1,0 @@
-[2m6:27:44 PM[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAnimated: `useNativeDriver` is not supported because the native animated module is missing. Falling back to JS-based animation. To resolve this, add `RCTAnimation` module to this app, or remove `useNativeDriver`. Make sure to run `bundle exec pod install` first. Read more about autolinking: https://github.com/react-native-community/cli/blob/master/docs/autolinking.md
-[2m7:02:19 PM[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mCannot record touch end without a touch start.
- Touch End: {"identifier":0,"pageX":492,"pageY":739,"timestamp":2074816.7000000002}
- Touch Bank: []

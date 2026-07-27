@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <None Remove="Resources\Images\Logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.1" />
+    <PackageReference Include="DBI.Drivers.Delta.PLC" Version="1.1.1" />
+    <PackageReference Include="HandyControls" Version="3.6.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.4" />
+    <ProjectReference Include="..\Shared.Models\Shared.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\Logo.ico" />
+    <Resource Include="Resources\Images\Logo.png" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>GearLatheFeeder.Desktop</AssemblyName>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\Images\Logo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+</Project>

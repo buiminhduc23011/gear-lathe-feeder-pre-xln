@@ -1,0 +1,954 @@
+<UserControl
+    x:Class="Desktop.App.Views.Pages.AutoPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Desktop.App.Controls"
+    xmlns:converters="clr-namespace:Desktop.App.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="clr-namespace:Desktop.App.ViewModels.Pages"
+    xmlns:shared="clr-namespace:Desktop.App.Views.Shared"
+    d:DataContext="{d:DesignInstance pages:AutoPageViewModel}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
+        <converters:BoolToAutoCallPauseTextConverter x:Key="BoolToPauseTextConverter" />
+        <converters:PercentToWidthConverter x:Key="PercentToWidthConverter" />
+        <converters:BoolToRunStopTextConverter x:Key="BoolToRunStopTextConverter" />
+        <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+
+        <Style x:Key="AutoCallProgressBar" TargetType="ProgressBar">
+            <Setter Property="Height" Value="8" />
+            <Setter Property="Minimum" Value="0" />
+            <Setter Property="Maximum" Value="100" />
+            <Setter Property="Background" Value="#E2E8F0" />
+            <Setter Property="Foreground" Value="#2563EB" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" CornerRadius="3" />
+                            <Border
+                                Name="PART_Indicator"
+                                HorizontalAlignment="Left"
+                                Background="{TemplateBinding Foreground}"
+                                CornerRadius="3" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AutoPauseToggle" TargetType="ToggleButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#475569" />
+            <Setter Property="Padding" Value="16,7" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#E2E8F0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border
+                            x:Name="BtnBg"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#F1F5F9" />
+                                <Setter TargetName="BtnBg" Property="BorderBrush" Value="#CBD5E1" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  Compact Card Style  -->
+        <Style x:Key="AgvKeCard" TargetType="Border">
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="Padding" Value="20,16" />
+            <Setter Property="Margin" Value="6" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        BlurRadius="10"
+                        Direction="270"
+                        Opacity="0.05"
+                        ShadowDepth="3"
+                        Color="#000000" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  Status Badges  -->
+        <Style x:Key="StatusBadge" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding}" Value="BadgeSuccess">
+                    <Setter Property="Background" Value="#DCFCE7" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding}" Value="BadgeDanger">
+                    <Setter Property="Background" Value="#FEE2E2" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding}" Value="BadgeWarning">
+                    <Setter Property="Background" Value="#FEF08A" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding}" Value="BadgeInfo">
+                    <Setter Property="Background" Value="#E0F2FE" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="StatusBadgeText" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding}" Value="BadgeSuccess">
+                    <Setter Property="Foreground" Value="#16A34A" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding}" Value="BadgeDanger">
+                    <Setter Property="Foreground" Value="#DC2626" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding}" Value="BadgeWarning">
+                    <Setter Property="Foreground" Value="#CA8A04" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding}" Value="BadgeInfo">
+                    <Setter Property="Foreground" Value="#0284C7" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--  Compact Metrics  -->
+        <Style x:Key="MetricLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#64748B" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Medium" />
+        </Style>
+        <Style x:Key="MetricValue" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#0F172A" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,2,0,0" />
+        </Style>
+
+        <!--  Compact Tray legend  -->
+        <Style x:Key="LegendDot" TargetType="Border">
+            <Setter Property="Width" Value="12" />
+            <Setter Property="Height" Value="12" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Margin" Value="0,0,3,0" />
+        </Style>
+
+        <Style x:Key="PrimaryActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="#2563EB" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Padding" Value="16,7" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="BtnBg"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#1D4ED8" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="BtnBg" Property="Opacity" Value="0.4" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GhostActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#475569" />
+            <Setter Property="Padding" Value="16,7" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#E2E8F0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="BtnBg"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BtnBg" Property="Background" Value="#F1F5F9" />
+                                <Setter TargetName="BtnBg" Property="BorderBrush" Value="#CBD5E1" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="BtnBg" Property="Opacity" Value="0.4" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  Compact Order table styles  -->
+        <Style x:Key="OrderTableHeader" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#64748B" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="4,6" />
+        </Style>
+
+        <Style x:Key="OrderTableCell" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#334155" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="4,6" />
+        </Style>
+    </UserControl.Resources>
+
+    <shared:PageScaffold PageSubtitle="{Binding Subtitle}" PageTitle="{Binding Title}">
+        <shared:PageScaffold.HeaderActionContent>
+            <Button
+                Command="{Binding ToggleRunStopCommand}"
+                Cursor="Hand"
+                FontSize="14"
+                FontWeight="Bold"
+                Padding="24,8"
+                Content="{Binding IsRunning, Converter={StaticResource BoolToRunStopTextConverter}}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Foreground" Value="#FFFFFF" />
+                        <Setter Property="Background" Value="#16A34A" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border
+                                        Padding="{TemplateBinding Padding}"
+                                        Background="{TemplateBinding Background}"
+                                        CornerRadius="8">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#15803D" />
+                            </Trigger>
+                            <DataTrigger Binding="{Binding IsRunning}" Value="False">
+                                <Setter Property="Background" Value="#DC2626" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </shared:PageScaffold.HeaderActionContent>
+        <shared:PageScaffold.BodyContent>
+            <Border Style="{StaticResource SectionCard}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Legend (top-right)  -->
+                    <StackPanel
+                        Grid.Row="0"
+                        Margin="0,0,0,6"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Orientation="Horizontal">
+                        <Border Background="#2563EB" Style="{StaticResource LegendDot}" />
+                        <TextBlock
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="#64748B"
+                            Text="Có sản phẩm" />
+                        <Border Background="#16A34A" Style="{StaticResource LegendDot}" />
+                        <TextBlock
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="#64748B"
+                            Text="Đang gắp" />
+                        <Border Background="#E2E8F0" Style="{StaticResource LegendDot}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="#64748B"
+                            Text="Trống" />
+                    </StackPanel>
+
+                    <!--  Two KỆ side by side  -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  ============ KỆ 1 ============  -->
+                        <Border Grid.Column="0" Style="{StaticResource AgvKeCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!--  Row 0: Header + Status Badge  -->
+                                <DockPanel Grid.Row="0" Margin="0,0,0,4">
+                                    <TextBlock
+                                        FontSize="20"
+                                        FontWeight="Bold"
+                                        Foreground="#0F172A"
+                                        Text="KỆ 1" />
+                                    <Border
+                                        HorizontalAlignment="Right"
+                                        DataContext="{Binding AgvService.Position1State.StatusBadgeKey}"
+                                        Style="{StaticResource StatusBadge}">
+                                        <TextBlock
+                                            DataContext="{Binding DataContext.AgvService.Position1State.StatusBadgeKey, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            FontSize="12"
+                                            Style="{StaticResource StatusBadgeText}"
+                                            Text="{Binding DataContext.AgvService.Position1State.StatusText, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                    </Border>
+                                </DockPanel>
+
+                                <!--  Row 0b: Slot undeclared warning  -->
+                                <Border
+                                    Grid.Row="0"
+                                    Margin="0,24,0,0"
+                                    Padding="8,5"
+                                    Background="#FEF2F2"
+                                    BorderBrush="#FECACA"
+                                    BorderThickness="1"
+                                    CornerRadius="6">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding AgvService.Position1State.IsServerSlotDeclared}" Value="False" />
+                                                        <Condition Binding="{Binding AgvService.Position1State.IsAutoCallPausedLocally}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock
+                                        FontSize="12"
+                                        FontWeight="SemiBold"
+                                        Foreground="#DC2626"
+                                        TextWrapping="Wrap"
+                                        Text="{Binding AgvService.Position1State.ServerSlotWarningText}" />
+                                </Border>
+
+                                <!--  Row 1: Model + Layout + Metrics (inline)  -->
+                                <DockPanel Grid.Row="1" Margin="0,0,0,8">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock
+                                            FontSize="14"
+                                            Foreground="#64748B"
+                                            Text="Model: " />
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="SemiBold"
+                                            Foreground="#2563EB"
+                                            Text="{Binding AgvService.Position1State.CurrentModelName}" />
+                                        <Border
+                                            Margin="8,0,0,0"
+                                            Padding="6,2"
+                                            VerticalAlignment="Center"
+                                            Background="#F1F5F9"
+                                            CornerRadius="8">
+                                            <TextBlock
+                                                FontSize="12"
+                                                FontWeight="Medium"
+                                                Foreground="#475569"
+                                                Text="{Binding AgvService.Position1State.ShelfLayoutDisplayText}" />
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <StackPanel Margin="0,0,14,0">
+                                            <TextBlock Style="{StaticResource MetricLabel}" Text="TỔNG" />
+                                            <TextBlock Style="{StaticResource MetricValue}" Text="{Binding AgvService.Position1State.OrderQty}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,14,0">
+                                            <TextBlock Style="{StaticResource MetricLabel}" Text="ĐANG GẮP" />
+                                            <TextBlock Style="{StaticResource MetricValue}" Text="{Binding AgvService.Position1State.CurrentPickingQty}" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource MetricLabel}" Text="CÒN LẠI" />
+                                            <TextBlock
+                                                Foreground="#2563EB"
+                                                Style="{StaticResource MetricValue}"
+                                                Text="{Binding AgvService.Position1State.RemainingQty}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DockPanel>
+
+                                <!--  Row 2: Main content — Col 0: Trays stacked | Col 1: Order table  -->
+                                <Grid Grid.Row="2" Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--  Left col: Tray 2 (trên) + Tray 1 (dưới)  -->
+                                    <StackPanel Grid.Column="0" Width="260">
+                                        <controls:TrayGridControl
+                                            Margin="0,0,0,6"
+                                            GridColumns="{Binding Ke1Tray2Cols}"
+                                            GridRows="{Binding Ke1Tray2Rows}"
+                                            SlotStates="{Binding Ke1Tray2Slots}"
+                                            TrayLabel="{Binding Ke1TrayLabel2}" />
+                                        <controls:TrayGridControl
+                                            GridColumns="{Binding Ke1Tray1Cols}"
+                                            GridRows="{Binding Ke1Tray1Rows}"
+                                            SlotStates="{Binding Ke1Tray1Slots}"
+                                            TrayLabel="{Binding Ke1TrayLabel1}" />
+                                    </StackPanel>
+
+                                    <!--  Right col: Order table  -->
+                                    <DockPanel Grid.Column="2">
+                                        <TextBlock
+                                            DockPanel.Dock="Top"
+                                            Margin="0,0,0,4"
+                                            FontSize="13"
+                                            FontWeight="SemiBold"
+                                            Foreground="#64748B"
+                                            Text="DANH SÁCH ORDER" />
+
+                                        <Border
+                                            DockPanel.Dock="Top"
+                                            Background="#F8FAFC"
+                                            BorderBrush="#E2E8F0"
+                                            BorderThickness="0,0,0,1"
+                                            CornerRadius="6,6,0,0">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="32" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="50" />
+                                                    <ColumnDefinition Width="50" />
+                                                    <ColumnDefinition Width="50" />
+                                                    <ColumnDefinition Width="50" />
+                                                    <ColumnDefinition Width="85" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Style="{StaticResource OrderTableHeader}" Text="#" />
+                                                <TextBlock Grid.Column="1" Style="{StaticResource OrderTableHeader}" Text="MODEL" />
+                                                <TextBlock Grid.Column="2" Style="{StaticResource OrderTableHeader}" Text="SL" />
+                                                <TextBlock Grid.Column="3" Style="{StaticResource OrderTableHeader}" Text="TRAY" />
+                                                <TextBlock Grid.Column="4" Style="{StaticResource OrderTableHeader}" Text="VỊ TRÍ" />
+                                                <TextBlock Grid.Column="5" Style="{StaticResource OrderTableHeader}" Text="JIG" />
+                                                <TextBlock Grid.Column="6" Style="{StaticResource OrderTableHeader}" Text="T.THÁI" />
+                                            </Grid>
+                                        </Border>
+
+                                        <ScrollViewer
+                                            VerticalScrollBarVisibility="Auto"
+                                            HorizontalScrollBarVisibility="Disabled">
+                                            <ItemsControl ItemsSource="{Binding Ke1Orders}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border
+                                                            BorderBrush="#F1F5F9"
+                                                            BorderThickness="0,0,0,1"
+                                                            Padding="0,1">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="32" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="50" />
+                                                                    <ColumnDefinition Width="50" />
+                                                                    <ColumnDefinition Width="50" />
+                                                                    <ColumnDefinition Width="50" />
+                                                                    <ColumnDefinition Width="85" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Style="{StaticResource OrderTableCell}" Text="{Binding Sequence}" />
+                                                                <TextBlock Grid.Column="1" Style="{StaticResource OrderTableCell}" Text="{Binding ModelName}" FontWeight="Medium" />
+                                                                <TextBlock Grid.Column="2" Style="{StaticResource OrderTableCell}" Text="{Binding Quantity}" />
+                                                                <TextBlock Grid.Column="3" Style="{StaticResource OrderTableCell}" Text="{Binding TrayIndex}" />
+                                                                <TextBlock Grid.Column="4" Style="{StaticResource OrderTableCell}" Text="{Binding StartPosition}" />
+                                                                <TextBlock Grid.Column="5" Style="{StaticResource OrderTableCell}" Text="{Binding JigTypeName}" />
+                                                                <Border
+                                                                    Grid.Column="6"
+                                                                    Margin="3,2"
+                                                                    VerticalAlignment="Center"
+                                                                    DataContext="{Binding StatusBadgeKey}"
+                                                                    Style="{StaticResource StatusBadge}">
+                                                                    <TextBlock
+                                                                        FontSize="12"
+                                                                        Style="{StaticResource StatusBadgeText}"
+                                                                        Text="{Binding DataContext.StatusText, RelativeSource={RelativeSource AncestorType=Grid}}" />
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </DockPanel>
+                                </Grid>
+
+                                <!--  Row 3: Progress bar  -->
+                                <StackPanel Grid.Row="3" Margin="0,0,0,4">
+                                    <DockPanel Margin="0,0,0,3">
+                                        <TextBlock
+                                            FontSize="12"
+                                            FontWeight="Medium"
+                                            Foreground="#64748B"
+                                            Text="TIẾN ĐỘ GỌI AGV" />
+                                        <TextBlock
+                                            HorizontalAlignment="Right"
+                                            FontSize="12"
+                                            Foreground="#475569"
+                                            Text="{Binding AgvService.Position1State.AutoCallProgressText}" />
+                                    </DockPanel>
+                                    <ProgressBar
+                                        Style="{StaticResource AutoCallProgressBar}"
+                                        Value="{Binding AgvService.Position1State.AutoCallProgressPercent, Mode=OneWay}" />
+                                </StackPanel>
+
+                                <!--  Row 4: Actions  -->
+                                <Border Grid.Row="4" Margin="0,6,0,0" Padding="6" Background="#F8FAFC" CornerRadius="8">
+                                    <DockPanel>
+                                        <!--  Toggle: Gọi AGV BẬT/TẮT  -->
+                                        <ToggleButton
+                                            DockPanel.Dock="Left"
+                                            IsChecked="{Binding AgvService.Position1State.IsAutoCallPausedLocally, Mode=TwoWay}"
+                                            Style="{StaticResource AutoPauseToggle}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    FontSize="13"
+                                                    FontWeight="Medium"
+                                                    Foreground="#64748B"
+                                                    Text="Gọi AGV " />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    FontSize="15"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding AgvService.Position1State.IsAutoCallPausedLocally, Converter={StaticResource BoolToPauseTextConverter}}">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="#16A34A" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding AgvService.Position1State.IsAutoCallPausedLocally}" Value="True">
+                                                                    <Setter Property="Foreground" Value="#DC2626" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </ToggleButton>
+
+                                        <!--  Divider  -->
+                                        <Border DockPanel.Dock="Left" Width="1" Margin="10,4" Background="#E2E8F0" />
+
+                                        <!--  Action buttons  -->
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button
+                                                Margin="0,0,5,0"
+                                                Command="{Binding LoadManualCommand}"
+                                                CommandParameter="1"
+                                                Content="Load Manual"
+                                                IsEnabled="{Binding AgvService.Position1State.CanLoadManual}"
+                                                Style="{StaticResource GhostActionBtn}" />
+                                            <Button
+                                                Margin="0,0,5,0"
+                                                Command="{Binding CallAgvManualCommand}"
+                                                CommandParameter="1"
+                                                Content="GỌI AGV">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource PrimaryActionBtn}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding AgvService.Position1State.CanCallManual}" Value="False">
+                                                                <Setter Property="IsEnabled" Value="False" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding AgvService.Position1State.IsAutoCallPausedLocally}" Value="True">
+                                                                <Setter Property="IsEnabled" Value="False" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding AgvService.Position1State.IsServerSlotDeclared}" Value="False">
+                                                                <Setter Property="IsEnabled" Value="False" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button
+                                                Margin="0,0,5,0"
+                                                Command="{Binding CancelAgvManualCommand}"
+                                                CommandParameter="1"
+                                                Content="HỦY LỆNH"
+                                                IsEnabled="{Binding AgvService.Position1State.CanCancel}"
+                                                Style="{StaticResource GhostActionBtn}" />
+                                            <Button
+                                                Command="{Binding ClearShelfManualCommand}"
+                                                CommandParameter="1"
+                                                Content="XÓA KỆ"
+                                                Style="{StaticResource GhostActionBtn}" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!--  ============ KỆ 2 ============  -->
+                        <Border Grid.Column="1" Style="{StaticResource AgvKeCard}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!--  Row 0: Header + Status Badge  -->
+                                <DockPanel Grid.Row="0" Margin="0,0,0,4">
+                                    <TextBlock
+                                        FontSize="20"
+                                        FontWeight="Bold"
+                                        Foreground="#0F172A"
+                                        Text="KỆ 2" />
+                                    <Border
+                                        HorizontalAlignment="Right"
+                                        DataContext="{Binding AgvService.Position2State.StatusBadgeKey}"
+                                        Style="{StaticResource StatusBadge}">
+                                        <TextBlock
+                                            DataContext="{Binding DataContext.AgvService.Position2State.StatusBadgeKey, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            FontSize="12"
+                                            Style="{StaticResource StatusBadgeText}"
+                                            Text="{Binding DataContext.AgvService.Position2State.StatusText, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                                    </Border>
+                                </DockPanel>
+
+                                <!--  Row 0b: Slot undeclared warning  -->
+                                <Border
+                                    Grid.Row="0"
+                                    Margin="0,24,0,0"
+                                    Padding="8,5"
+                                    Background="#FEF2F2"
+                                    BorderBrush="#FECACA"
+                                    BorderThickness="1"
+                                    CornerRadius="6">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding AgvService.Position2State.IsServerSlotDeclared}" Value="False" />
+                                                        <Condition Binding="{Binding AgvService.Position2State.IsAutoCallPausedLocally}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <TextBlock
+                                        FontSize="12"
+                                        FontWeight="SemiBold"
+                                        Foreground="#DC2626"
+                                        TextWrapping="Wrap"
+                                        Text="{Binding AgvService.Position2State.ServerSlotWarningText}" />
+                                </Border>
+
+                                <!--  Row 1: Model + Layout + Metrics (inline)  -->
+                                <DockPanel Grid.Row="1" Margin="0,0,0,8">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock
+                                            FontSize="14"
+                                            Foreground="#64748B"
+                                            Text="Model: " />
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="SemiBold"
+                                            Foreground="#2563EB"
+                                            Text="{Binding AgvService.Position2State.CurrentModelName}" />
+                                        <Border
+                                            Margin="8,0,0,0"
+                                            Padding="6,2"
+                                            VerticalAlignment="Center"
+                                            Background="#F1F5F9"
+                                            CornerRadius="8">
+                                            <TextBlock
+                                                FontSize="12"
+                                                FontWeight="Medium"
+                                                Foreground="#475569"
+                                                Text="{Binding AgvService.Position2State.ShelfLayoutDisplayText}" />
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <StackPanel Margin="0,0,14,0">
+                                            <TextBlock Style="{StaticResource MetricLabel}" Text="TỔNG" />
+                                            <TextBlock Style="{StaticResource MetricValue}" Text="{Binding AgvService.Position2State.OrderQty}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,14,0">
+                                            <TextBlock Style="{StaticResource MetricLabel}" Text="ĐANG GẮP" />
+                                            <TextBlock Style="{StaticResource MetricValue}" Text="{Binding AgvService.Position2State.CurrentPickingQty}" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource MetricLabel}" Text="CÒN LẠI" />
+                                            <TextBlock
+                                                Foreground="#2563EB"
+                                                Style="{StaticResource MetricValue}"
+                                                Text="{Binding AgvService.Position2State.RemainingQty}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DockPanel>
+
+                                <!--  Row 2: Main content — Col 0: Trays stacked | Col 1: Order table  -->
+                                <Grid Grid.Row="2" Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--  Left col: Tray 2 (trên) + Tray 1 (dưới)  -->
+                                    <StackPanel Grid.Column="0" Width="260">
+                                        <controls:TrayGridControl
+                                            Margin="0,0,0,6"
+                                            GridColumns="{Binding Ke2Tray2Cols}"
+                                            GridRows="{Binding Ke2Tray2Rows}"
+                                            SlotStates="{Binding Ke2Tray2Slots}"
+                                            TrayLabel="{Binding Ke2TrayLabel2}" />
+                                        <controls:TrayGridControl
+                                            GridColumns="{Binding Ke2Tray1Cols}"
+                                            GridRows="{Binding Ke2Tray1Rows}"
+                                            SlotStates="{Binding Ke2Tray1Slots}"
+                                            TrayLabel="{Binding Ke2TrayLabel1}" />
+                                    </StackPanel>
+
+                                    <!--  Right col: Order table  -->
+                                    <DockPanel Grid.Column="2">
+                                        <TextBlock
+                                            DockPanel.Dock="Top"
+                                            Margin="0,0,0,4"
+                                            FontSize="13"
+                                            FontWeight="SemiBold"
+                                            Foreground="#64748B"
+                                            Text="DANH SÁCH ORDER" />
+
+                                        <Border
+                                            DockPanel.Dock="Top"
+                                            Background="#F8FAFC"
+                                            BorderBrush="#E2E8F0"
+                                            BorderThickness="0,0,0,1"
+                                            CornerRadius="6,6,0,0">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="32" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="50" />
+                                                    <ColumnDefinition Width="50" />
+                                                    <ColumnDefinition Width="50" />
+                                                    <ColumnDefinition Width="50" />
+                                                    <ColumnDefinition Width="85" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Style="{StaticResource OrderTableHeader}" Text="#" />
+                                                <TextBlock Grid.Column="1" Style="{StaticResource OrderTableHeader}" Text="MODEL" />
+                                                <TextBlock Grid.Column="2" Style="{StaticResource OrderTableHeader}" Text="SL" />
+                                                <TextBlock Grid.Column="3" Style="{StaticResource OrderTableHeader}" Text="TRAY" />
+                                                <TextBlock Grid.Column="4" Style="{StaticResource OrderTableHeader}" Text="VỊ TRÍ" />
+                                                <TextBlock Grid.Column="5" Style="{StaticResource OrderTableHeader}" Text="JIG" />
+                                                <TextBlock Grid.Column="6" Style="{StaticResource OrderTableHeader}" Text="T.THÁI" />
+                                            </Grid>
+                                        </Border>
+
+                                        <ScrollViewer
+                                            VerticalScrollBarVisibility="Auto"
+                                            HorizontalScrollBarVisibility="Disabled">
+                                            <ItemsControl ItemsSource="{Binding Ke2Orders}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border
+                                                            BorderBrush="#F1F5F9"
+                                                            BorderThickness="0,0,0,1"
+                                                            Padding="0,1">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="32" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="50" />
+                                                                    <ColumnDefinition Width="50" />
+                                                                    <ColumnDefinition Width="50" />
+                                                                    <ColumnDefinition Width="50" />
+                                                                    <ColumnDefinition Width="85" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Style="{StaticResource OrderTableCell}" Text="{Binding Sequence}" />
+                                                                <TextBlock Grid.Column="1" Style="{StaticResource OrderTableCell}" Text="{Binding ModelName}" FontWeight="Medium" />
+                                                                <TextBlock Grid.Column="2" Style="{StaticResource OrderTableCell}" Text="{Binding Quantity}" />
+                                                                <TextBlock Grid.Column="3" Style="{StaticResource OrderTableCell}" Text="{Binding TrayIndex}" />
+                                                                <TextBlock Grid.Column="4" Style="{StaticResource OrderTableCell}" Text="{Binding StartPosition}" />
+                                                                <TextBlock Grid.Column="5" Style="{StaticResource OrderTableCell}" Text="{Binding JigTypeName}" />
+                                                                <Border
+                                                                    Grid.Column="6"
+                                                                    Margin="3,2"
+                                                                    VerticalAlignment="Center"
+                                                                    DataContext="{Binding StatusBadgeKey}"
+                                                                    Style="{StaticResource StatusBadge}">
+                                                                    <TextBlock
+                                                                        FontSize="12"
+                                                                        Style="{StaticResource StatusBadgeText}"
+                                                                        Text="{Binding DataContext.StatusText, RelativeSource={RelativeSource AncestorType=Grid}}" />
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </DockPanel>
+                                </Grid>
+
+                                <!--  Row 3: Progress bar  -->
+                                <StackPanel Grid.Row="3" Margin="0,0,0,4">
+                                    <DockPanel Margin="0,0,0,3">
+                                        <TextBlock
+                                            FontSize="12"
+                                            FontWeight="Medium"
+                                            Foreground="#64748B"
+                                            Text="TIẾN ĐỘ GỌI AGV" />
+                                        <TextBlock
+                                            HorizontalAlignment="Right"
+                                            FontSize="12"
+                                            Foreground="#475569"
+                                            Text="{Binding AgvService.Position2State.AutoCallProgressText}" />
+                                    </DockPanel>
+                                    <ProgressBar
+                                        Style="{StaticResource AutoCallProgressBar}"
+                                        Value="{Binding AgvService.Position2State.AutoCallProgressPercent, Mode=OneWay}" />
+                                </StackPanel>
+
+                                <!--  Row 4: Actions  -->
+                                <Border Grid.Row="4" Margin="0,6,0,0" Padding="6" Background="#F8FAFC" CornerRadius="8">
+                                    <DockPanel>
+                                        <!--  Toggle: Gọi AGV BẬT/TẮT  -->
+                                        <ToggleButton
+                                            DockPanel.Dock="Left"
+                                            IsChecked="{Binding AgvService.Position2State.IsAutoCallPausedLocally, Mode=TwoWay}"
+                                            Style="{StaticResource AutoPauseToggle}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    FontSize="13"
+                                                    FontWeight="Medium"
+                                                    Foreground="#64748B"
+                                                    Text="Gọi AGV " />
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    FontSize="15"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding AgvService.Position2State.IsAutoCallPausedLocally, Converter={StaticResource BoolToPauseTextConverter}}">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="#16A34A" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding AgvService.Position2State.IsAutoCallPausedLocally}" Value="True">
+                                                                    <Setter Property="Foreground" Value="#DC2626" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </ToggleButton>
+
+                                        <!--  Divider  -->
+                                        <Border DockPanel.Dock="Left" Width="1" Margin="10,4" Background="#E2E8F0" />
+
+                                        <!--  Action buttons  -->
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button
+                                                Margin="0,0,5,0"
+                                                Command="{Binding LoadManualCommand}"
+                                                CommandParameter="2"
+                                                Content="Load Manual"
+                                                IsEnabled="{Binding AgvService.Position2State.CanLoadManual}"
+                                                Style="{StaticResource GhostActionBtn}" />
+                                            <Button
+                                                Margin="0,0,5,0"
+                                                Command="{Binding CallAgvManualCommand}"
+                                                CommandParameter="2"
+                                                Content="GỌI AGV">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource PrimaryActionBtn}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding AgvService.Position2State.CanCallManual}" Value="False">
+                                                                <Setter Property="IsEnabled" Value="False" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding AgvService.Position2State.IsAutoCallPausedLocally}" Value="True">
+                                                                <Setter Property="IsEnabled" Value="False" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding AgvService.Position2State.IsServerSlotDeclared}" Value="False">
+                                                                <Setter Property="IsEnabled" Value="False" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button
+                                                Margin="0,0,5,0"
+                                                Command="{Binding CancelAgvManualCommand}"
+                                                CommandParameter="2"
+                                                Content="HỦY LỆNH"
+                                                IsEnabled="{Binding AgvService.Position2State.CanCancel}"
+                                                Style="{StaticResource GhostActionBtn}" />
+                                            <Button
+                                                Command="{Binding ClearShelfManualCommand}"
+                                                CommandParameter="2"
+                                                Content="XÓA KỆ"
+                                                Style="{StaticResource GhostActionBtn}" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+                </Grid>
+            </Border>
+
+        </shared:PageScaffold.BodyContent>
+    </shared:PageScaffold>
+
+</UserControl>

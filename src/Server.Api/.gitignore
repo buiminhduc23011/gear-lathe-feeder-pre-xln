@@ -1,0 +1,6 @@
+bin/
+obj/
+Storage/**
+!Storage/
+!Storage/Uploads/
+!Storage/Uploads/.gitkeep

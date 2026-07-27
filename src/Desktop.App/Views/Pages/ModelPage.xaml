@@ -1,0 +1,790 @@
+<UserControl
+    x:Class="Desktop.App.Views.Pages.ModelPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Desktop.App.Converters"
+    xmlns:controls="clr-namespace:Desktop.App.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:shared="clr-namespace:Desktop.App.Views.Shared"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:BooleanAndMultiConverter x:Key="BooleanAndMultiConverter" />
+
+        <Style
+            x:Key="NumericTextBox"
+            BasedOn="{StaticResource FilterToolbarTextBox}"
+            TargetType="TextBox">
+            <EventSetter Event="PreviewTextInput" Handler="NumericField_PreviewTextInput" />
+            <EventSetter Event="DataObject.Pasting" Handler="NumericField_Pasting" />
+        </Style>
+
+        <Style x:Key="SettingsSegmentButton" TargetType="ToggleButton">
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="MinHeight" Value="38" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSize.Body}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+            <Setter Property="Background" Value="{DynamicResource Brush.Surface.Subpanel}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border.Subtle}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border
+                            x:Name="Root"
+                            MinWidth="{TemplateBinding MinWidth}"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Surface.Hover}" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource Brush.Action.Primary}" />
+                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Action.PrimarySurface}" />
+                                <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Brush.Action.Primary}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.45" />
+                                <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Disabled}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModelListBoxItem" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="ItemRoot" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" CornerRadius="6">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemRoot" Property="Background" Value="{DynamicResource Brush.Surface.Hover}" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemRoot" Property="Background" Value="{DynamicResource Brush.Action.PrimarySurface}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="StatusDot" TargetType="Ellipse">
+            <Setter Property="Width" Value="{DynamicResource Size.StatusDot.Large}" />
+            <Setter Property="Height" Value="{DynamicResource Size.StatusDot.Large}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Fill" Value="{DynamicResource Brush.Status.Idle}" />
+        </Style>
+
+        <Style x:Key="ServoBadge" TargetType="Border">
+            <Setter Property="CornerRadius" Value="{DynamicResource Radius.Badge}" />
+            <Setter Property="Padding" Value="8,3" />
+            <Setter Property="Background" Value="{DynamicResource Brush.Status.IdleSurface}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Status.Idle}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style x:Key="ServoBadgeText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="{DynamicResource FontSize.Caption}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Status.Idle}" />
+        </Style>
+
+        <Style x:Key="AxisInputLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Margin" Value="0,0,0,3" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Secondary}" />
+        </Style>
+
+        <Style
+            x:Key="ModelMetadataLabel"
+            BasedOn="{StaticResource ParameterLabel}"
+            TargetType="TextBlock">
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+    </UserControl.Resources>
+
+    <shared:PageScaffold PageSubtitle="{Binding Subtitle}" PageTitle="{Binding Title}">
+        <shared:PageScaffold.BodyContent>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="280" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!--  ═══ Sidebar ═══  -->
+                <Border Grid.Column="0" Style="{StaticResource SectionCard.Subtle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Style="{StaticResource SectionTitleText}" Text="Danh sách Model" />
+
+                        <Grid
+                            Grid.Row="1"
+                            Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="8" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button
+                                Grid.Column="0"
+                                Command="{Binding CreateNewModelCommand}"
+                                Content="+ Tạo mới"
+                                Style="{StaticResource ButtonPrimary}" />
+
+                            <Button
+                                Grid.Column="2"
+                                Command="{Binding DeleteModelCommand}"
+                                Content="Xóa">
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource ButtonDanger}" TargetType="Button">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsCreatingNew}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding SelectedModel}" Value="{x:Null}">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </Grid>
+
+                        <TextBox
+                            Grid.Row="2"
+                            Margin="0,10,0,0"
+                            hc:InfoElement.Placeholder="Tìm Article ID..."
+                            Style="{StaticResource FilterToolbarTextBox}"
+                            Text="{Binding ModelFilterText, UpdateSourceTrigger=PropertyChanged}" />
+                        <ScrollViewer
+                            Grid.Row="3"
+                            MaxHeight="520"
+                            Margin="0,12,0,0"
+                            Padding="0,0,4,0"
+                            Style="{StaticResource IndustrialScrollViewer}"
+                            VerticalScrollBarVisibility="Auto">
+                            <ListBox
+                                Background="Transparent"
+                                BorderThickness="0"
+                                ItemContainerStyle="{StaticResource ModelListBoxItem}"
+                                ItemsSource="{Binding ModelsView}"
+                                SelectedItem="{Binding SelectedModel}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock
+                                                    FontSize="{DynamicResource FontSize.Body}"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource Brush.Text.Primary}"
+                                                    Text="{Binding ModelName}"
+                                                    TextTrimming="CharacterEllipsis" />
+                                                <Border
+                                                    Margin="6,0,0,0"
+                                                    Padding="5,1"
+                                                    VerticalAlignment="Center"
+                                                    Background="{DynamicResource Brush.Status.WarningSurface}"
+                                                    BorderBrush="{DynamicResource Brush.Status.Warning}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="4">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsEnabled}" Value="False">
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <TextBlock
+                                                        FontSize="{DynamicResource FontSize.Caption}"
+                                                        FontWeight="SemiBold"
+                                                        Foreground="{DynamicResource Brush.Status.Warning}"
+                                                        Text="Chưa kích hoạt" />
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock
+                                                Margin="0,2,0,0"
+                                                FontSize="{DynamicResource FontSize.Caption}"
+                                                Foreground="{DynamicResource Brush.Text.Secondary}">
+                                                <Run Text="{Binding UpdatedByUsername, StringFormat='Cập nhật: {0}'}" />
+                                                <Run Text=" • " />
+                                                <Run Text="{Binding UpdatedAtUtc, Converter={StaticResource RelativeTimeConverter}}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+                <!--  ═══ Main Content ═══  -->
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="430" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Left: Model fields  -->
+                    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!--  Empty state  -->
+                            <Border Padding="32">
+                                <Border.Style>
+                                    <Style BasedOn="{StaticResource SectionCard.Subtle}" TargetType="Border">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasModelSelected}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource SectionSubtitleText}"
+                                    Text="Chọn model từ danh sách hoặc tạo model mới để bắt đầu." />
+                            </Border>
+
+                            <StackPanel Visibility="{Binding HasModelSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <!--  Model name + save/discard  -->
+                                <Border Style="{StaticResource SectionCard.Subtle}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="12" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="12" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="12" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Grid.Column="0" Grid.ColumnSpan="5">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Article ID" />
+                                            <TextBox Margin="0,6,0,0" Text="{Binding ModelNameInput, UpdateSourceTrigger=PropertyChanged}">
+                                                <TextBox.Style>
+                                                    <Style BasedOn="{StaticResource FilterToolbarTextBox}" TargetType="TextBox">
+                                                        <Setter Property="IsReadOnly" Value="False" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsCreatingNew}" Value="False">
+                                                                <Setter Property="IsReadOnly" Value="True" />
+                                                                <Setter Property="Background" Value="{DynamicResource Brush.Surface.Subpanel}" />
+                                                                <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Secondary}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="6" VerticalAlignment="Bottom" Orientation="Horizontal">
+                                            <Button Margin="0,0,8,0" Command="{Binding SaveModelCommand}" Content="Lưu" Style="{StaticResource FilterToolbarPrimaryButton}" />
+                                            <Button Command="{Binding DiscardChangesCommand}" Content="Hủy" Style="{StaticResource FilterToolbarSecondaryButton}" />
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,10,0,0">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Loại hàng" />
+                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding ItemTypeInput, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,10,0,0">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Chương trình gia công" />
+                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding MachiningProgramInput, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Grid.Column="4" Margin="0,10,0,0">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Đường kính ngoài trục" />
+                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding OuterShaftDiameterInput, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Grid.Column="6" Margin="0,10,0,0">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Đường kính Op1" />
+                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding DiameterOp1Input, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,10,0,0">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Đường kính Op2" />
+                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding DiameterOp2Input, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,10,0,0">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Tray sử dụng" />
+                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding TrayUsageInput, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="2" Grid.Column="4" Margin="0,10,0,0">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Loại tray" />
+                                            <ComboBox
+                                                Margin="0,6,0,0"
+                                                DisplayMemberPath="Label"
+                                                ItemsSource="{Binding TrayTypeOptions}"
+                                                SelectedValue="{Binding TrayTypeInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedValuePath="Value"
+                                                Style="{StaticResource FilterToolbarComboBox}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!--  Tab selector (fields)  -->
+                                <StackPanel Margin="0,16,0,12" Orientation="Horizontal">
+                                    <ToggleButton Command="{Binding SelectRobotTabCommand}" Content="Robot" IsChecked="{Binding IsRobotTabSelected, Mode=OneWay}" Style="{StaticResource SettingsSegmentButton}" />
+                                    <ToggleButton Command="{Binding SelectLine1TabCommand}" Content="Line 1" IsChecked="{Binding IsLine1TabSelected, Mode=OneWay}" Style="{StaticResource SettingsSegmentButton}" />
+                                    <ToggleButton Command="{Binding SelectLine2TabCommand}" Content="Line 2" IsChecked="{Binding IsLine2TabSelected, Mode=OneWay}" Style="{StaticResource SettingsSegmentButton}" />
+                                </StackPanel>
+
+                                <!--  Robot tab  -->
+                                <StackPanel Visibility="{Binding IsRobotTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Border Style="{StaticResource SectionCard.Subtle}">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số Robot" />
+                                                    <TextBlock Margin="0,4,0,0" Style="{StaticResource SectionSubtitleText}" Text="Thông số chiều cao sản phẩm và offset Jig cho robot." />
+                                                </StackPanel>
+
+                                                <Grid
+                                                    Grid.Column="1"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Top"
+                                                    MinWidth="368">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="8" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="8" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="8" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Button
+                                                        Grid.Column="0"
+                                                        MinWidth="86"
+                                                        Background="#16A34A"
+                                                        BorderBrush="#15803D"
+                                                        Command="{Binding WriteRobotTestLine1Command}"
+                                                        Content="Ghi L1"
+                                                        Foreground="White"
+                                                        Style="{StaticResource ButtonPrimary}" />
+                                                    <Button
+                                                        Grid.Column="2"
+                                                        MinWidth="86"
+                                                        Background="#16A34A"
+                                                        BorderBrush="#15803D"
+                                                        Command="{Binding WriteRobotTestLine2Command}"
+                                                        Content="Ghi L2"
+                                                        Foreground="White"
+                                                        Style="{StaticResource ButtonPrimary}" />
+                                                    <Button
+                                                        Grid.Column="4"
+                                                        MinWidth="86"
+                                                        Command="{Binding CancelRobotPickLine1Command}"
+                                                        Content="Hủy L1"
+                                                        Style="{StaticResource ButtonDanger}" />
+                                                    <Button
+                                                        Grid.Column="6"
+                                                        MinWidth="86"
+                                                        Command="{Binding CancelRobotPickLine2Command}"
+                                                        Content="Hủy L2"
+                                                        Style="{StaticResource ButtonDanger}" />
+                                                </Grid>
+                                            </Grid>
+                                            <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding RobotFields}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel ItemWidth="270" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Margin="0,0,8,8" Padding="10,8" Background="{DynamicResource Brush.Surface.Subpanel}" BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1" CornerRadius="8">
+                                                            <StackPanel>
+                                                                <TextBlock FontSize="12" Foreground="{DynamicResource Brush.Text.Primary}" Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
+                                                                <ComboBox Margin="0,6,0,0" DisplayMemberPath="Label" ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption, Mode=TwoWay}" Visibility="{Binding IsSelectField, Converter={StaticResource BoolToVisibilityConverter}}" Style="{StaticResource FilterToolbarComboBox}" />
+                                                                <Grid Margin="0,6,0,0">
+                                                                    <Grid.Style>
+                                                                        <Style TargetType="Grid">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsSelectField}" Value="True">
+                                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Grid.Style>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="*" />
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <TextBox Grid.Column="0" MinHeight="32" Style="{StaticResource NumericTextBox}" Text="{Binding ValueText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                    <Button
+                                                                        Grid.Column="1"
+                                                                        Height="32"
+                                                                        Margin="4,0,0,0"
+                                                                        Padding="6,0"
+                                                                        MinWidth="48"
+                                                                        VerticalAlignment="Bottom"
+                                                                        Command="{Binding DataContext.CapturePositionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                        CommandParameter="{Binding Key}"
+                                                                        Content="Lấy VT"
+                                                                        FontSize="11"
+                                                                        Style="{StaticResource ButtonSecondary}"
+                                                                        Visibility="{Binding IsCoordinateField, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                                                </Grid>
+                                                                <TextBlock Margin="0,4,0,0" FontSize="11" Foreground="{StaticResource Brush.Action.Danger}" Text="{Binding ValidationMessage}" Visibility="{Binding HasValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+
+                                <!--  Line 1 tab  -->
+                                <StackPanel Visibility="{Binding IsLine1TabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Border Style="{StaticResource SectionCard.Subtle}">
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số Line 1" />
+                                            <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding Line1Fields}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate><WrapPanel ItemWidth="200" /></ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Margin="0,0,8,8" Padding="10,8" Background="{DynamicResource Brush.Surface.Subpanel}" CornerRadius="8">
+                                                            <StackPanel>
+                                                                <TextBlock FontSize="12" Text="{Binding Label}" />
+                                                                <TextBlock Margin="0,6,0,0" FontSize="14" Text="{Binding DisplayText}" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+
+                                <!--  Line 2 tab  -->
+                                <StackPanel Visibility="{Binding IsLine2TabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Border Style="{StaticResource SectionCard.Subtle}">
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số Line 2" />
+                                            <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding Line2Fields}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate><WrapPanel ItemWidth="200" /></ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Margin="0,0,8,8" Padding="10,8" Background="{DynamicResource Brush.Surface.Subpanel}" CornerRadius="8">
+                                                            <StackPanel>
+                                                                <TextBlock FontSize="12" Text="{Binding Label}" />
+                                                                <TextBlock Margin="0,6,0,0" FontSize="14" Text="{Binding DisplayText}" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!--  ═══ Right: Control Panel (2 tabs) ═══  -->
+                    <Border
+                        Grid.Column="2"
+                        Padding="16"
+                        Background="{DynamicResource Brush.Surface.Panel}"
+                        CornerRadius="12">
+                        <ScrollViewer Padding="0,0,6,0" Style="{StaticResource IndustrialScrollViewer}" VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+
+                                <!--  Header + PLC badge  -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource SectionTitleText}" Text="Điều khiển thủ công" />
+                                        <TextBlock Margin="0,4,0,0" Style="{StaticResource SectionSubtitleText}" Text="Di chuyển trục, về Home và điều khiển xy lanh." />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" VerticalAlignment="Center">
+                                        <Border.Style>
+                                            <Style BasedOn="{StaticResource ServoBadge}" TargetType="Border">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                                        <Setter Property="Background" Value="{StaticResource Brush.Status.RunningSurface}" />
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Brush.Status.Running}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock>
+                                            <TextBlock.Style>
+                                                <Style BasedOn="{StaticResource ServoBadgeText}" TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="PLC offline" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                                            <Setter Property="Text" Value="PLC online" />
+                                                            <Setter Property="Foreground" Value="{StaticResource Brush.Status.Running}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                </Grid>
+
+                                <!--  Tab selector (control panel)  -->
+                                <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                                    <ToggleButton
+                                        Command="{Binding SelectAxisTabCommand}"
+                                        Content="Điều khiển Trục"
+                                        IsChecked="{Binding IsAxisTabSelected, Mode=OneWay}"
+                                        Style="{StaticResource SettingsSegmentButton}" />
+                                    <ToggleButton
+                                        Command="{Binding SelectCylinderTabCommand}"
+                                        Content="Điều khiển Xy lanh"
+                                        IsChecked="{Binding IsCylinderTabSelected, Mode=OneWay}"
+                                        Style="{StaticResource SettingsSegmentButton}" />
+                                </StackPanel>
+
+                                <!--  ── Tab: Điều khiển Trục ──  -->
+                                <ItemsControl
+                                    ItemsSource="{Binding Axes}"
+                                    Visibility="{Binding IsAxisTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Margin="0,0,0,8" Padding="12,10" Background="{DynamicResource Brush.Surface.Panel}" BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1" CornerRadius="10">
+                                                <StackPanel>
+                                                    <!--  Name + position  -->
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" Text="{Binding DisplayName}" />
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Center"
+                                                            FontSize="16"
+                                                            FontWeight="SemiBold"
+                                                            Foreground="{StaticResource Brush.Action.Primary}"
+                                                            Text="{Binding CurrentPositionText, StringFormat='{}{0} mm'}" />
+                                                    </Grid>
+
+                                                    <!--  Row 1: [Vị trí] [Tốc độ] [Home]  -->
+                                                    <Grid Margin="0,8,0,6">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="6" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="6" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <StackPanel Grid.Column="0">
+                                                            <TextBlock Style="{StaticResource AxisInputLabel}" Text="Vị trí (mm)" />
+                                                            <TextBox
+                                                                MinHeight="30"
+                                                                LostFocus="MovePointInput_LostFocus"
+                                                                Style="{StaticResource NumericTextBox}"
+                                                                Text="{Binding MovePointInput, UpdateSourceTrigger=PropertyChanged}">
+                                                                <TextBox.InputBindings>
+                                                                    <KeyBinding
+                                                                        Key="Return"
+                                                                        Command="{Binding DataContext.WriteMovePointValueCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                        CommandParameter="{Binding}" />
+                                                                </TextBox.InputBindings>
+                                                            </TextBox>
+                                                        </StackPanel>
+
+                                                        <StackPanel Grid.Column="2">
+                                                            <TextBlock Style="{StaticResource AxisInputLabel}" Text="Tốc độ (mm/s)" />
+                                                            <TextBox
+                                                                MinHeight="30"
+                                                                LostFocus="SpeedInput_LostFocus"
+                                                                Style="{StaticResource NumericTextBox}"
+                                                                Text="{Binding ManualSpeedInput, UpdateSourceTrigger=PropertyChanged}">
+                                                                <TextBox.InputBindings>
+                                                                    <KeyBinding
+                                                                        Key="Return"
+                                                                        Command="{Binding DataContext.ApplyAxisSpeedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                        CommandParameter="{Binding}" />
+                                                                </TextBox.InputBindings>
+                                                            </TextBox>
+                                                        </StackPanel>
+
+                                                        <StackPanel Grid.Column="4" VerticalAlignment="Bottom">
+                                                            <TextBlock Style="{StaticResource AxisInputLabel}" Text=" " />
+                                                            <Button
+                                                                MinWidth="52"
+                                                                MinHeight="30"
+                                                                Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                CommandParameter="{Binding HomeTagName}"
+                                                                Content="Home"
+                                                                Style="{StaticResource ButtonSecondary}" />
+                                                        </StackPanel>
+                                                    </Grid>
+
+                                                    <!--  Row 2: [Jog-] [Jog+] [Chạy]  -->
+                                                    <UniformGrid Columns="3" Rows="1">
+                                                        <controls:HoldToRunButton
+                                                            Margin="0,0,3,0"
+                                                            Content="{Binding NegativeLabel}"
+                                                            PressCommand="{Binding DataContext.StartJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            PressCommandParameter="{Binding NegativeJogTagName}"
+                                                            ReleaseCommand="{Binding DataContext.StopJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            ReleaseCommandParameter="{Binding NegativeJogTagName}">
+                                                            <controls:HoldToRunButton.IsEnabled>
+                                                                <MultiBinding Converter="{StaticResource BooleanAndMultiConverter}">
+                                                                    <Binding Path="DataContext.CanIssueCommands" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                                                    <Binding Path="CanJogNegative" />
+                                                                </MultiBinding>
+                                                            </controls:HoldToRunButton.IsEnabled>
+                                                            <controls:HoldToRunButton.Style>
+                                                                <Style BasedOn="{StaticResource ServoButton.Jog}" TargetType="Button">
+                                                                    <Setter Property="MinWidth" Value="0" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsNegativeJogActive}" Value="True">
+                                                                            <Setter Property="Background" Value="{StaticResource Brush.Action.PrimarySurface}" />
+                                                                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Action.Primary}" />
+                                                                            <Setter Property="Foreground" Value="{StaticResource Brush.Action.Primary}" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </controls:HoldToRunButton.Style>
+                                                        </controls:HoldToRunButton>
+                                                        <controls:HoldToRunButton
+                                                            Margin="0,0,3,0"
+                                                            Content="{Binding PositiveLabel}"
+                                                            PressCommand="{Binding DataContext.StartJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            PressCommandParameter="{Binding PositiveJogTagName}"
+                                                            ReleaseCommand="{Binding DataContext.StopJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            ReleaseCommandParameter="{Binding PositiveJogTagName}">
+                                                            <controls:HoldToRunButton.IsEnabled>
+                                                                <MultiBinding Converter="{StaticResource BooleanAndMultiConverter}">
+                                                                    <Binding Path="DataContext.CanIssueCommands" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                                                    <Binding Path="CanJogPositive" />
+                                                                </MultiBinding>
+                                                            </controls:HoldToRunButton.IsEnabled>
+                                                            <controls:HoldToRunButton.Style>
+                                                                <Style BasedOn="{StaticResource ServoButton.Jog}" TargetType="Button">
+                                                                    <Setter Property="MinWidth" Value="0" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsPositiveJogActive}" Value="True">
+                                                                            <Setter Property="Background" Value="{StaticResource Brush.Action.PrimarySurface}" />
+                                                                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Action.Primary}" />
+                                                                            <Setter Property="Foreground" Value="{StaticResource Brush.Action.Primary}" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </controls:HoldToRunButton.Style>
+                                                        </controls:HoldToRunButton>
+                                                        <Button
+                                                            Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}"
+                                                            Content="Chạy"
+                                                            Style="{StaticResource ButtonPrimary}" />
+                                                    </UniformGrid>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!--  ── Tab: Điều khiển Xy lanh ──  -->
+                                <ItemsControl
+                                    ItemsSource="{Binding Cylinders}"
+                                    Visibility="{Binding IsCylinderTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Margin="0,0,0,8" Padding="14,12" Background="{DynamicResource Brush.Surface.Panel}" BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1" CornerRadius="10">
+                                                <StackPanel>
+                                                    <!--  Name + LED  -->
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Ellipse Width="10" Height="10" Margin="0,0,8,0">
+                                                            <Ellipse.Style>
+                                                                <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsPrimaryFeedbackActive}" Value="True">
+                                                                            <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Ellipse.Style>
+                                                        </Ellipse>
+                                                        <TextBlock VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Text="{Binding Title}" />
+                                                    </StackPanel>
+                                                    <!--  Buttons  -->
+                                                    <UniformGrid Margin="0,10,0,0" Columns="2" Rows="1">
+                                                        <Button
+                                                            Margin="0,0,4,0"
+                                                            Padding="12,6"
+                                                            Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding PrimaryCommandTagName}"
+                                                            Content="{Binding PrimaryActionLabel}"
+                                                            Style="{StaticResource ButtonPrimary}" />
+                                                        <Button
+                                                            Padding="12,6"
+                                                            Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding SecondaryCommandTagName}"
+                                                            Content="{Binding SecondaryActionLabel}"
+                                                            Style="{StaticResource ButtonSecondary}" />
+                                                    </UniformGrid>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </Grid>
+        </shared:PageScaffold.BodyContent>
+    </shared:PageScaffold>
+</UserControl>

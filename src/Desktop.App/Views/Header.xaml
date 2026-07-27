@@ -1,0 +1,153 @@
+<UserControl
+    x:Class="Desktop.App.Views.Header"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Border
+        x:Name="HeaderRoot"
+        MinHeight="{DynamicResource Size.Header.Height}"
+        Margin="0,0,0,12"
+        MouseLeftButtonDown="HeaderRoot_OnMouseLeftButtonDown"
+        Style="{StaticResource ShellPanel}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <DockPanel
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="0,0,12,0"
+                LastChildFill="False"
+                VerticalAlignment="Center">
+                
+                <Image
+                    Height="28"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    RenderOptions.BitmapScalingMode="HighQuality"
+                    Source="pack://application:,,,/Resources/Images/Logo.png" />
+
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Margin="0,0,12,0"
+                    FontSize="22"
+                    Style="{StaticResource PageTitleText}"
+                    Text="{Binding MachineName}"
+                    TextTrimming="CharacterEllipsis" />
+                <Border
+                    DockPanel.Dock="Right"
+                    Margin="0,0,14,0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource StatusBadge.Info}">
+                    <TextBlock Style="{StaticResource StatusBadgeText.Info}" Text="{Binding MachineCode}" />
+                </Border>
+            </DockPanel>
+
+            <WrapPanel
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,0,12,0"
+                VerticalAlignment="Center">
+                <Button
+                    x:Name="UtilityMenuButton"
+                    Margin="0,0,8,0"
+                    Click="UtilityMenuButton_OnClick"
+                    Content="Trợ giúp"
+                    Style="{StaticResource HeaderCompactButton}">
+                    <Button.ContextMenu>
+                        <ContextMenu Placement="Bottom">
+                            <MenuItem Click="OpenWebsite_Click" Header="Website" />
+                            <MenuItem Header="Hướng dẫn sử dụng" IsEnabled="False" />
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
+
+                <!-- User display — only visible when authenticated -->
+                <Border
+                    Margin="0,0,8,0"
+                    Padding="10,0,12,0"
+                    Height="34"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource Brush.Action.PrimarySurface}"
+                    BorderBrush="{DynamicResource Brush.Action.Primary}"
+                    BorderThickness="1"
+                    CornerRadius="{DynamicResource Radius.Button}"
+                    Visibility="{Binding IsAuthenticated, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock
+                            Text="&#x25CF;"
+                            FontSize="8"
+                            Foreground="{DynamicResource Brush.Action.Primary}"
+                            VerticalAlignment="Center"
+                            Margin="0,0,6,0" />
+                        <TextBlock
+                            Text="{Binding UserDisplayName}"
+                            FontSize="{DynamicResource FontSize.Caption}"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource Brush.Action.Primary}"
+                            VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+
+                <Button
+                    Margin="0,0,8,0"
+                    Command="{Binding ToggleAuthCommand}"
+                    Content="{Binding AuthActionText}"
+                    Style="{StaticResource HeaderCompactPrimaryButton}" />
+                <ToggleButton
+                    x:Name="LightCurtainToggle"
+                    IsEnabled="{Binding IsPlcConnected}"
+                    Content="Light Curtain"
+                    Margin="0,0,8,0"
+                    IsChecked="{Binding OffLightCurtain, Mode=TwoWay}"
+                    Style="{StaticResource HeaderCompactToggleButton}" />
+                <ToggleButton
+                    x:Name="BuzzerToggle"
+                    IsEnabled="{Binding IsPlcConnected}"
+                    Content="Tắt chuông"
+                    IsChecked="{Binding OffBuzzer, Mode=TwoWay}"
+                    Style="{StaticResource HeaderCompactToggleButton}" />
+            </WrapPanel>
+
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="2"
+                VerticalAlignment="Top"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="MinButton"
+                    Click="MinButton_OnClick"
+                    Content="-"
+                    Style="{StaticResource WindowChromeButton}" />
+                <ToggleButton
+                    x:Name="MaxToggle"
+                    Margin="8,0,0,0"
+                    Checked="MaxToggle_OnChecked"
+                    Content="[]"
+                    Style="{StaticResource WindowChromeToggleButton}"
+                    Unchecked="MaxToggle_OnUnchecked" />
+                <Button
+                    x:Name="CloseButton"
+                    Margin="8,0,0,0"
+                    Click="CloseButton_OnClick"
+                    Content="X"
+                    Style="{StaticResource WindowChromeButton}" />
+            </StackPanel>
+
+        </Grid>
+    </Border>
+</UserControl>

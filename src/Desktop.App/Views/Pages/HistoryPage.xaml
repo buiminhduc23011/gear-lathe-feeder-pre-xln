@@ -1,0 +1,235 @@
+<UserControl
+    x:Class="Desktop.App.Views.Pages.HistoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:shared="clr-namespace:Desktop.App.Views.Shared"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style
+            x:Key="HistoryWrapText"
+            BasedOn="{StaticResource IndustrialDataGridTextElement}"
+            TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextTrimming" Value="None" />
+            <Setter Property="Margin" Value="10,4,10,4" />
+        </Style>
+
+        <Style
+            x:Key="HistoryRowStyle"
+            BasedOn="{StaticResource IndustrialDataGridRow}"
+            TargetType="DataGridRow">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsActive}" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Brush.Status.FaultSurface}" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Status.Fault}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <shared:PageScaffold PageSubtitle="{Binding Subtitle}" PageTitle="{Binding Title}">
+        <shared:PageScaffold.BodyContent>
+            <StackPanel>
+                <WrapPanel Margin="0,10,0,10" HorizontalAlignment="Left">
+                    <hc:TextBox
+                        Width="280"
+                        Height="42"
+                        Margin="0,0,12,6"
+                        hc:InfoElement.Placeholder="Tìm theo Tag, mô tả..."
+                        Style="{StaticResource FilterToolbarTextBox}"
+                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <ComboBox
+                        Width="184"
+                        Margin="0,0,12,6"
+                        DisplayMemberPath="Label"
+                        ItemsSource="{Binding StatusOptions}"
+                        SelectedItem="{Binding SelectedStatusOption}"
+                        Style="{StaticResource FilterToolbarComboBox}" />
+
+                    <ComboBox
+                        Width="168"
+                        Margin="0,0,12,6"
+                        DisplayMemberPath="Label"
+                        ItemsSource="{Binding TypeOptions}"
+                        SelectedItem="{Binding SelectedTypeOption}"
+                        Style="{StaticResource FilterToolbarComboBox}" />
+
+                    <DatePicker
+                        Width="168"
+                        Margin="0,0,12,6"
+                        hc:InfoElement.Placeholder="Từ Ngày"
+                        SelectedDate="{Binding FromDate, Mode=TwoWay}"
+                        Style="{StaticResource FilterToolbarDatePicker}" />
+
+                    <DatePicker
+                        Width="168"
+                        Margin="0,0,12,6"
+                        hc:InfoElement.Placeholder="Đến Ngày"
+                        SelectedDate="{Binding ToDate, Mode=TwoWay}"
+                        Style="{StaticResource FilterToolbarDatePicker}" />
+
+                    <Button
+                        Width="94"
+                        Margin="0,0,12,6"
+                        Command="{Binding ApplyFiltersCommand}"
+                        Content="Áp Dụng"
+                        Style="{StaticResource FilterToolbarPrimaryButton}" />
+
+                    <Button
+                        Width="94"
+                        Margin="0,0,12,6"
+                        Command="{Binding ClearFiltersCommand}"
+                        Content="Xóa Lọc"
+                        Style="{StaticResource FilterToolbarSecondaryButton}" />
+
+                    <Button
+                        Width="120"
+                        Margin="0,0,12,6"
+                        Command="{Binding DeleteHistoryCommand}"
+                        Content="Xóa lịch sử"
+                        Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Style="{StaticResource FilterToolbarDangerButton}" />
+                </WrapPanel>
+
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+
+
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <DataGrid
+                            Grid.Row="0"
+                            MinHeight="420"
+                            AutoGenerateColumns="False"
+                            HeadersVisibility="Column"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding Records}"
+                            RowStyle="{StaticResource HistoryRowStyle}"
+                            Style="{StaticResource IndustrialDataGrid}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Width="70"
+                                    Binding="{Binding Index}"
+                                    ElementStyle="{StaticResource IndustrialDataGridTextElement}"
+                                    Header="STT" />
+                                <DataGridTextColumn
+                                    Width="140"
+                                    Binding="{Binding Tag}"
+                                    ElementStyle="{StaticResource IndustrialDataGridTextElement}"
+                                    Header="Tag" />
+                                <DataGridTextColumn
+                                    Width="2*"
+                                    Binding="{Binding Description}"
+                                    ElementStyle="{StaticResource HistoryWrapText}"
+                                    Header="Mô tả" />
+                                <DataGridTextColumn
+                                    Width="2.2*"
+                                    Binding="{Binding Remedy}"
+                                    ElementStyle="{StaticResource HistoryWrapText}"
+                                    Header="Hướng dẫn khắc phục" />
+                                <DataGridTextColumn
+                                    Width="110"
+                                    Binding="{Binding TypeText}"
+                                    ElementStyle="{StaticResource IndustrialDataGridTextElement}"
+                                    Header="Loại" />
+                                <DataGridTextColumn
+                                    Width="130"
+                                    Binding="{Binding StatusText}"
+                                    ElementStyle="{StaticResource IndustrialDataGridTextElement}"
+                                    Header="Trạng thái" />
+                                <DataGridTextColumn
+                                    Width="120"
+                                    Binding="{Binding DurationText}"
+                                    ElementStyle="{StaticResource IndustrialDataGridTextElement}"
+                                    Header="Thời gian lỗi" />
+                                <DataGridTextColumn
+                                    Width="160"
+                                    Binding="{Binding StartedAtText}"
+                                    ElementStyle="{StaticResource IndustrialDataGridTextElement}"
+                                    Header="Bắt đầu" />
+                                <DataGridTextColumn
+                                    Width="160"
+                                    Binding="{Binding EndedAtText}"
+                                    ElementStyle="{StaticResource IndustrialDataGridTextElement}"
+                                    Header="Kết thúc" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <Border
+                            Grid.Row="0"
+                            Background="#99FFFFFF"
+                            Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Text="Đang tải dữ liệu..." />
+                        </Border>
+
+                        <DockPanel
+                            Grid.Row="1"
+                            Margin="0,14,0,0"
+                            LastChildFill="False">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Style="{StaticResource BodySecondaryText}"
+                                Text="{Binding TotalCount, StringFormat='Tổng: {0} bản ghi'}" />
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                <Button
+                                    Command="{Binding GoToFirstPageCommand}"
+                                    Content="|&lt;"
+                                    IsEnabled="{Binding CanGoPreviousPage}"
+                                    Style="{StaticResource PagerButton}" />
+                                <Button
+                                    Margin="8,0,0,0"
+                                    Command="{Binding GoToPreviousPageCommand}"
+                                    Content="&lt;"
+                                    IsEnabled="{Binding CanGoPreviousPage}"
+                                    Style="{StaticResource PagerButton}" />
+                                <Border
+                                    Margin="8,0,0,0"
+                                    Padding="12,0"
+                                    VerticalAlignment="Stretch"
+                                    Style="{StaticResource StatusBadge.Info}">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource StatusBadgeText.Info}"
+                                        Text="{Binding PageStatusText}" />
+                                </Border>
+                                <Button
+                                    Margin="8,0,0,0"
+                                    Command="{Binding GoToNextPageCommand}"
+                                    Content="&gt;"
+                                    IsEnabled="{Binding CanGoNextPage}"
+                                    Style="{StaticResource PagerButton}" />
+                                <Button
+                                    Margin="8,0,0,0"
+                                    Command="{Binding GoToLastPageCommand}"
+                                    Content="&gt;|"
+                                    IsEnabled="{Binding CanGoNextPage}"
+                                    Style="{StaticResource PagerButton}" />
+                            </StackPanel>
+                        </DockPanel>
+                    </Grid>
+                </Grid>
+
+            </StackPanel>
+        </shared:PageScaffold.BodyContent>
+    </shared:PageScaffold>
+</UserControl>
