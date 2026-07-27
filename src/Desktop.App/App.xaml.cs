@@ -23,9 +23,6 @@ public partial class App : Application
 
     public IPlcService PlcService { get; private set; } = null!;
 
-    public IPlcService PlcServiceLine1 { get; private set; } = null!;
-
-    public IPlcService PlcServiceLine2 { get; private set; } = null!;
 
     public IRobotRuntimeService RobotRuntimeService { get; private set; } = null!;
 
@@ -69,9 +66,6 @@ public partial class App : Application
 
     public ILoginDialogService LoginDialogService { get; private set; } = null!;
 
-    public LineModelPlcService LineModelService1 { get; private set; } = null!;
-
-    public LineModelPlcService LineModelService2 { get; private set; } = null!;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -112,7 +106,7 @@ public partial class App : Application
         var factory = new DeltaClientFactory();
 
         PlcService = new PlcService(
-            "Robot",
+            "Main PLC",
             factory,
             AppSettings.Current,
             PlcTagCatalog.All,
@@ -120,22 +114,6 @@ public partial class App : Application
             static (f, o) => f.Create(o),
             AppSettings.Current.PollIntervalMs,
             PlcTagCatalog.WritableTagNames);
-        PlcServiceLine1 = new PlcService(
-            "Line 1",
-            factory,
-            AppSettings.Current,
-            PlcTagCatalog.AllLine1,
-            DeltaPlcMetadata.BuildFor(PlcTagCatalog.AllLine1),
-            static (f, o) => f.CreateForLine1(o),
-            AppSettings.Current.PlcLine1PollIntervalMs);
-        PlcServiceLine2 = new PlcService(
-            "Line 2",
-            factory,
-            AppSettings.Current,
-            PlcTagCatalog.AllLine2,
-            DeltaPlcMetadata.BuildFor(PlcTagCatalog.AllLine2),
-            static (f, o) => f.CreateForLine2(o),
-            AppSettings.Current.PlcLine2PollIntervalMs);
 
         PlcParameterSyncService = new PlcParameterSyncService(PlcService, PlcParameterSettingsService);
         AlarmDefinitionCatalog.Validate();
@@ -158,8 +136,6 @@ public partial class App : Application
         HeaderViewModel.AttachPlcService(PlcService);
         FooterViewModel = new FooterViewModel();
         FooterViewModel.AttachPlcService(PlcService);
-        FooterViewModel.AttachPlcLine1Service(PlcServiceLine1);
-        FooterViewModel.AttachPlcLine2Service(PlcServiceLine2);
 
         var authTokenHandler = new AuthTokenHandler
         {
@@ -169,14 +145,8 @@ public partial class App : Application
         {
             BaseAddress = new Uri(AppSettings.Current.ApiBaseUrl.TrimEnd('/') + "/")
         };
-        var lineHttpClient = new HttpClient(new HttpClientHandler())
-        {
-            BaseAddress = new Uri(AppSettings.Current.ApiBaseUrl.TrimEnd('/') + "/")
-        };
 
         var desktopUserApiClient = new UserApiClient(desktopHttpClient);
-        var lineUserApiClient = new UserApiClient(lineHttpClient);
-        var lineModelProfileApiClient = new ModelProfileApiClient(lineHttpClient);
 
         LoginDialogService = new LoginDialogService(desktopUserApiClient);
         ModelProfileApiClient = new ModelProfileApiClient(desktopHttpClient);
@@ -186,9 +156,6 @@ public partial class App : Application
 
         PlcMessageMonitorService = new PlcMessageMonitorService(PlcService, NotificationDialogService);
         PlcMessageMonitorService.InitializeAsync().GetAwaiter().GetResult();
-
-        LineModelService1 = new LineModelPlcService("Line 1", PlcServiceLine1, lineModelProfileApiClient, lineUserApiClient, LineTagSet.ForLine1());
-        LineModelService2 = new LineModelPlcService("Line 2", PlcServiceLine2, lineModelProfileApiClient, lineUserApiClient, LineTagSet.ForLine2());
 
         base.OnStartup(e);
         _ = StartRuntimeAsync();
@@ -205,15 +172,11 @@ public partial class App : Application
                 try { await RobotRuntimeService.StopAsync(); } catch { }
 
                 await Task.WhenAll(
-                    SafeDisposeAsync(PlcService),
-                    SafeDisposeAsync(PlcServiceLine1),
-                    SafeDisposeAsync(PlcServiceLine2));
+                    SafeDisposeAsync(PlcService));
 
                 try { AlarmMonitorService.Dispose(); } catch { }
                 try { PlcMessageMonitorService.Dispose(); } catch { }
                 try { await PlcParameterSyncService.DisposeAsync(); } catch { }
-                try { LineModelService1.Dispose(); } catch { }
-                try { LineModelService2.Dispose(); } catch { }
                 try { AgvBackgroundService.Dispose(); } catch { }
             });
 
@@ -239,11 +202,7 @@ public partial class App : Application
 
     private async Task StartRuntimeAsync()
     {
-        // Connect all 3 PLCs in parallel with unified style
-        await Task.WhenAll(
-            ConnectPlcAsync("Robot", PlcService),
-            ConnectPlcAsync("Line 1", PlcServiceLine1),
-            ConnectPlcAsync("Line 2", PlcServiceLine2));
+        await ConnectPlcAsync("Main PLC", PlcService);
         // Start Robot-specific runtime (parameter sync, etc.)
         try
         {
@@ -255,16 +214,6 @@ public partial class App : Application
         }
 
         AgvBackgroundService.Start();
-
-        // Start Line Model services (event-driven, listen to DataUpdated)
-        _ = Task.Run(async () =>
-        {
-            try { await LineModelService1.StartAsync(); } catch { }
-        });
-        _ = Task.Run(async () =>
-        {
-            try { await LineModelService2.StartAsync(); } catch { }
-        });
     }
 
     private static async Task ConnectPlcAsync(string name, IPlcService plcService)

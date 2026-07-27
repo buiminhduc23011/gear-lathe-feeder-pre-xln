@@ -15,7 +15,7 @@ public partial class GpioPage : UserControl
         var app = Application.Current as App
             ?? throw new InvalidOperationException("Desktop application context is not available.");
 
-        _viewModel = new GpioPageViewModel(app.PlcService, app.PlcServiceLine1, app.PlcServiceLine2);
+        _viewModel = new GpioPageViewModel(app.PlcService);
         DataContext = _viewModel;
 
         Loaded += OnLoaded;
