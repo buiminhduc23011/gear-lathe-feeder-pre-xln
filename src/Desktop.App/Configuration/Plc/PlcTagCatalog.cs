@@ -51,7 +51,7 @@ public static class PlcTagCatalog
             Name = "word.d5130",
             Address = "D5130",
             DataType = PlcTagDataType.Int16,
-            Description = "Word output group for Y0.00 - Y0.15",
+            Description = "Word output group for Y0.00 - Y0.11",
         };
 
         public static readonly PlcTagDefinition D5131 = new()
@@ -60,6 +60,22 @@ public static class PlcTagCatalog
             Address = "D5131",
             DataType = PlcTagDataType.Int16,
             Description = "Word output group for Y1.00 - Y1.15",
+        };
+
+        public static readonly PlcTagDefinition D5132 = new()
+        {
+            Name = "word.d5132",
+            Address = "D5132",
+            DataType = PlcTagDataType.Int16,
+            Description = "Word output group for Y2.00 - Y2.15",
+        };
+
+        public static readonly PlcTagDefinition D5133 = new()
+        {
+            Name = "word.d5133",
+            Address = "D5133",
+            DataType = PlcTagDataType.Int16,
+            Description = "Word output group for Y3.00 - Y3.15",
         };
     }
 
@@ -158,39 +174,74 @@ public static class PlcTagCatalog
 
     public static class Outputs
     {
-        public static readonly PlcTagDefinition Y0_00 = CreateBit("output.y0_00", "Y0.00", "Y0.00");
-        public static readonly PlcTagDefinition Y0_01 = CreateBit("output.y0_01", "Y0.01", "Y0.01");
-        public static readonly PlcTagDefinition Y0_02 = CreateBit("output.y0_02", "Y0.02", "Y0.02");
-        public static readonly PlcTagDefinition Y0_03 = CreateBit("output.y0_03", "Y0.03", "Y0.03");
-        public static readonly PlcTagDefinition Y0_04 = CreateBit("output.y0_04", "Y0.04", "Y0.04");
-        public static readonly PlcTagDefinition Y0_05 = CreateBit("output.y0_05", "Y0.05", "Y0.05");
-        public static readonly PlcTagDefinition Y0_06 = CreateBit("output.y0_06", "Y0.06", "Y0.06");
-        public static readonly PlcTagDefinition Y0_07 = CreateBit("output.y0_07", "Y0.07", "Y0.07");
-        public static readonly PlcTagDefinition Y0_08 = CreateBit("output.y0_08", "Y0.08", "Y0.08");
-        public static readonly PlcTagDefinition Y0_09AxisXOn = CreateBit("output.y0_09", "Y0.09", "SERVO ON TRỤC X");
-        public static readonly PlcTagDefinition Y0_10AxisYOn = CreateBit("output.y0_10", "Y0.10", "SERVO ON TRỤC Y");
-        public static readonly PlcTagDefinition Y0_11AxisZOn = CreateBit("output.y0_11", "Y0.11", "SERVO ON TRỤC Z");
-        public static readonly PlcTagDefinition Y0_12 = CreateBit("output.y0_12", "Y0.12", "Y0.12");
-        public static readonly PlcTagDefinition Y0_13 = CreateBit("output.y0_13", "Y0.13", "Y0.13");
-        public static readonly PlcTagDefinition Y0_14 = CreateBit("output.y0_14", "Y0.14", "Y0.14");
-        public static readonly PlcTagDefinition Y0_15 = CreateBit("output.y0_15", "Y0.15", "Y0.15");
-
-        public static readonly PlcTagDefinition Y1_00LightRed = CreateBit("output.y1_00", "Y1.00", "ĐÈN ĐỎ");
-        public static readonly PlcTagDefinition Y1_01LightYellow = CreateBit("output.y1_01", "Y1.01", "ĐÈN VÀNG");
-        public static readonly PlcTagDefinition Y1_02LightGreen = CreateBit("output.y1_02", "Y1.02", "ĐÈN XANH");
-        public static readonly PlcTagDefinition Y1_03LightBuzzer = CreateBit("output.y1_03", "Y1.03", "CÒI BÁO");
-        public static readonly PlcTagDefinition Y1_04XlCenter1In = CreateBit("output.y1_04", "Y1.04", "XL KẸP XE 2");
-        public static readonly PlcTagDefinition Y1_05XlCenter1Out = CreateBit("output.y1_05", "Y1.05", "XL MỞ KẸP XE 2");
-        public static readonly PlcTagDefinition Y1_06XlCenter2In = CreateBit("output.y1_06", "Y1.06", "XL KẸP XE 1");
-        public static readonly PlcTagDefinition Y1_07XlCenter2Out = CreateBit("output.y1_07", "Y1.07", "XL MỞ KẸP XE 1");
-        public static readonly PlcTagDefinition Y1_08XlClampPartIn = CreateBit("output.y1_08", "Y1.08", "XL TOOL KẸP");
-        public static readonly PlcTagDefinition Y1_09XlClampPartOut = CreateBit("output.y1_09", "Y1.09", "XL TOOL MỞ KẸP");
-        public static readonly PlcTagDefinition Y1_10XlRotary0 = CreateBit("output.y1_10", "Y1.10", "XL XOAY 0");
-        public static readonly PlcTagDefinition Y1_11XlRotary90 = CreateBit("output.y1_11", "Y1.11", "XL XOAY 90");
-        public static readonly PlcTagDefinition Y1_12BtLightStop = CreateBit("output.y1_12", "Y1.12", "ĐÈN NÚT DỪNG");
-        public static readonly PlcTagDefinition Y1_13BtLightStart = CreateBit("output.y1_13", "Y1.13", "ĐÈN NÚT CHẠY");
-        public static readonly PlcTagDefinition Y1_14BtLightReset = CreateBit("output.y1_14", "Y1.14", "ĐÈN NÚT XÓA LỖI");
-        public static readonly PlcTagDefinition Y1_15 = CreateBit("output.y1_15", "Y1.15", "ĐÈN NÚT VỀ GỐC");
+        // --- Word 0: Y0.00 - Y0.11 ---
+        public static readonly PlcTagDefinition Y0_00 = CreateBit("output.y0_00", "Y0.00", "Y0.0");
+        public static readonly PlcTagDefinition Y0_01 = CreateBit("output.y0_01", "Y0.01", "Y0.1");
+        public static readonly PlcTagDefinition Y0_02 = CreateBit("output.y0_02", "Y0.02", "Y0.2");
+        public static readonly PlcTagDefinition Y0_03 = CreateBit("output.y0_03", "Y0.03", "Y0.3");
+        public static readonly PlcTagDefinition Y0_04 = CreateBit("output.y0_04", "Y0.04", "Y0.4");
+        public static readonly PlcTagDefinition Y0_05 = CreateBit("output.y0_05", "Y0.05", "Y0.5");
+        public static readonly PlcTagDefinition Y0_06 = CreateBit("output.y0_06", "Y0.06", "Y0.6");
+        public static readonly PlcTagDefinition Y0_07 = CreateBit("output.y0_07", "Y0.07", "XL Nâng Motor");
+        public static readonly PlcTagDefinition Y0_08 = CreateBit("output.y0_08", "Y0.08", "XL Hạ Motor");
+        public static readonly PlcTagDefinition Y0_09 = CreateBit("output.y0_09", "Y0.09", "XL Trước Nam Châm Cụm out ở trong");
+        public static readonly PlcTagDefinition Y0_10 = CreateBit("output.y0_10", "Y0.10", "XL Trước Nam Châm Cụm out Ở ngoài");
+        public static readonly PlcTagDefinition Y0_11 = CreateBit("output.y0_11", "Y0.11", "Dừng khẩn cấp");
+        // --- Word 1: Y1.00 - Y1.15 ---
+        public static readonly PlcTagDefinition Y1_00 = CreateBit("output.y1_00", "Y1.00", "Đèn tháp màu đỏ");
+        public static readonly PlcTagDefinition Y1_01 = CreateBit("output.y1_01", "Y1.01", "Đèn tháp màu vàng");
+        public static readonly PlcTagDefinition Y1_02 = CreateBit("output.y1_02", "Y1.02", "Đèn tháp màu xanh");
+        public static readonly PlcTagDefinition Y1_03 = CreateBit("output.y1_03", "Y1.03", "Đèn tháp còi");
+        public static readonly PlcTagDefinition Y1_04 = CreateBit("output.y1_04", "Y1.04", "Đèn nút Start");
+        public static readonly PlcTagDefinition Y1_05 = CreateBit("output.y1_05", "Y1.05", "Đèn nút Stop");
+        public static readonly PlcTagDefinition Y1_06 = CreateBit("output.y1_06", "Y1.06", "Đèn nút Reset");
+        public static readonly PlcTagDefinition Y1_07 = CreateBit("output.y1_07", "Y1.07", "Đèn nút về gốc");
+        public static readonly PlcTagDefinition Y1_08 = CreateBit("output.y1_08", "Y1.08", "XL kẹp xe");
+        public static readonly PlcTagDefinition Y1_09 = CreateBit("output.y1_09", "Y1.09", "XL mở kẹp xe");
+        public static readonly PlcTagDefinition Y1_10 = CreateBit("output.y1_10", "Y1.10", "XL đầu vào xoay 0");
+        public static readonly PlcTagDefinition Y1_11 = CreateBit("output.y1_11", "Y1.11", "XL đầu vào xoay 90");
+        public static readonly PlcTagDefinition Y1_12 = CreateBit("output.y1_12", "Y1.12", "XL đầu vào kẹp phôi");
+        public static readonly PlcTagDefinition Y1_13 = CreateBit("output.y1_13", "Y1.13", "XL đầu vào mở kẹp phôi");
+        public static readonly PlcTagDefinition Y1_14 = CreateBit("output.y1_14", "Y1.14", "Bàn xoay quay thuận");
+        public static readonly PlcTagDefinition Y1_15 = CreateBit("output.y1_15", "Y1.15", "bàn Xoay quay nghịch");
+        // --- Word 2: Y2.00 - Y2.15 ---
+        public static readonly PlcTagDefinition Y2_00 = CreateBit("output.y2_00", "Y2.00", "Bàn xoay xóa lỗi");
+        public static readonly PlcTagDefinition Y2_01 = CreateBit("output.y2_01", "Y2.01", "Bàn xoay chạy chậm");
+        public static readonly PlcTagDefinition Y2_02 = CreateBit("output.y2_02", "Y2.02", "bàn xoay chạy nhanh");
+        public static readonly PlcTagDefinition Y2_03 = CreateBit("output.y2_03", "Y2.03", "Cụm nâng đi lên");
+        public static readonly PlcTagDefinition Y2_04 = CreateBit("output.y2_04", "Y2.04", "Cụm nâng đi xuống");
+        public static readonly PlcTagDefinition Y2_05 = CreateBit("output.y2_05", "Y2.05", "Xóa Lỗi Cụm nâng");
+        public static readonly PlcTagDefinition Y2_06 = CreateBit("output.y2_06", "Y2.06", "Cụm nâng chạy chậm");
+        public static readonly PlcTagDefinition Y2_07 = CreateBit("output.y2_07", "Y2.07", "Cụm nâng chạy nhanh");
+        public static readonly PlcTagDefinition Y2_08 = CreateBit("output.y2_08", "Y2.08", "Tay tool Xoay 0");
+        public static readonly PlcTagDefinition Y2_09 = CreateBit("output.y2_09", "Y2.09", "Tay tool Xoay 90");
+        public static readonly PlcTagDefinition Y2_10 = CreateBit("output.y2_10", "Y2.10", "Xì khí tay tool 1");
+        public static readonly PlcTagDefinition Y2_11 = CreateBit("output.y2_11", "Y2.11", "Tay Tool Nam châm 1");
+        public static readonly PlcTagDefinition Y2_12 = CreateBit("output.y2_12", "Y2.12", "Tay Tool Nam châm 2");
+        public static readonly PlcTagDefinition Y2_13 = CreateBit("output.y2_13", "Y2.13", "Tay Tool Nam châm 3");
+        public static readonly PlcTagDefinition Y2_14 = CreateBit("output.y2_14", "Y2.14", "Tay Tool Nam châm 4");
+        public static readonly PlcTagDefinition Y2_15 = CreateBit("output.y2_15", "Y2.15", "Xì khí tay tool 2");
+        // --- Word 3: Y3.00 - Y3.15 ---
+        public static readonly PlcTagDefinition Y3_00 = CreateBit("output.y3_00", "Y3.00", "Kẹp phôi trước Hope");
+        public static readonly PlcTagDefinition Y3_01 = CreateBit("output.y3_01", "Y3.01", "Mở kẹp phôi trước Hope");
+        public static readonly PlcTagDefinition Y3_02 = CreateBit("output.y3_02", "Y3.02", "Cụm Output xoay 0");
+        public static readonly PlcTagDefinition Y3_03 = CreateBit("output.y3_03", "Y3.03", "Cụm Output xoay 180");
+        public static readonly PlcTagDefinition Y3_04 = CreateBit("output.y3_04", "Y3.04", "XL chuyển hàng X vào trong");
+        public static readonly PlcTagDefinition Y3_05 = CreateBit("output.y3_05", "Y3.05", "XL chuyển hàng X ra ngoài");
+        public static readonly PlcTagDefinition Y3_06 = CreateBit("output.y3_06", "Y3.06", "XL chuyển hàng Y vào trong");
+        public static readonly PlcTagDefinition Y3_07 = CreateBit("output.y3_07", "Y3.07", "XL chuyển hàng Y ra ngoài");
+        public static readonly PlcTagDefinition Y3_08 = CreateBit("output.y3_08", "Y3.08", "Cụm Output nam châm1");
+        public static readonly PlcTagDefinition Y3_09 = CreateBit("output.y3_09", "Y3.09", "Cụm Output nam châm2");
+        public static readonly PlcTagDefinition Y3_10 = CreateBit("output.y3_10", "Y3.10", "Phanh Bàn Xoay");
+        public static readonly PlcTagDefinition Y3_11 = CreateBit("output.y3_11", "Y3.11", "Phanh Cụm Nâng");
+        public static readonly PlcTagDefinition Y3_12 = CreateBit("output.y3_12", "Y3.12", "Máy tiện 1 Mở/kẹp Chấu cặp");
+        public static readonly PlcTagDefinition Y3_13 = CreateBit("output.y3_13", "Y3.13", "Máy tiện 1 Chạy");
+        public static readonly PlcTagDefinition Y3_14 = CreateBit("output.y3_14", "Y3.14", "Máy tiện 2 Mở/kẹp Chấu cặp");
+        public static readonly PlcTagDefinition Y3_15 = CreateBit("output.y3_15", "Y3.15", "Máy tiện 2 Chạy");
+        // Aliases for backward compatibility
+        public static readonly PlcTagDefinition Y0_09AxisXOn = Y0_09;
+        public static readonly PlcTagDefinition Y0_10AxisYOn = Y0_10;
+        public static readonly PlcTagDefinition Y0_11AxisZOn = Y0_11;
     }
 
     public static class DataAutos
@@ -708,6 +759,8 @@ public static class PlcTagCatalog
         Words.D5124,
         Words.D5130,
         Words.D5131,
+        Words.D5132,
+        Words.D5133,
         Inputs.X0_00,
         Inputs.X0_01,
         Inputs.X0_02,
@@ -797,287 +850,57 @@ public static class PlcTagCatalog
         Outputs.Y0_06,
         Outputs.Y0_07,
         Outputs.Y0_08,
-        Outputs.Y0_09AxisXOn,
-        Outputs.Y0_10AxisYOn,
-        Outputs.Y0_11AxisZOn,
-        Outputs.Y0_12,
-        Outputs.Y0_13,
-        Outputs.Y0_14,
-        Outputs.Y0_15,
-        Outputs.Y1_00LightRed,
-        Outputs.Y1_01LightYellow,
-        Outputs.Y1_02LightGreen,
-        Outputs.Y1_03LightBuzzer,
-        Outputs.Y1_04XlCenter1In,
-        Outputs.Y1_05XlCenter1Out,
-        Outputs.Y1_06XlCenter2In,
-        Outputs.Y1_07XlCenter2Out,
-        Outputs.Y1_08XlClampPartIn,
-        Outputs.Y1_09XlClampPartOut,
-        Outputs.Y1_10XlRotary0,
-        Outputs.Y1_11XlRotary90,
-        Outputs.Y1_12BtLightStop,
-        Outputs.Y1_13BtLightStart,
-        Outputs.Y1_14BtLightReset,
+        Outputs.Y0_09,
+        Outputs.Y0_10,
+        Outputs.Y0_11,
+        Outputs.Y1_00,
+        Outputs.Y1_01,
+        Outputs.Y1_02,
+        Outputs.Y1_03,
+        Outputs.Y1_04,
+        Outputs.Y1_05,
+        Outputs.Y1_06,
+        Outputs.Y1_07,
+        Outputs.Y1_08,
+        Outputs.Y1_09,
+        Outputs.Y1_10,
+        Outputs.Y1_11,
+        Outputs.Y1_12,
+        Outputs.Y1_13,
+        Outputs.Y1_14,
         Outputs.Y1_15,
-        DataAutos.Shelf1ProductCount,
-        DataAutos.Shelf1OrderCount,
-        DataAutos.OrderLine1Code,
-        DataAutos.OrderLine1ModelId,
-        DataAutos.OrderLine1Quantity,
-        DataAutos.OrderLine1JigType,
-        DataAutos.OrderLine1StartPosition,
-        DataAutos.OrderLine1TrayIndex,
-        DataAutos.OrderLine1TrayType,
-        DataAutos.OrderLine1Sequence,
-        //DataAutos.OrderLine1CheckPoint1X,
-        //DataAutos.OrderLine1CheckPoint1Y,
-        //DataAutos.OrderLine1CheckPoint1Z,
-        DataAutos.OrderLine1PartHoverHeight,
-        DataAutos.OrderLine1JigCenterOffset,
-        DataAutos.OrderLine1JigDepthOffset,
-        DataAutos.OrderLine1PickedCount,
-        DataAutos.OrderLine1DiameterOp1,
-        DataAutos.OrderLine1IsLoading,
-        DataAutos.OrderLine1ProductionResultAcknowledged,
-        DataAutos.OrderLine1PausedByPc,
-        DataAutos.OrderLine1ClearRequestedByPc,
-        DataAutos.OrderLine1ShelfOrdersCompleted,
-        DataAutos.CurrentOrderRunStarted,
-        DataAutos.CurrentOrderLoadCompleted,
-        DataAutos.CurrentOrderCompleted,
-        DataAutos.OrderLine1CurrentPickIndex,
-        DataAutos.Shelf2ProductCount,
-        DataAutos.Shelf2OrderCount,
-        DataAutos.OrderLine2Code,
-        DataAutos.OrderLine2ModelId,
-        DataAutos.OrderLine2Quantity,
-        DataAutos.OrderLine2JigType,
-        DataAutos.OrderLine2StartPosition,
-        DataAutos.OrderLine2TrayIndex,
-        DataAutos.OrderLine2TrayType,
-        DataAutos.OrderLine2Sequence,
-        //DataAutos.OrderLine2CheckPoint1X,
-        //DataAutos.OrderLine2CheckPoint1Y,
-        //DataAutos.OrderLine2CheckPoint1Z,
-        DataAutos.OrderLine2PartHoverHeight,
-        DataAutos.OrderLine2JigCenterOffset,
-        DataAutos.OrderLine2JigDepthOffset,
-        DataAutos.OrderLine2PickedCount,
-        DataAutos.OrderLine2DiameterOp1,
-        DataAutos.OrderLine2IsLoading,
-        DataAutos.OrderLine2ProductionResultAcknowledged,
-        DataAutos.OrderLine2PausedByPc,
-        DataAutos.OrderLine2ClearRequestedByPc,
-        DataAutos.OrderLine2ShelfOrdersCompleted,
-        DataAutos.CurrentOrderRunStartedLine2,
-        DataAutos.CurrentOrderLoadCompletedLine2,
-        DataAutos.CurrentOrderCompletedLine2,
-        DataAutos.OrderLine2CurrentPickIndex,
-        DataAutos.Clock1s,
-        RobotTest.JigProductHeight,
-        RobotTest.JigCenterOffset,
-        RobotTest.JigDepthOffset,
-        RobotTest.DiameterOp1,
-        RobotTest.TrayType,
-        RobotTest.RunLine1,
-        RobotTest.RunLine2,
-        RobotTest.CancelPickLine1,
-        RobotTest.CancelPickLine2,
-        DataTrayCart.Cart1SmallTrayPos1X,
-        DataTrayCart.Cart1SmallTrayPos1Y,
-        DataTrayCart.Cart1SmallTrayPos1Z,
-        DataTrayCart.Cart1SmallTrayPos2X,
-        DataTrayCart.Cart1SmallTrayPos2Y,
-        DataTrayCart.Cart1SmallTrayPos2Z,
-        DataTrayCart.Cart1LargeTrayPos1X,
-        DataTrayCart.Cart1LargeTrayPos1Y,
-        DataTrayCart.Cart1LargeTrayPos1Z,
-        DataTrayCart.Cart1LargeTrayPos2X,
-        DataTrayCart.Cart1LargeTrayPos2Y,
-        DataTrayCart.Cart1LargeTrayPos2Z,
-        DataTrayCart.Cart2SmallTrayPos1X,
-        DataTrayCart.Cart2SmallTrayPos1Y,
-        DataTrayCart.Cart2SmallTrayPos1Z,
-        DataTrayCart.Cart2SmallTrayPos2X,
-        DataTrayCart.Cart2SmallTrayPos2Y,
-        DataTrayCart.Cart2SmallTrayPos2Z,
-        DataTrayCart.Cart2LargeTrayPos1X,
-        DataTrayCart.Cart2LargeTrayPos1Y,
-        DataTrayCart.Cart2LargeTrayPos1Z,
-        DataTrayCart.Cart2LargeTrayPos2X,
-        DataTrayCart.Cart2LargeTrayPos2Y,
-        DataTrayCart.Cart2LargeTrayPos2Z,
-        DataTrayCart.SmallTrayColumnSpacing,
-        DataTrayCart.SmallTrayRowSpacing,
-        DataTrayCart.SmallTrayJigHeight,
-        DataTrayCart.SmallTrayColumns,
-        DataTrayCart.SmallTrayRows,
-        DataTrayCart.LargeTrayColumnSpacing,
-        DataTrayCart.LargeTrayRowSpacing,
-        DataTrayCart.LargeTrayColumns,
-        DataTrayCart.LargeTrayRows,
-        DataTrayCart.LargeTrayJigHeight,
-        DataMachine.AxisXSpeedLimit,
-        DataMachine.AxisYSpeedLimit,
-        DataMachine.AxisZSpeedLimit,
-        DataMachine.AxisXPositiveLimit,
-        DataMachine.AxisXNegativeLimit,
-        DataMachine.AxisYPositiveLimit,
-        DataMachine.AxisYNegativeLimit,
-        DataMachine.AxisZPositiveLimit,
-        DataMachine.AxisZNegativeLimit,
-        DataMachine.AxisZPickDownSpeed,
-        DataMachine.AxisZPickSpeed,
-        DataMachine.AxisZDropSpeed,
-        DataMachine.AxisXAutoSpeed,
-        DataMachine.AxisYAutoSpeed,
-        DataMachine.AxisZAutoSpeed,
-        DataMachine.WaitPickPositionX,
-        DataMachine.WaitPickPositionY,
-        DataMachine.WaitPickPositionZ,
-        DataMachine.SafeRotatePositionZ,
-        DataMachine.SafeRotatePositionX,
-        DataMachine.SafeRotatePositionZLower,
-        DataMachine.PlaceProductLine1X,
-        DataMachine.PlaceProductLine1Y,
-        DataMachine.PlaceProductLine1Z,
-        DataMachine.PlaceProductLine2X,
-        DataMachine.PlaceProductLine2Y,
-        DataMachine.PlaceProductLine2Z,
-        DataMachine.MasterShaftOp1Diameter,
-        DataMachine.AxisXTorqueUpperLimit,
-        DataMachine.AxisXTorqueLowerLimit,
-        DataMachine.AxisYTorqueUpperLimit,
-        DataMachine.AxisYTorqueLowerLimit,
-        DataMachine.AxisZTorqueUpperLimit,
-        DataMachine.AxisZTorqueLowerLimit,
-        DataOriginCheck.MoveToOriginCheckSpeedLimit,
-        DataOriginCheck.OriginCheckSpeedLimit,
-        DataOriginCheck.OffsetX,
-        DataOriginCheck.OffsetY,
-        DataOriginCheck.OffsetZ,
-        DataOriginCheck.JigClampThickness,
-        DataOriginCheck.OriginXLine1,
-        DataOriginCheck.OriginYLine1,
-        DataOriginCheck.OriginZLine1,
-        DataOriginCheck.OriginXLine2,
-        DataOriginCheck.OriginYLine2,
-        DataOriginCheck.OriginZLine2,
-        Manual.MoveXForward,
-        Manual.MoveXBackward,
-        Manual.HomeX,
-        Manual.MoveXToPoint,
-        Manual.ManualSpeedX,
-        Manual.MovePointX,
-        Manual.CurrentPositionX,
-        Manual.IsHomingX,
-        Manual.IsHomedX,
-        Manual.MoveYLeft,
-        Manual.MoveYRight,
-        Manual.HomeY,
-        Manual.MoveYToPoint,
-        Manual.ManualSpeedY,
-        Manual.MovePointY,
-        Manual.CurrentPositionY,
-        Manual.IsHomingY,
-        Manual.IsHomedY,
-        Manual.MoveZUp,
-        Manual.MoveZDown,
-        Manual.HomeZ,
-        Manual.MoveZToPoint,
-        Manual.ManualSpeedZ,
-        Manual.MovePointZ,
-        Manual.CurrentPositionZ,
-        Manual.IsHomingZ,
-        Manual.IsHomedZ,
-        Manual.ToolClampIn,
-        Manual.ToolClampOut,
-        Manual.ToolRotate0,
-        Manual.ToolRotate90,
-        Manual.ClampCart1,
-        Manual.UnclampCart1,
-        Manual.ClampCart2,
-        Manual.UnclampCart2,
-        Manual.HomeAll,
-        Manual.HomeRotateCylinder,
-        Manual.HomeToolClampCylinder,
-        Manual.BuzzerOnOff,
-        Manual.LightCurtainOnOff,
-        Manual.Cart1OpenedSignal,
-        Manual.Cart1ClosedSignal,
-        Manual.Cart2OpenedSignal,
-        Manual.Cart2ClosedSignal,
-        Manual.ToolClosedSignal,
-        Manual.ToolOpenedSignal,
-        Manual.RotatedTo0Signal,
-        Manual.RotatedTo90Signal,
-        Manual.HomeRotateCylinderDone,
-        Manual.HomeToolClampDone,
-        Manual.IsRunningToPointX,
-        Manual.IsRunningToPointY,
-        Manual.IsRunningToPointZ,
-        Alarms.AlarmCode1,
-        Alarms.AlarmCode2,
-        Alarms.ErrorCode1,
-        Alarms.ErrorCode2,
-        Alarms.ErrorCode3,
-        Alarms.ErrorCode4,
-        Alarms.EStop,
-        Alarms.XLimitNegative,
-        Alarms.XLimitPositive,
-        Alarms.YLimitNegative,
-        Alarms.YLimitPositive,
-        Alarms.ZLimitNegative,
-        Alarms.ZLimitPositive,
-        Alarms.PickSlip,
-        Alarms.PlaceSlip,
-        Alarms.CanOpenDisconnect,
-        Alarms.LostPhase,
-        Alarms.NotHomed,
-        Alarms.AlarmDriverX,
-        Alarms.AlarmDriverY,
-        Alarms.AlarmDriverZ,
-        Alarms.RotateCylinderTimeout0,
-        Alarms.RotateCylinderTimeout90,
-        Alarms.Cart1PositionInvalid,
-        Alarms.Cart2PositionInvalid,
-        Alarms.Cart1ClampCylinderFault,
-        Alarms.Cart2ClampCylinderFault,
-        Alarms.ToolGripperNoRelease,
-        Alarms.ToolGripperNoClamp,
-        Alarms.FailPlaceLine1,
-        Alarms.FailPlaceLine2,
-        Alarms.LightCurtain,
-        Alarms.XSoftLimitOutside,
-        Alarms.XSoftLimitInside,
-        Alarms.YSoftLimitLeft,
-        Alarms.YSoftLimitRight,
-        Alarms.ZSoftLimitTop,
-        Alarms.ZSoftLimitBottom,
-        Alarms.HumanInWorkingZone,
-        Alarms.AirPressureLost,
-        Alarms.XOverMoment,
-        Alarms.YOverMoment,
-        Alarms.ZOverMoment,
-        Alarms.PlcLine1Disconnected,
-        Alarms.PlcLine2Disconnected,
-        Alarms.PcDisconnected,
-        Alarms.OrderNotEntered,
-        Alarms.ProductParametersMissingLine1,
-        Alarms.ProductParametersMissingLine2,
-        Agv.MachineReadyForSwapLine1,
-        Agv.MachineReadyForSwapLine2,
-        Agv.AgvRequestSwapLine1,
-        Agv.AgvRequestSwapLine2,
-        Agv.AgvSwapDoneLine1,
-        Agv.AgvSwapDoneLine2,
-        ConfirmMessages.CollisionRotate90,
-        ConfirmMessages.CollisionRotate0,
-        ConfirmMessages.NotRotated90,
-        ConfirmMessages.ZNotHomed,
-        ConfirmMessages.OpenGripperBeforeHome,
-        ConfirmMessages.ProductionCompleted,
+        Outputs.Y2_00,
+        Outputs.Y2_01,
+        Outputs.Y2_02,
+        Outputs.Y2_03,
+        Outputs.Y2_04,
+        Outputs.Y2_05,
+        Outputs.Y2_06,
+        Outputs.Y2_07,
+        Outputs.Y2_08,
+        Outputs.Y2_09,
+        Outputs.Y2_10,
+        Outputs.Y2_11,
+        Outputs.Y2_12,
+        Outputs.Y2_13,
+        Outputs.Y2_14,
+        Outputs.Y2_15,
+        Outputs.Y3_00,
+        Outputs.Y3_01,
+        Outputs.Y3_02,
+        Outputs.Y3_03,
+        Outputs.Y3_04,
+        Outputs.Y3_05,
+        Outputs.Y3_06,
+        Outputs.Y3_07,
+        Outputs.Y3_08,
+        Outputs.Y3_09,
+        Outputs.Y3_10,
+        Outputs.Y3_11,
+        Outputs.Y3_12,
+        Outputs.Y3_13,
+        Outputs.Y3_14,
+        Outputs.Y3_15
     ];
 
     public static IReadOnlyDictionary<string, PlcTagDefinition> ByName { get; } =
