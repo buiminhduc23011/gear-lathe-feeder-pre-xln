@@ -16,15 +16,7 @@ public sealed class PlcMessageMonitorService : IPlcMessageMonitorService, IDispo
     private bool _initialized;
     private bool _disposed;
 
-    private static readonly PlcTagDefinition[] MonitoredTags =
-    [
-        PlcTagCatalog.ConfirmMessages.CollisionRotate90,
-        PlcTagCatalog.ConfirmMessages.CollisionRotate0,
-        PlcTagCatalog.ConfirmMessages.NotRotated90,
-        PlcTagCatalog.ConfirmMessages.ZNotHomed,
-        PlcTagCatalog.ConfirmMessages.OpenGripperBeforeHome,
-        PlcTagCatalog.ConfirmMessages.ProductionCompleted
-    ];
+    private static readonly PlcTagDefinition[] MonitoredTags = [];
 
     public PlcMessageMonitorService(IPlcService plcService, INotificationDialogService dialogService)
     {
