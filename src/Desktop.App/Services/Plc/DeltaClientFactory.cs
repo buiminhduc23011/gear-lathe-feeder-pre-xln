@@ -12,16 +12,6 @@ public sealed class DeltaClientFactory : IDeltaClientFactory
         return CreateClient(options.PlcHost, options.PlcPort, options.PlcConnectionMode, options.PlcSlaveId, options);
     }
 
-    public IDeltaClient CreateForLine1(AppOptions options)
-    {
-        return CreateClient(options.PlcLine1Host, options.PlcLine1Port, options.PlcLine1ConnectionMode, options.PlcLine1SlaveId, options);
-    }
-
-    public IDeltaClient CreateForLine2(AppOptions options)
-    {
-        return CreateClient(options.PlcLine2Host, options.PlcLine2Port, options.PlcLine2ConnectionMode, options.PlcLine2SlaveId, options);
-    }
-
     private static IDeltaClient CreateClient(string host, int port, string? connectionMode, int slaveId, AppOptions options)
     {
         var parsedMode = ParseConnectionMode(connectionMode);
