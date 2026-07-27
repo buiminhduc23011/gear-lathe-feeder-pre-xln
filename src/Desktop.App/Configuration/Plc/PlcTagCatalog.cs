@@ -498,56 +498,100 @@ public static class PlcTagCatalog
     {
         public static readonly PlcTagDefinition AlarmCode1 = CreateWord("alarm.code_1", "D5140", PlcTagDataType.Int16, "Mã cảnh báo 1");
         public static readonly PlcTagDefinition AlarmCode2 = CreateWord("alarm.code_2", "D5141", PlcTagDataType.Int16, "Mã cảnh báo 2");
-        public static readonly PlcTagDefinition ErrorCode1 = CreateWord("alarm.error_code_1", "D5142", PlcTagDataType.Int16, "Mã lỗi 1");
-        public static readonly PlcTagDefinition ErrorCode2 = CreateWord("alarm.error_code_2", "D5143", PlcTagDataType.Int16, "Mã lỗi 2");
-        public static readonly PlcTagDefinition ErrorCode3 = CreateWord("alarm.error_code_3", "D5144", PlcTagDataType.Int16, "Mã lỗi 3");
-        public static readonly PlcTagDefinition ErrorCode4 = CreateWord("alarm.error_code_4", "D5145", PlcTagDataType.Int16, "Mã lỗi 4");
+        public static readonly PlcTagDefinition ErrorCode1 = CreateWord("alarm.error_code_1", "D5142", PlcTagDataType.Int16, "Mã Lỗi 1");
+        public static readonly PlcTagDefinition ErrorCode2 = CreateWord("alarm.error_code_2", "D5143", PlcTagDataType.Int16, "Mã Lỗi 2");
+        public static readonly PlcTagDefinition ErrorCode3 = CreateWord("alarm.error_code_3", "D5144", PlcTagDataType.Int16, "Mã Lỗi 3");
+        public static readonly PlcTagDefinition ErrorCode4 = CreateWord("alarm.error_code_4", "D5145", PlcTagDataType.Int16, "Mã Lỗi 4");
+        public static readonly PlcTagDefinition ErrorCode5 = CreateWord("alarm.error_code_5", "D5146", PlcTagDataType.Int16, "Mã Lỗi 5");
+        public static readonly PlcTagDefinition ErrorCode6 = CreateWord("alarm.error_code_6", "D5147", PlcTagDataType.Int16, "Mã Lỗi 6");
+        public static readonly PlcTagDefinition ErrorCode7 = CreateWord("alarm.error_code_7", "D5148", PlcTagDataType.Int16, "Mã Lỗi 7");
 
+        // D5140
+        public static readonly PlcTagDefinition EStop = CreateBit("alarm.estop", "D5140.0", "Lỗi dừng khẩn cấp");
 
-        public static readonly PlcTagDefinition HumanInWorkingZone = CreateBit("alarm.human_in_working_zone", "D5140.0", "Cảnh báo có người trong vùng hoạt động");
+        // D5141
+        public static readonly PlcTagDefinition XSoftLimitOutside = CreateBit("alarm.x_soft_limit_outside", "D5141.0", "Lỗi giới hạn mềm ngoài trục X");
+        public static readonly PlcTagDefinition XSoftLimitInside = CreateBit("alarm.x_soft_limit_inside", "D5141.1", "Lỗi giới hạn mềm trong trục X");
+        public static readonly PlcTagDefinition ZSoftLimitBottom = CreateBit("alarm.z_soft_limit_bottom", "D5141.2", "Lỗi giới hạn mềm dưới trục Z");
+        public static readonly PlcTagDefinition ZSoftLimitTop = CreateBit("alarm.z_soft_limit_top", "D5141.3", "Lỗi giới hạn mềm trên trục Z");
+        public static readonly PlcTagDefinition NotHomedRodal = CreateBit("alarm.not_homed_rodal", "D5141.4", "Lỗi chưa về gốc Rodal");
+        public static readonly PlcTagDefinition AlarmDriverX = CreateBit("alarm.alarm_driver_x", "D5141.5", "Lỗi Driver trục X");
+        public static readonly PlcTagDefinition AlarmDriverZ = CreateBit("alarm.alarm_driver_z", "D5141.6", "Lỗi Driver trục Z");
 
-        public static readonly PlcTagDefinition EStop = CreateBit("alarm.estop", "D5142.0", "Lỗi dừng khẩn cấp");
-        public static readonly PlcTagDefinition XLimitNegative = CreateBit("alarm.x_limit_negative", "D5142.1", "Lỗi quá giới hạn mềm phía ngoài trục X");
-        public static readonly PlcTagDefinition XLimitPositive = CreateBit("alarm.x_limit_positive", "D5142.2", "Lỗi quá giới hạn mềm phía trong trục X");
-        public static readonly PlcTagDefinition YLimitNegative = CreateBit("alarm.y_limit_negative", "D5142.3", "Lỗi quá giới hạn mềm bên trái trục Y");
-        public static readonly PlcTagDefinition YLimitPositive = CreateBit("alarm.y_limit_positive", "D5142.4", "Lỗi quá giới hạn mềm bên phải trục Y");
-        public static readonly PlcTagDefinition ZLimitNegative = CreateBit("alarm.z_limit_negative", "D5142.5", "Lỗi quá giới hạn mềm phía dưới trục Z");
-        public static readonly PlcTagDefinition ZLimitPositive = CreateBit("alarm.z_limit_positive", "D5142.6", "Lỗi quá giới hạn mềm phía trên trục Z");
-        public static readonly PlcTagDefinition PickSlip = CreateBit("alarm.pick_slip", "D5142.7", "Lỗi gắp trượt sản phẩm");
-        public static readonly PlcTagDefinition PlaceSlip = CreateBit("alarm.place_slip", "D5142.8", "Lỗi thả trượt sản phẩm");
-        public static readonly PlcTagDefinition CanOpenDisconnect = CreateBit("alarm.canopen_disconnect", "D5142.9", "Mất kết nối canopen");
-        public static readonly PlcTagDefinition LostPhase = CreateBit("alarm.lost_phase", "D5142.10", "Lỗi mất pha");
-        public static readonly PlcTagDefinition NotHomed = CreateBit("alarm.not_homed", "D5142.11", "Lỗi chưa về gốc");
-        public static readonly PlcTagDefinition AlarmDriverX = CreateBit("alarm.alarm_driver_x", "D5142.12", "Lỗi Driver trục x");
-        public static readonly PlcTagDefinition AlarmDriverY = CreateBit("alarm.alarm_driver_y", "D5142.13", "Lỗi Driver trục y");
-        public static readonly PlcTagDefinition AlarmDriverZ = CreateBit("alarm.alarm_driver_z", "D5142.14", "Lỗi Driver trục z");
+        // D5142
+        public static readonly PlcTagDefinition XLimitNegative = CreateBit("alarm.x_limit_negative", "D5142.0", "Lỗi giới hạn cứng ngoài trục X");
+        public static readonly PlcTagDefinition XLimitPositive = CreateBit("alarm.x_limit_positive", "D5142.1", "Lỗi giới hạn cứng trong trục X");
+        public static readonly PlcTagDefinition ZLimitNegative = CreateBit("alarm.z_limit_negative", "D5142.2", "Lỗi giới hạn cứng dưới trục Z");
+        public static readonly PlcTagDefinition ZLimitPositive = CreateBit("alarm.z_limit_positive", "D5142.3", "Lỗi Giới hạn cứng trên trục Z");
+        public static readonly PlcTagDefinition XOverMoment = CreateBit("alarm.x_over_moment", "D5142.4", "Lỗi quá Momen trục X");
+        public static readonly PlcTagDefinition ZOverMoment = CreateBit("alarm.z_over_moment", "D5142.5", "Lỗi quá Momen trục Z");
+        public static readonly PlcTagDefinition AirPressureLost = CreateBit("alarm.air_pressure_lost", "D5142.6", "Lỗi áp suất khí nén mức thấp");
+        public static readonly PlcTagDefinition RotateCylinderTimeout0 = CreateBit("alarm.rotate_cylinder_timeout_0", "D5142.7", "Lỗi TimeOut Xilanh xoay 0 cụm Tool");
+        public static readonly PlcTagDefinition RotateCylinderTimeout180 = CreateBit("alarm.rotate_cylinder_timeout_180", "D5142.8", "Lỗi TimeOut Xilanh xoay 180 cụm Tool");
+        public static readonly PlcTagDefinition ToolCheckSensor1 = CreateBit("alarm.tool_check_sensor_1", "D5142.9", "Lỗi cảm biến check hàng tool 1");
+        public static readonly PlcTagDefinition ToolCheckSensor2 = CreateBit("alarm.tool_check_sensor_2", "D5142.10", "Lỗi cảm biến check hàng tool 2");
 
-        public static readonly PlcTagDefinition RotateCylinderTimeout0 = CreateBit("alarm.rotate_cylinder_timeout_0", "D5143.0", "Lỗi timeout xilanh xoay 0");
-        public static readonly PlcTagDefinition RotateCylinderTimeout90 = CreateBit("alarm.rotate_cylinder_timeout_90", "D5143.1", "Lỗi timeout xilanh xoay 90");
-        public static readonly PlcTagDefinition Cart1PositionInvalid = CreateBit("alarm.cart_1_position_invalid", "D5143.2", "Lỗi xe 1 không ở đúng vị trí");
-        public static readonly PlcTagDefinition Cart2PositionInvalid = CreateBit("alarm.cart_2_position_invalid", "D5143.3", "Lỗi xe 2 không ở đúng vị trí");
-        public static readonly PlcTagDefinition Cart1ClampCylinderFault = CreateBit("alarm.cart_1_clamp_cylinder_fault", "D5143.4", "Lỗi xilanh kẹp xe 1");
-        public static readonly PlcTagDefinition Cart2ClampCylinderFault = CreateBit("alarm.cart_2_clamp_cylinder_fault", "D5143.5", "Lỗi xilanh kẹp xe 2");
-        public static readonly PlcTagDefinition ToolGripperNoRelease = CreateBit("alarm.tool_gripper_no_release", "D5143.6", "Lỗi tay kẹp không nhả");
-        public static readonly PlcTagDefinition ToolGripperNoClamp = CreateBit("alarm.tool_gripper_no_clamp", "D5143.7", "Lỗi tay kẹp không kẹp");
-        public static readonly PlcTagDefinition FailPlaceLine1 = CreateBit("alarm.fail_place_line1", "D5143.8", "Lỗi thả sản phẩm line 1");
-        public static readonly PlcTagDefinition FailPlaceLine2 = CreateBit("alarm.fail_place_line2", "D5143.9", "Lỗi cắm sản phẩm line 2");
+        // D5143
+        public static readonly PlcTagDefinition LifterSoftLimitBottom = CreateBit("alarm.lifter_soft_limit_bottom", "D5143.0", "Lỗi giới hạn mềm dưới cụm nâng");
+        public static readonly PlcTagDefinition LifterSoftLimitTop = CreateBit("alarm.lifter_soft_limit_top", "D5143.1", "Lỗi giới hạn mềm trên cụm nâng");
+        public static readonly PlcTagDefinition LifterInverterFault = CreateBit("alarm.lifter_inverter_fault", "D5143.2", "Lỗi biến tần cụm nâng");
+        public static readonly PlcTagDefinition RotaryInverterFault = CreateBit("alarm.rotary_inverter_fault", "D5143.3", "Lỗi biến tần bàn xoay");
+        public static readonly PlcTagDefinition InputGroupNotHomed = CreateBit("alarm.input_group_not_homed", "D5143.4", "Lỗi chưa về gốc Cụm Input");
+        public static readonly PlcTagDefinition LifterPulseSlip = CreateBit("alarm.lifter_pulse_slip", "D5143.5", "Lỗi trượt xung cụm nâng");
+        public static readonly PlcTagDefinition RotaryPulseSlip = CreateBit("alarm.rotary_pulse_slip", "D5143.6", "Lỗi trượt xung bàn xoay");
 
-        public static readonly PlcTagDefinition LightCurtain = CreateBit("alarm.light_curtain", "D5144.0", "Lỗi light curtain");
-        public static readonly PlcTagDefinition XSoftLimitOutside = CreateBit("alarm.x_soft_limit_outside", "D5144.1", "Lỗi quá giới hạn phía ngoài trục X");
-        public static readonly PlcTagDefinition XSoftLimitInside = CreateBit("alarm.x_soft_limit_inside", "D5144.2", "Lỗi quá giới hạn phía trong trục X");
-        public static readonly PlcTagDefinition YSoftLimitLeft = CreateBit("alarm.y_soft_limit_left", "D5144.3", "Lỗi quá giới hạn bên trái trục Y");
-        public static readonly PlcTagDefinition YSoftLimitRight = CreateBit("alarm.y_soft_limit_right", "D5144.4", "Lỗi quá giới hạn bên phải trục Y");
-        public static readonly PlcTagDefinition ZSoftLimitTop = CreateBit("alarm.z_soft_limit_top", "D5144.5", "Lỗi quá giới hạn phía trên trục Z");
-        public static readonly PlcTagDefinition ZSoftLimitBottom = CreateBit("alarm.z_soft_limit_bottom", "D5144.6", "Lỗi quá giới hạn phía dưới trục Z");
-        public static readonly PlcTagDefinition AirPressureLost = CreateBit("alarm.air_pressure_lost", "D5144.8", "Lỗi mất khí");
-        public static readonly PlcTagDefinition XOverMoment = CreateBit("alarm.x_over_moment", "D5144.9", "Lỗi quá momen trục X");
-        public static readonly PlcTagDefinition YOverMoment = CreateBit("alarm.y_over_moment", "D5144.10", "Lỗi quá momen trục Y");
-        public static readonly PlcTagDefinition ZOverMoment = CreateBit("alarm.z_over_moment", "D5144.11", "Lỗi quá momen trục Z");
+        // D5144
+        public static readonly PlcTagDefinition LifterHardLimitBottom = CreateBit("alarm.lifter_hard_limit_bottom", "D5144.0", "Lỗi giới hạn cứng dưới cụm nâng");
+        public static readonly PlcTagDefinition LifterHardLimitTop = CreateBit("alarm.lifter_hard_limit_top", "D5144.1", "Lỗi giới hạn cứng trên cụm nâng");
+        public static readonly PlcTagDefinition CartClampTimeout = CreateBit("alarm.cart_clamp_timeout", "D5144.2", "Lỗi Timeout Xilanh kẹp xe");
+        public static readonly PlcTagDefinition CartUnclampTimeout = CreateBit("alarm.cart_unclamp_timeout", "D5144.3", "Lỗi Timeout Xilanh mở kẹp xe");
+        public static readonly PlcTagDefinition CartPositionInvalid = CreateBit("alarm.cart_position_invalid", "D5144.4", "Lôi sai vị trí xe");
+        public static readonly PlcTagDefinition RotaryNotAtHome = CreateBit("alarm.rotary_not_at_home", "D5144.5", "Lỗi Bàn xoay không ở gốc");
+        public static readonly PlcTagDefinition MotorNotAtHome = CreateBit("alarm.motor_not_at_home", "D5144.6", "Lỗi Motor không ở gốc");
+        public static readonly PlcTagDefinition InputRotateTimeout0 = CreateBit("alarm.input_rotate_timeout_0", "D5144.7", "Lỗi TimeOut XL xoay 0 cụm input");
+        public static readonly PlcTagDefinition InputRotateTimeout90 = CreateBit("alarm.input_rotate_timeout_90", "D5144.8", "Lỗi TimeOut XL xoay 90 cụm input");
+        public static readonly PlcTagDefinition InputClampTimeout = CreateBit("alarm.input_clamp_timeout", "D5144.9", "Lỗi Timout kẹp phôi cụm Input");
+        public static readonly PlcTagDefinition InputUnclampTimeout = CreateBit("alarm.input_unclamp_timeout", "D5144.10", "Lỗi Timout mở kẹp phôi cụm Input");
+        public static readonly PlcTagDefinition InputCheckSensorFault = CreateBit("alarm.input_check_sensor_fault", "D5144.11", "Lỗi cảm biến check hàng đầu vào");
 
+        // D5147
+        public static readonly PlcTagDefinition OutputRotateTimeout0 = CreateBit("alarm.output_rotate_timeout_0", "D5147.0", "Lỗi TimeOut Xilanh xoay 0 Cụm đầu ra");
+        public static readonly PlcTagDefinition OutputRotateTimeout90 = CreateBit("alarm.output_rotate_timeout_90", "D5147.1", "Lỗi TimeOut Xilanh xoay 90 Cụm đầu ra");
+        public static readonly PlcTagDefinition ShiftLeftTimeout = CreateBit("alarm.shift_left_timeout", "D5147.2", "Lỗi Timeout Xilanh chuyển phôi sang trái");
+        public static readonly PlcTagDefinition ShiftRightTimeout = CreateBit("alarm.shift_right_timeout", "D5147.3", "Lỗi Timeout Xilanh chuyển phôi sang phải");
+        public static readonly PlcTagDefinition ShiftInTimeout = CreateBit("alarm.shift_in_timeout", "D5147.4", "Lỗi Timeout Xilanh chuyển phôi ở trong");
+        public static readonly PlcTagDefinition ShiftOutTimeout = CreateBit("alarm.shift_out_timeout", "D5147.5", "Lỗi Timeout Xilanh chuyển phôi ở ngoài");
+        public static readonly PlcTagDefinition ProductClampTimeout = CreateBit("alarm.product_clamp_timeout", "D5147.6", "Lỗi Timeout Kẹp phôi thành phẩm");
+        public static readonly PlcTagDefinition ProductUnclampTimeout = CreateBit("alarm.product_unclamp_timeout", "D5147.7", "Lỗi Timeout Mở Kẹp phôi thành phẩm");
+        public static readonly PlcTagDefinition OutputMagnetInTimeout = CreateBit("alarm.output_magnet_in_timeout", "D5147.8", "Lỗi Timout Xilanh cụm Nam châm Output ở trong");
+        public static readonly PlcTagDefinition OutputMagnetOutTimeout = CreateBit("alarm.output_magnet_out_timeout", "D5147.9", "Lỗi Timout Xilanh cụm Nam châm Output ở ngoài");
+
+        // Aliases for backward compatibility
+        public static readonly PlcTagDefinition HumanInWorkingZone = EStop;
+        public static readonly PlcTagDefinition YLimitNegative = XLimitNegative;
+        public static readonly PlcTagDefinition YLimitPositive = XLimitPositive;
+        public static readonly PlcTagDefinition PickSlip = ToolCheckSensor1;
+        public static readonly PlcTagDefinition PlaceSlip = ToolCheckSensor2;
+        public static readonly PlcTagDefinition CanOpenDisconnect = AlarmDriverX;
+        public static readonly PlcTagDefinition LostPhase = EStop;
+        public static readonly PlcTagDefinition NotHomed = NotHomedRodal;
+        public static readonly PlcTagDefinition AlarmDriverY = AlarmDriverX;
+        public static readonly PlcTagDefinition RotateCylinderTimeout90 = RotateCylinderTimeout180;
+        public static readonly PlcTagDefinition Cart1PositionInvalid = CartPositionInvalid;
+        public static readonly PlcTagDefinition Cart2PositionInvalid = CartPositionInvalid;
+        public static readonly PlcTagDefinition Cart1ClampCylinderFault = CartClampTimeout;
+        public static readonly PlcTagDefinition Cart2ClampCylinderFault = CartClampTimeout;
+        public static readonly PlcTagDefinition ToolGripperNoRelease = RotateCylinderTimeout0;
+        public static readonly PlcTagDefinition ToolGripperNoClamp = RotateCylinderTimeout180;
+        public static readonly PlcTagDefinition FailPlaceLine1 = ToolCheckSensor1;
+        public static readonly PlcTagDefinition FailPlaceLine2 = ToolCheckSensor2;
+        public static readonly PlcTagDefinition LightCurtain = EStop;
+        public static readonly PlcTagDefinition YSoftLimitLeft = XSoftLimitOutside;
+        public static readonly PlcTagDefinition YSoftLimitRight = XSoftLimitInside;
+        public static readonly PlcTagDefinition YOverMoment = XOverMoment;
         public static readonly PlcTagDefinition PlcLine1Disconnected = CreateBit("alarm.plc_line_1_disconnected", "D5145.0", "Mất kết nối PLC line 1");
         public static readonly PlcTagDefinition PlcLine2Disconnected = CreateBit("alarm.plc_line_2_disconnected", "D5145.1", "Mất kết nối PLC line 2");
-        public static readonly PlcTagDefinition PcDisconnected = CreateBit("alarm.pc_disconnected", "D5145.2", "Mất kết nối PLC line 2");
+        public static readonly PlcTagDefinition PcDisconnected = CreateBit("alarm.pc_disconnected", "D5145.2", "Mất kết nối PC");
         public static readonly PlcTagDefinition OrderNotEntered = CreateBit("alarm.order_not_entered", "D5145.3", "Chưa nhập order");
         public static readonly PlcTagDefinition ProductParametersMissingLine1 = CreateBit("alarm.product_parameters_missing_line_1", "D5145.4", "Lỗi thiếu thông số sản phẩm line 1");
         public static readonly PlcTagDefinition ProductParametersMissingLine2 = CreateBit("alarm.product_parameters_missing_line_2", "D5145.5", "Lỗi thiếu thông số sản phẩm line 2");
