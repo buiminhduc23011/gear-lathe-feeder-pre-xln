@@ -131,15 +131,13 @@ internal sealed class RobotJigTypeResolver
         var lineData = isLine2 ? profile.Line2Data : profile.Line1Data;
         var robotData = profile.RobotData;
 
-        var jigType = TryReadInt(lineData, "jigType", out var resolvedJigType) ? resolvedJigType : 0;
+        var jigType = TryReadInt(robotData, "modelJigClampType", out var clampType)
+            ? clampType
+            : (TryReadInt(lineData, "jigType", out var resolvedJigType) ? resolvedJigType : 0);
 
         return new RobotProfileLineData
         {
             JigType = jigType,
-            // Cải tiến theo yêu cầu mr.Tùng ngày 27/04/2026: Ẩn và ngừng ghi các điểm check gốc robot
-            // CheckPoint1X = ReadFloatOrDefault(robotData, $"{checkPrefix}X"),
-            // CheckPoint1Y = ReadFloatOrDefault(robotData, $"{checkPrefix}Y"),
-            // CheckPoint1Z = ReadFloatOrDefault(robotData, $"{checkPrefix}Z"),
             PartHoverHeight = ReadFloatOrDefault(robotData, "jigProductHeight"),
             JigCenterOffset = ReadFloatOrDefault(robotData, "jigCenterOffset"),
             JigDepthOffset = ReadFloatOrDefault(robotData, "jigDepthOffset"),

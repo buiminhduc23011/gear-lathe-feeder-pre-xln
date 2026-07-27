@@ -13,7 +13,6 @@ import {
   Space,
   Switch,
   Table,
-  Tabs,
   Tag,
   Tooltip,
   Typography
@@ -66,31 +65,7 @@ const ROBOT_FIELDS = [
   }
 ];
 
-const LINE1_FIELDS = [
-  {
-    key: "jigType",
-    label: "Loại tay kẹp",
-    type: "select",
-    options: GRIPPER_TYPE_OPTIONS
-  },
-  { key: "pickInputX", label: "Tọa độ X gắp SP đầu vào line", type: "real" },
-  { key: "pickInputZ", label: "Tọa độ Z gắp SP đầu vào line", type: "real" },
-  { key: "pickOp1X", label: "Tọa độ X an toàn lên xuống Op1", type: "real" },
-  { key: "pickOp1Z", label: "Tọa độ Z an toàn lên xuống Op1", type: "real" },
-  { key: "pickOp2X", label: "Tọa độ X an toàn lên xuống Op2", type: "real" },
-  { key: "pickOp2Z", label: "Tọa độ Z an toàn lên xuống Op2", type: "real" },
-  { key: "placeOp1X", label: "Tọa độ X chống tâm Op1", type: "real" },
-  { key: "placeOp1Z", label: "Tọa độ Z chống tâm Op1", type: "real" },
-  { key: "placeOp2X", label: "Tọa độ X chống tâm Op2", type: "real" },
-  { key: "placeOp2Z", label: "Tọa độ Z chống tâm Op2", type: "real" },
-  { key: "placeMeasureX", label: "Tọa độ X chống tâm máy đo", type: "real" },
-  { key: "placeMeasureZ", label: "Tọa độ Z chống tâm máy đo", type: "real" },
-  { key: "jigProductHeight", label: "Tọa độ Jig đỡ trục đầu vào", type: "real" },
-  { key: "grindingTimeOp1", label: "Thời gian mài Op1", type: "int" },
-  { key: "grindingTimeOp2", label: "Thời gian mài Op2", type: "int" }
-];
 
-const LINE2_FIELDS = [...LINE1_FIELDS];
 
 const MODEL_METADATA_FIELDS = [
   { key: "itemType", label: "Loại hàng", type: "text" },
@@ -280,9 +255,7 @@ function buildModelFormValues(model) {
       diameterOp2: 0,
       trayType: 0,
       orderInput: 1,
-      robotData: buildFieldDefaults(ROBOT_FIELDS),
-      line1Data: buildFieldDefaults(LINE1_FIELDS),
-      line2Data: buildFieldDefaults(LINE2_FIELDS)
+      robotData: buildFieldDefaults(ROBOT_FIELDS)
     };
   }
 
@@ -297,9 +270,7 @@ function buildModelFormValues(model) {
     diameterOp2: model.diameterOp2 ?? 0,
     trayType: model.trayType ?? 0,
     orderInput: model.orderInput ?? 1,
-    robotData: buildFieldData(ROBOT_FIELDS, model.robotData),
-    line1Data: buildFieldData(LINE1_FIELDS, model.line1Data),
-    line2Data: buildFieldData(LINE2_FIELDS, model.line2Data)
+    robotData: buildFieldData(ROBOT_FIELDS, model.robotData)
   };
 }
 
@@ -316,8 +287,8 @@ function buildModelPayload(values, modelName) {
     trayType: values.trayType ?? 0,
     orderInput: values.orderInput ?? 1,
     robotData: buildFieldData(ROBOT_FIELDS, values.robotData),
-    line1Data: buildFieldData(LINE1_FIELDS, values.line1Data),
-    line2Data: buildFieldData(LINE2_FIELDS, values.line2Data)
+    line1Data: {},
+    line2Data: {}
   };
 }
 
@@ -919,14 +890,10 @@ function ModelProfiles() {
 
               <MetadataFormItems />
 
-              <Tabs
-                defaultActiveKey="robot"
-                items={[
-                  { key: "robot", label: "Model (Robot)", forceRender: true, children: <FieldFormItems fields={ROBOT_FIELDS} namePrefix="robotData" /> },
-                  { key: "line1", label: "Model Line 1", forceRender: true, children: <FieldFormItems fields={LINE1_FIELDS} namePrefix="line1Data" /> },
-                  { key: "line2", label: "Model Line 2", forceRender: true, children: <FieldFormItems fields={LINE2_FIELDS} namePrefix="line2Data" /> }
-                ]}
-              />
+              <div style={{ marginTop: 12 }}>
+                <Text strong style={{ display: "block", marginBottom: 12 }}>Thông số Robot & Jig</Text>
+                <FieldFormItems fields={ROBOT_FIELDS} namePrefix="robotData" />
+              </div>
             </Form>
           </AppModal>
 
@@ -957,14 +924,7 @@ function ModelProfiles() {
               scroll={{ x: 980 }}
               expandable={{
                 expandedRowRender: (record) => (
-                  <Tabs
-                    size="small"
-                    items={[
-                      { key: "robot", label: "Robot", children: <SnapshotDataView data={record.robotData} fields={ROBOT_FIELDS} /> },
-                      { key: "line1", label: "Line 1", children: <SnapshotDataView data={record.line1Data} fields={LINE1_FIELDS} /> },
-                      { key: "line2", label: "Line 2", children: <SnapshotDataView data={record.line2Data} fields={LINE2_FIELDS} /> }
-                    ]}
-                  />
+                  <SnapshotDataView data={record.robotData} fields={ROBOT_FIELDS} />
                 )
               }}
               columns={[

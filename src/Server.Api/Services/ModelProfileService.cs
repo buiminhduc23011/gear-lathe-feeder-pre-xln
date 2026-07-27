@@ -893,58 +893,14 @@ public sealed class ModelProfileService : IModelProfileService
         ("modelJigClampType", "Model Jig tay kẹp"),
     ];
 
-    private static readonly (string Key, string Label)[] Line1FieldDefinitions =
-    [
-        ("jigType", "Loại tay kẹp"),
-        ("pickInputX", "Tọa độ X gắp SP đầu vào line"),
-        ("pickInputZ", "Tọa độ Z gắp SP đầu vào line"),
-        ("pickOp1X", "Tọa độ X an toàn lên xuống Op1"),
-        ("pickOp1Z", "Tọa độ Z an toàn lên xuống Op1"),
-        ("pickOp2X", "Tọa độ X an toàn lên xuống Op2"),
-        ("pickOp2Z", "Tọa độ Z an toàn lên xuống Op2"),
-        ("placeOp1X", "Tọa độ X chống tâm Op1"),
-        ("placeOp1Z", "Tọa độ Z chống tâm Op1"),
-        ("placeOp2X", "Tọa độ X chống tâm Op2"),
-        ("placeOp2Z", "Tọa độ Z chống tâm Op2"),
-        ("placeMeasureX", "Tọa độ X chống tâm máy đo"),
-        ("placeMeasureZ", "Tọa độ Z chống tâm máy đo"),
-        ("jigProductHeight", "Tọa độ Jig đỡ trục đầu vào"),
-        ("grindingTimeOp1", "Thời gian mài Op1"),
-        ("grindingTimeOp2", "Thời gian mài Op2"),
-    ];
-
-    private static readonly (string Key, string Label)[] Line2FieldDefinitions =
-    [
-        ("jigType", "Loại tay kẹp"),
-        ("pickInputX", "Tọa độ X gắp SP đầu vào line"),
-        ("pickInputZ", "Tọa độ Z gắp SP đầu vào line"),
-        ("pickOp1X", "Tọa độ X an toàn lên xuống Op1"),
-        ("pickOp1Z", "Tọa độ Z an toàn lên xuống Op1"),
-        ("pickOp2X", "Tọa độ X an toàn lên xuống Op2"),
-        ("pickOp2Z", "Tọa độ Z an toàn lên xuống Op2"),
-        ("placeOp1X", "Tọa độ X chống tâm Op1"),
-        ("placeOp1Z", "Tọa độ Z chống tâm Op1"),
-        ("placeOp2X", "Tọa độ X chống tâm Op2"),
-        ("placeOp2Z", "Tọa độ Z chống tâm Op2"),
-        ("placeMeasureX", "Tọa độ X chống tâm máy đo"),
-        ("placeMeasureZ", "Tọa độ Z chống tâm máy đo"),
-        ("jigProductHeight", "Tọa độ Jig đỡ trục đầu vào"),
-        ("grindingTimeOp1", "Thời gian mài Op1"),
-        ("grindingTimeOp2", "Thời gian mài Op2"),
-    ];
-
     private static void WriteModelsSheet(XLWorkbook workbook, IReadOnlyList<ModelProfileEntity> profiles)
     {
         var ws = workbook.Worksheets.Add(ModelsSheetName);
         var robotStart = ModelsRobotStartColumn;
-        var line1Start = robotStart + RobotFieldDefinitions.Length;
-        var line2Start = line1Start + Line1FieldDefinitions.Length;
-        var lastColumn = line2Start + Line2FieldDefinitions.Length - 1;
+        var lastColumn = robotStart + RobotFieldDefinitions.Length - 1;
 
         WriteGroupHeader(ws, 1, ModelsMetadataColumnCount, "Thông tin chung");
-        WriteGroupHeader(ws, robotStart, line1Start - 1, "Robot");
-        WriteGroupHeader(ws, line1Start, line2Start - 1, "Line 1");
-        WriteGroupHeader(ws, line2Start, lastColumn, "Line 2");
+        WriteGroupHeader(ws, robotStart, lastColumn, "Robot");
 
         ws.Cell(ModelsHeaderRow, 1).Value = "Article ID";
         foreach (var metadataField in MetadataFieldDefinitions)
@@ -953,8 +909,6 @@ public sealed class ModelProfileService : IModelProfileService
         }
 
         WriteFieldHeaders(ws, robotStart, RobotFieldDefinitions);
-        WriteFieldHeaders(ws, line1Start, Line1FieldDefinitions);
-        WriteFieldHeaders(ws, line2Start, Line2FieldDefinitions);
 
         var headerRange = ws.Range(1, 1, ModelsHeaderRow, lastColumn);
         headerRange.Style.Font.Bold = true;
@@ -973,8 +927,6 @@ public sealed class ModelProfileService : IModelProfileService
             ws.Cell(excelRow, 1).Value = profile.ModelName;
             WriteMetadataCells(ws, excelRow, profile);
             WriteFieldValues(ws, excelRow, robotStart, RobotFieldDefinitions, DeserializeData(profile.RobotData));
-            WriteFieldValues(ws, excelRow, line1Start, Line1FieldDefinitions, DeserializeData(profile.Line1Data));
-            WriteFieldValues(ws, excelRow, line2Start, Line2FieldDefinitions, DeserializeData(profile.Line2Data));
         }
 
         ws.SheetView.FreezeRows(ModelsHeaderRow);
@@ -1131,9 +1083,7 @@ public sealed class ModelProfileService : IModelProfileService
 
         var lastRow = ws.LastRowUsed()?.RowNumber() ?? 1;
         var robotStart = ModelsRobotStartColumn;
-        var line1Start = robotStart + RobotFieldDefinitions.Length;
-        var line2Start = line1Start + Line1FieldDefinitions.Length;
-        var lastColumn = line2Start + Line2FieldDefinitions.Length - 1;
+        var lastColumn = robotStart + RobotFieldDefinitions.Length - 1;
 
         ValidateModelsSheetHeader(ws, errors);
         if (errors.Count > 0)
@@ -1196,8 +1146,8 @@ public sealed class ModelProfileService : IModelProfileService
             }
 
             var robotData = ReadFieldValues(ws, row, robotStart, RobotFieldDefinitions);
-            var line1Data = ReadFieldValues(ws, row, line1Start, Line1FieldDefinitions);
-            var line2Data = ReadFieldValues(ws, row, line2Start, Line2FieldDefinitions);
+            var line1Data = new Dictionary<string, object?>();
+            var line2Data = new Dictionary<string, object?>();
 
             result.Rows[modelName] = new ExcelModelRow(modelName, row, metadata, robotData, line1Data, line2Data);
         }

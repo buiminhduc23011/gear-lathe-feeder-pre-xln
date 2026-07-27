@@ -40,11 +40,6 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         new("jigDepthOffset", PlcTagCatalog.RobotTest.JigDepthOffset),
     ];
 
-    // Tab state (fields)
-    [ObservableProperty] private bool _isRobotTabSelected = true;
-    [ObservableProperty] private bool _isLine1TabSelected;
-    [ObservableProperty] private bool _isLine2TabSelected;
-
     // Tab state (control panel)
     [ObservableProperty] private bool _isAxisTabSelected = true;
     [ObservableProperty] private bool _isCylinderTabSelected;
@@ -71,15 +66,13 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
 
     public IReadOnlyList<TrayTypeOption> TrayTypeOptions { get; } =
     [
-        new(null, "Chua chon"),
-        new(0, "Nho"),
+        new(null, "Chưa chọn"),
+        new(0, "Nhỏ"),
         new(1, "To")
     ];
 
     // Fields
     public ObservableCollection<ModelFieldValue> RobotFields { get; } = [];
-    public ObservableCollection<ModelFieldValue> Line1Fields { get; } = [];
-    public ObservableCollection<ModelFieldValue> Line2Fields { get; } = [];
 
     // Jog / Axis
     public ManualAxisState AxisX { get; }
@@ -197,12 +190,6 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         foreach (var def in ModelFieldCatalog.RobotFields)
         {
             RobotFields.Add(new ModelFieldValue(def, isReadOnly: false));
-        }
-
-        foreach (var def in ModelFieldCatalog.LineFields)
-        {
-            Line1Fields.Add(new ModelFieldValue(def, isReadOnly: true));
-            Line2Fields.Add(new ModelFieldValue(def, isReadOnly: true));
         }
     }
 
@@ -414,32 +401,6 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         RefreshCommandStates();
     }
 
-    // ══ Tab commands (fields) ══
-
-    [RelayCommand]
-    private void SelectRobotTab()
-    {
-        IsRobotTabSelected = true;
-        IsLine1TabSelected = false;
-        IsLine2TabSelected = false;
-    }
-
-    [RelayCommand]
-    private void SelectLine1Tab()
-    {
-        IsRobotTabSelected = false;
-        IsLine1TabSelected = true;
-        IsLine2TabSelected = false;
-    }
-
-    [RelayCommand]
-    private void SelectLine2Tab()
-    {
-        IsRobotTabSelected = false;
-        IsLine1TabSelected = false;
-        IsLine2TabSelected = true;
-    }
-
     // ══ Tab commands (control panel) ══
 
     [RelayCommand]
@@ -583,8 +544,8 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
                 TrayUsage = trayUsage,
                 TrayType = TrayTypeInput,
                 RobotData = CollectFieldData(RobotFields),
-                Line1Data = CollectFieldData(Line1Fields),
-                Line2Data = CollectFieldData(Line2Fields)
+                Line1Data = [],
+                Line2Data = []
             };
 
             ModelProfileDto saved;
@@ -1295,8 +1256,6 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         try
         {
             PopulateFieldCollection(RobotFields, model.RobotData);
-            PopulateFieldCollection(Line1Fields, model.Line1Data);
-            PopulateFieldCollection(Line2Fields, model.Line2Data);
         }
         finally
         {
@@ -1330,8 +1289,6 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         try
         {
             foreach (var f in RobotFields) f.ValueText = string.Empty;
-            foreach (var f in Line1Fields) f.ValueText = string.Empty;
-            foreach (var f in Line2Fields) f.ValueText = string.Empty;
         }
         finally
         {
