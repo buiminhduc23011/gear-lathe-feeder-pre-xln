@@ -522,13 +522,13 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             ? string.Join(" | ", activeAlarmTags.Take(3).Select(tag => tag.Description))
             : "Không có alarm đang kích hoạt";
 
-        IsAutoMode = ReadBool(PlcTagCatalog.Inputs.X1_01SwitchAuto.Name);
+        IsAutoMode = ReadBool(PlcTagCatalog.Inputs.X1_02.Name);
         CurrentModeText = IsAutoMode ? "Auto" : "Manual / Service";
 
         IsEStopActive = ReadBool(PlcTagCatalog.Alarms.EStop.Name);
         IsLightCurtainActive = ReadBool(PlcTagCatalog.Alarms.LightCurtain.Name);
         IsAirPressureAlarmActive = ReadBool(PlcTagCatalog.Alarms.AirPressureLost.Name);
-        IsPressureInputHealthy = ReadBool(PlcTagCatalog.Inputs.X1_08PressurePneumatic.Name);
+        IsPressureInputHealthy = ReadBool(PlcTagCatalog.Inputs.X1_00.Name);
 
         var interlockMessages = new List<string>();
         if (IsEStopActive)

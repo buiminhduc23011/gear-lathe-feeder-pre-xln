@@ -30,6 +30,22 @@ public static class PlcTagCatalog
             Description = "Word input group for X2.00 - X2.15",
         };
 
+        public static readonly PlcTagDefinition D5123 = new()
+        {
+            Name = "word.d5123",
+            Address = "D5123",
+            DataType = PlcTagDataType.Int16,
+            Description = "Word input group for X3.00 - X3.15",
+        };
+
+        public static readonly PlcTagDefinition D5124 = new()
+        {
+            Name = "word.d5124",
+            Address = "D5124",
+            DataType = PlcTagDataType.Int16,
+            Description = "Word input group for X4.00 - X4.15",
+        };
+
         public static readonly PlcTagDefinition D5130 = new()
         {
             Name = "word.d5130",
@@ -49,56 +65,95 @@ public static class PlcTagCatalog
 
     public static class Inputs
     {
-        public static readonly PlcTagDefinition X0_00 = CreateBit("input.x0_00", "X0.00", "X0.00");
-        public static readonly PlcTagDefinition X0_01 = CreateBit("input.x0_01", "X0.01", "X0.01");
-        public static readonly PlcTagDefinition X0_02 = CreateBit("input.x0_02", "X0.02", "X0.02");
-        public static readonly PlcTagDefinition X0_03 = CreateBit("input.x0_03", "X0.03", "X0.03");
-        public static readonly PlcTagDefinition X0_04 = CreateBit("input.x0_04", "X0.04", "X0.04");
-        public static readonly PlcTagDefinition X0_05 = CreateBit("input.x0_05", "X0.05", "X0.05");
-        public static readonly PlcTagDefinition X0_06 = CreateBit("input.x0_06", "X0.06", "X0.06");
-        public static readonly PlcTagDefinition X0_07 = CreateBit("input.x0_07", "X0.07", "X0.07");
-        public static readonly PlcTagDefinition X0_08 = CreateBit("input.x0_08", "X0.08", "X0.08");
-        public static readonly PlcTagDefinition X0_09 = CreateBit("input.x0_09", "X0.09", "X0.09");
-        public static readonly PlcTagDefinition X0_10 = CreateBit("input.x0_10", "X0.10", "CB GÓC LINE1");
+        // --- Word 0: X0.00 - X0.15 ---
+        public static readonly PlcTagDefinition X0_00 = CreateBit("input.x0_00", "X0.00", "Encoder Bàn Xoay Pha A");
+        public static readonly PlcTagDefinition X0_01 = CreateBit("input.x0_01", "X0.01", "Encoder Bàn Xoay Pha B");
+        public static readonly PlcTagDefinition X0_02 = CreateBit("input.x0_02", "X0.02", "Encoder Cụm Nâng Pha A");
+        public static readonly PlcTagDefinition X0_03 = CreateBit("input.x0_03", "X0.03", "Encoder Cụm Nâng Pha B");
+        public static readonly PlcTagDefinition X0_04 = CreateBit("input.x0_04", "X0.04", "X0.4");
+        public static readonly PlcTagDefinition X0_05 = CreateBit("input.x0_05", "X0.05", "X0.5");
+        public static readonly PlcTagDefinition X0_06 = CreateBit("input.x0_06", "X0.06", "X0.6");
+        public static readonly PlcTagDefinition X0_07 = CreateBit("input.x0_07", "X0.07", "X0.7");
+        public static readonly PlcTagDefinition X0_08 = CreateBit("input.x0_08", "X0.08", "X0.8");
+        public static readonly PlcTagDefinition X0_09 = CreateBit("input.x0_09", "X0.09", "X0.9");
+        public static readonly PlcTagDefinition X0_10 = CreateBit("input.x0_10", "X0.10", "X0.10");
         public static readonly PlcTagDefinition X0_11 = CreateBit("input.x0_11", "X0.11", "X0.11");
-        public static readonly PlcTagDefinition X0_12 = CreateBit("input.x0_12", "X0.12", "X0.12");
-        public static readonly PlcTagDefinition X0_13AxisXAlarm = CreateBit("input.x0_13", "X0.13", "CẢNH BÁO DRIVER X");
-        public static readonly PlcTagDefinition X0_14AxisXAlarm = CreateBit("input.x0_14", "X0.14", "CẢNH BÁO DRIVER Y");
-        public static readonly PlcTagDefinition X0_15AxisXAlarm = CreateBit("input.x0_15", "X0.15", "CẢNH BÁO DRIVER Z");
+        public static readonly PlcTagDefinition X0_12 = CreateBit("input.x0_12", "X0.12", "CB XL Trước Nam Châm Cụm out ở trong");
+        public static readonly PlcTagDefinition X0_13 = CreateBit("input.x0_13", "X0.13", "CB XL Trước Nam Châm Cụm out ở ngoài");
+        public static readonly PlcTagDefinition X0_14 = CreateBit("input.x0_14", "X0.14", "CB XL Nâng Motor");
+        public static readonly PlcTagDefinition X0_15 = CreateBit("input.x0_15", "X0.15", "CB XL Hạ Motor");
 
-        public static readonly PlcTagDefinition X1_00Emg = CreateBit("input.x1_00", "X1.00", "DỪNG KHẨN CẤP");
-        public static readonly PlcTagDefinition X1_01SwitchAuto = CreateBit("input.x1_01", "X1.01", "Switch Auto");
-        public static readonly PlcTagDefinition X1_02BtStart = CreateBit("input.x1_02", "X1.02", "NÚT DỪNG");
-        public static readonly PlcTagDefinition X1_03BtRst = CreateBit("input.x1_03", "X1.03", "NÚT CHẠY");
-        public static readonly PlcTagDefinition X1_04BtStop = CreateBit("input.x1_04", "X1.04", "NÚT XÓA LỖI");
-        public static readonly PlcTagDefinition X1_05S5xlClampPartIn = CreateBit("input.x1_05", "X1.05", "CB TAY TOOL ĐANG KẸP");
-        public static readonly PlcTagDefinition X1_06S5xlClampPartOut = CreateBit("input.x1_06", "X1.06", "CB TAY TOOL MỞ");
-        public static readonly PlcTagDefinition X1_07LightCurtain = CreateBit("input.x1_07", "X1.07", "CB MÀN CHẮN");
-        public static readonly PlcTagDefinition X1_08PressurePneumatic = CreateBit("input.x1_08", "X1.08", "ĐỒNG HỒ KHÍ NÉN");
-        public static readonly PlcTagDefinition X1_09SsxlRotary0 = CreateBit("input.x1_09", "X1.09", "CB XL QUAY 0");
-        public static readonly PlcTagDefinition X1_10SsxlRotary90 = CreateBit("input.x1_10", "X1.10", "CB XL QUAY 180");
-        public static readonly PlcTagDefinition X1_11SsCheckTray1Left = CreateBit("input.x1_11", "X1.11", "CB PHÁT HIỆN KỆ 1 TRÁI");
-        public static readonly PlcTagDefinition X1_12SsCheckTray1Right = CreateBit("input.x1_12", "X1.12", "CẢM BIẾN PHÁT HIỆN KỆ 1 PHẢI");
-        public static readonly PlcTagDefinition X1_13SsCheckTray2Left = CreateBit("input.x1_13", "X1.13", "CB PHÁT HIỆN KỆ 2 TRÁI");
-        public static readonly PlcTagDefinition X1_14SsCheckTray2Right = CreateBit("input.x1_14", "X1.14", "CẢM BIẾN PHÁT HIỆN KỆ 2 PHẢI");
-        public static readonly PlcTagDefinition X1_15PowerPhase = CreateBit("input.x1_15", "X1.15", "BÁO PHA");
+        // --- Word 1: X1.00 - X1.15 ---
+        public static readonly PlcTagDefinition X1_00 = CreateBit("input.x1_00", "X1.00", "Đồng hồ áp khí");
+        public static readonly PlcTagDefinition X1_01 = CreateBit("input.x1_01", "X1.01", "Dừng khẩn cấp");
+        public static readonly PlcTagDefinition X1_02 = CreateBit("input.x1_02", "X1.02", "Switch Auto/man");
+        public static readonly PlcTagDefinition X1_03 = CreateBit("input.x1_03", "X1.03", "Nút bắt đầu");
+        public static readonly PlcTagDefinition X1_04 = CreateBit("input.x1_04", "X1.04", "Nút tạm dừng");
+        public static readonly PlcTagDefinition X1_05 = CreateBit("input.x1_05", "X1.05", "Nút xóa lỗi");
+        public static readonly PlcTagDefinition X1_06 = CreateBit("input.x1_06", "X1.06", "Nút về gốc");
+        public static readonly PlcTagDefinition X1_07 = CreateBit("input.x1_07", "X1.07", "X1.7");
+        public static readonly PlcTagDefinition X1_08 = CreateBit("input.x1_08", "X1.08", "CB XL kẹp xe trái");
+        public static readonly PlcTagDefinition X1_09 = CreateBit("input.x1_09", "X1.09", "CB XL Mở xe trái");
+        public static readonly PlcTagDefinition X1_10 = CreateBit("input.x1_10", "X1.10", "CB XL kẹp xe phải");
+        public static readonly PlcTagDefinition X1_11 = CreateBit("input.x1_11", "X1.11", "CB XL mở xe phải");
+        public static readonly PlcTagDefinition X1_12 = CreateBit("input.x1_12", "X1.12", "CB check xe trái");
+        public static readonly PlcTagDefinition X1_13 = CreateBit("input.x1_13", "X1.13", "CB check xe phải");
+        public static readonly PlcTagDefinition X1_14 = CreateBit("input.x1_14", "X1.14", "CB Gốc Motor bàn xoay");
+        public static readonly PlcTagDefinition X1_15 = CreateBit("input.x1_15", "X1.15", "CB gốc bàn xoay");
 
-        public static readonly PlcTagDefinition X2_00SsxlCenter1Left1In = CreateBit("input.x2_00", "X2.00", "SSXL center 1 Left 1 In");
-        public static readonly PlcTagDefinition X2_01SsxlCenter1Left1Out = CreateBit("input.x2_01", "X2.01", "SSXL center 1 Left 1 Out");
-        public static readonly PlcTagDefinition X2_02SsxlCenter1Right1In = CreateBit("input.x2_02", "X2.02", "SSXL center 1 Right 1 In");
-        public static readonly PlcTagDefinition X2_03SsxlCenter1Right1Out = CreateBit("input.x2_03", "X2.03", "SSXL center 1 Right 1 Out");
-        public static readonly PlcTagDefinition X2_04SsxlCenter2Left1In = CreateBit("input.x2_04", "X2.04", "CB XL KẸP KỆ 1 TRÁI KẸP");
-        public static readonly PlcTagDefinition X2_05SsxlCenter2Left1Out = CreateBit("input.x2_05", "X2.05", "CB XL KẸP KỆ 1 TRÁI MỞ");
-        public static readonly PlcTagDefinition X2_06SsxlCenter2Right1In = CreateBit("input.x2_06", "X2.06", "CB XL KẸP KỆ 1 PHẢI MỞ");
-        public static readonly PlcTagDefinition X2_07SsxlCenter2Right1Out = CreateBit("input.x2_07", "X2.07", "CB XL KẸP KỆ 1 PHẢI KẸP");
-        public static readonly PlcTagDefinition X2_08SsxlCenter1Left2In = CreateBit("input.x2_08", "X2.08", "SSXL center 1 Left 2 In");
-        public static readonly PlcTagDefinition X2_09SsxlCenter1Left2Out = CreateBit("input.x2_09", "X2.09", "SSXL center 1 Left 2 Out");
-        public static readonly PlcTagDefinition X2_10SsxlCenter1Right2In = CreateBit("input.x2_10", "X2.10", "SSXL center 1 Right 2 In");
-        public static readonly PlcTagDefinition X2_11SsxlCenter1Right2Out = CreateBit("input.x2_11", "X2.11", "SSXL center 1 Right 2 Out");
-        public static readonly PlcTagDefinition X2_12SsxlCenter2Left2In = CreateBit("input.x2_12", "X2.12", "CB XL KẸP KỆ 2 TRÁI KẸP");
-        public static readonly PlcTagDefinition X2_13SsxlCenter2Left2Out = CreateBit("input.x2_13", "X2.13", "CB XL KẸP KỆ 2 TRÁI MỞ");
-        public static readonly PlcTagDefinition X2_14SsxlCenter2Right2In = CreateBit("input.x2_14", "X2.14", "CB XL KẸP KỆ 2 PHẢI KẸP");
-        public static readonly PlcTagDefinition X2_15SsxlCenter2Right2Out = CreateBit("input.x2_15", "X2.15", "CB XL KẸP KỆ 2 PHẢI MỞ");
+        // --- Word 2: X2.00 - X2.15 ---
+        public static readonly PlcTagDefinition X2_00 = CreateBit("input.x2_00", "X2.00", "CB gốc cụm nâng");
+        public static readonly PlcTagDefinition X2_01 = CreateBit("input.x2_01", "X2.01", "CB Giới hạn trên cụm nâng");
+        public static readonly PlcTagDefinition X2_02 = CreateBit("input.x2_02", "X2.02", "CB giới hạn dưới cụm nâng");
+        public static readonly PlcTagDefinition X2_03 = CreateBit("input.x2_03", "X2.03", "CB XL Cụm đầu vào Xoay 0");
+        public static readonly PlcTagDefinition X2_04 = CreateBit("input.x2_04", "X2.04", "CB XL Cụm đầu vào Xoay 90");
+        public static readonly PlcTagDefinition X2_05 = CreateBit("input.x2_05", "X2.05", "CB XL kẹp đầu vào");
+        public static readonly PlcTagDefinition X2_06 = CreateBit("input.x2_06", "X2.06", "CB XL Mở kẹp đầu vào");
+        public static readonly PlcTagDefinition X2_07 = CreateBit("input.x2_07", "X2.07", "CB XL check hàng đầu vào");
+        public static readonly PlcTagDefinition X2_08 = CreateBit("input.x2_08", "X2.08", "Tín hiệu chạy bàn xoay");
+        public static readonly PlcTagDefinition X2_09 = CreateBit("input.x2_09", "X2.09", "Tín hiệu lỗi bàn xoay");
+        public static readonly PlcTagDefinition X2_10 = CreateBit("input.x2_10", "X2.10", "Tín hiệu chạy cụm nâng");
+        public static readonly PlcTagDefinition X2_11 = CreateBit("input.x2_11", "X2.11", "Tín hiệu báo lỗi cụm nâng");
+        public static readonly PlcTagDefinition X2_12 = CreateBit("input.x2_12", "X2.12", "Lỗi trục X");
+        public static readonly PlcTagDefinition X2_13 = CreateBit("input.x2_13", "X2.13", "Lỗi trục Z");
+        public static readonly PlcTagDefinition X2_14 = CreateBit("input.x2_14", "X2.14", "CB Check hàng trước Hope");
+        public static readonly PlcTagDefinition X2_15 = CreateBit("input.x2_15", "X2.15", "X2.15");
+
+        // --- Word 3: X3.00 - X3.15 ---
+        public static readonly PlcTagDefinition X3_00 = CreateBit("input.x3_00", "X3.00", "CB Tay Rodal Xoay 0");
+        public static readonly PlcTagDefinition X3_01 = CreateBit("input.x3_01", "X3.01", "CB Tay Rodal Xoay 180");
+        public static readonly PlcTagDefinition X3_02 = CreateBit("input.x3_02", "X3.02", "CB Check phôi Tay Rodal 1");
+        public static readonly PlcTagDefinition X3_03 = CreateBit("input.x3_03", "X3.03", "CB Check phôi Tay Rodal 2");
+        public static readonly PlcTagDefinition X3_04 = CreateBit("input.x3_04", "X3.04", "X3.4");
+        public static readonly PlcTagDefinition X3_05 = CreateBit("input.x3_05", "X3.05", "X3.5");
+        public static readonly PlcTagDefinition X3_06 = CreateBit("input.x3_06", "X3.06", "X3.6");
+        public static readonly PlcTagDefinition X3_07 = CreateBit("input.x3_07", "X3.07", "X3.7");
+        public static readonly PlcTagDefinition X3_08 = CreateBit("input.x3_08", "X3.08", "CB XL Xoay 0 Output");
+        public static readonly PlcTagDefinition X3_09 = CreateBit("input.x3_09", "X3.09", "CB XL Xoay 90 Output");
+        public static readonly PlcTagDefinition X3_10 = CreateBit("input.x3_10", "X3.10", "CB XL Chuyển hàng Y ở trong");
+        public static readonly PlcTagDefinition X3_11 = CreateBit("input.x3_11", "X3.11", "CB XL Chuyển hàng Y ở ngoài");
+        public static readonly PlcTagDefinition X3_12 = CreateBit("input.x3_12", "X3.12", "CB XL Chuyển hàng X ở trong");
+        public static readonly PlcTagDefinition X3_13 = CreateBit("input.x3_13", "X3.13", "CB XL Chuyển hàng X ở ngoài");
+        public static readonly PlcTagDefinition X3_14 = CreateBit("input.x3_14", "X3.14", "CB XL Kẹp Trước Hope");
+        public static readonly PlcTagDefinition X3_15 = CreateBit("input.x3_15", "X3.15", "CB XL Mở Kẹp Trước Hope");
+
+        // --- Word 4: X4.00 - X4.15 ---
+        public static readonly PlcTagDefinition X4_00 = CreateBit("input.x4_00", "X4.00", "Máy tiện OP1 Báo Chạy");
+        public static readonly PlcTagDefinition X4_01 = CreateBit("input.x4_01", "X4.01", "Máy tiện OP1 Hoàn thành");
+        public static readonly PlcTagDefinition X4_02 = CreateBit("input.x4_02", "X4.02", "Máy tiện OP1 báo Lỗi");
+        public static readonly PlcTagDefinition X4_03 = CreateBit("input.x4_03", "X4.03", "Máy tiện Op1 nút dừng khẩn");
+        public static readonly PlcTagDefinition X4_04 = CreateBit("input.x4_04", "X4.04", "Máy tiện OP1 Kẹp chấu cặp");
+        public static readonly PlcTagDefinition X4_05 = CreateBit("input.x4_05", "X4.05", "Máy tiện OP1 Mở kẹp chấu cặp");
+        public static readonly PlcTagDefinition X4_06 = CreateBit("input.x4_06", "X4.06", "Máy tiện Op1 mở cửa");
+        public static readonly PlcTagDefinition X4_07 = CreateBit("input.x4_07", "X4.07", "X4.7");
+        public static readonly PlcTagDefinition X4_08 = CreateBit("input.x4_08", "X4.08", "Máy tiện OP2 Báo Chạy");
+        public static readonly PlcTagDefinition X4_09 = CreateBit("input.x4_09", "X4.09", "Máy tiện OP2 Hoàn thành");
+        public static readonly PlcTagDefinition X4_10 = CreateBit("input.x4_10", "X4.10", "Máy tiện OP2 báo Lỗi");
+        public static readonly PlcTagDefinition X4_11 = CreateBit("input.x4_11", "X4.11", "Máy tiện Op2 nút dừng khẩn");
+        public static readonly PlcTagDefinition X4_12 = CreateBit("input.x4_12", "X4.12", "Máy tiện OP2 Kẹp chấu cặp");
+        public static readonly PlcTagDefinition X4_13 = CreateBit("input.x4_13", "X4.13", "Máy tiện OP2 Mở kẹp chấu cặp");
+        public static readonly PlcTagDefinition X4_14 = CreateBit("input.x4_14", "X4.14", "Máy tiện Op2 mở cửa");
+        public static readonly PlcTagDefinition X4_15 = CreateBit("input.x4_15", "X4.15", "X4.15");
     }
 
     public static class Outputs
@@ -649,6 +704,8 @@ public static class PlcTagCatalog
         Words.D5120,
         Words.D5121,
         Words.D5122,
+        Words.D5123,
+        Words.D5124,
         Words.D5130,
         Words.D5131,
         Inputs.X0_00,
@@ -664,41 +721,73 @@ public static class PlcTagCatalog
         Inputs.X0_10,
         Inputs.X0_11,
         Inputs.X0_12,
-        Inputs.X0_13AxisXAlarm,
-        Inputs.X0_14AxisXAlarm,
-        Inputs.X0_15AxisXAlarm,
-        Inputs.X1_00Emg,
-        Inputs.X1_01SwitchAuto,
-        Inputs.X1_02BtStart,
-        Inputs.X1_03BtRst,
-        Inputs.X1_04BtStop,
-        Inputs.X1_05S5xlClampPartIn,
-        Inputs.X1_06S5xlClampPartOut,
-        Inputs.X1_07LightCurtain,
-        Inputs.X1_08PressurePneumatic,
-        Inputs.X1_09SsxlRotary0,
-        Inputs.X1_10SsxlRotary90,
-        Inputs.X1_11SsCheckTray1Left,
-        Inputs.X1_12SsCheckTray1Right,
-        Inputs.X1_13SsCheckTray2Left,
-        Inputs.X1_14SsCheckTray2Right,
-        Inputs.X1_15PowerPhase,
-        Inputs.X2_00SsxlCenter1Left1In,
-        Inputs.X2_01SsxlCenter1Left1Out,
-        Inputs.X2_02SsxlCenter1Right1In,
-        Inputs.X2_03SsxlCenter1Right1Out,
-        Inputs.X2_04SsxlCenter2Left1In,
-        Inputs.X2_05SsxlCenter2Left1Out,
-        Inputs.X2_06SsxlCenter2Right1In,
-        Inputs.X2_07SsxlCenter2Right1Out,
-        Inputs.X2_08SsxlCenter1Left2In,
-        Inputs.X2_09SsxlCenter1Left2Out,
-        Inputs.X2_10SsxlCenter1Right2In,
-        Inputs.X2_11SsxlCenter1Right2Out,
-        Inputs.X2_12SsxlCenter2Left2In,
-        Inputs.X2_13SsxlCenter2Left2Out,
-        Inputs.X2_14SsxlCenter2Right2In,
-        Inputs.X2_15SsxlCenter2Right2Out,
+        Inputs.X0_13,
+        Inputs.X0_14,
+        Inputs.X0_15,
+        Inputs.X1_00,
+        Inputs.X1_01,
+        Inputs.X1_02,
+        Inputs.X1_03,
+        Inputs.X1_04,
+        Inputs.X1_05,
+        Inputs.X1_06,
+        Inputs.X1_07,
+        Inputs.X1_08,
+        Inputs.X1_09,
+        Inputs.X1_10,
+        Inputs.X1_11,
+        Inputs.X1_12,
+        Inputs.X1_13,
+        Inputs.X1_14,
+        Inputs.X1_15,
+        Inputs.X2_00,
+        Inputs.X2_01,
+        Inputs.X2_02,
+        Inputs.X2_03,
+        Inputs.X2_04,
+        Inputs.X2_05,
+        Inputs.X2_06,
+        Inputs.X2_07,
+        Inputs.X2_08,
+        Inputs.X2_09,
+        Inputs.X2_10,
+        Inputs.X2_11,
+        Inputs.X2_12,
+        Inputs.X2_13,
+        Inputs.X2_14,
+        Inputs.X2_15,
+        Inputs.X3_00,
+        Inputs.X3_01,
+        Inputs.X3_02,
+        Inputs.X3_03,
+        Inputs.X3_04,
+        Inputs.X3_05,
+        Inputs.X3_06,
+        Inputs.X3_07,
+        Inputs.X3_08,
+        Inputs.X3_09,
+        Inputs.X3_10,
+        Inputs.X3_11,
+        Inputs.X3_12,
+        Inputs.X3_13,
+        Inputs.X3_14,
+        Inputs.X3_15,
+        Inputs.X4_00,
+        Inputs.X4_01,
+        Inputs.X4_02,
+        Inputs.X4_03,
+        Inputs.X4_04,
+        Inputs.X4_05,
+        Inputs.X4_06,
+        Inputs.X4_07,
+        Inputs.X4_08,
+        Inputs.X4_09,
+        Inputs.X4_10,
+        Inputs.X4_11,
+        Inputs.X4_12,
+        Inputs.X4_13,
+        Inputs.X4_14,
+        Inputs.X4_15,
         Outputs.Y0_00,
         Outputs.Y0_01,
         Outputs.Y0_02,
