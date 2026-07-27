@@ -637,15 +637,7 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition ProductParametersMissingLine2 = CreateBit("alarm.product_parameters_missing_line_2", "D5145.5", "Lỗi thiếu thông số sản phẩm line 2");
     }
 
-    public static class ConfirmMessages
-    {
-        public static readonly PlcTagDefinition CollisionRotate90 = CreateBit("message.collision_rotate_90", "D5650.0", "Đang ở trong vùng va chạm không thể quay 90 xilanh");
-        public static readonly PlcTagDefinition CollisionRotate0 = CreateBit("message.collision_rotate_0", "D5650.1", "Đang ở trong vùng va chạm không thể quay 0 xilanh");
-        public static readonly PlcTagDefinition NotRotated90 = CreateBit("message.not_rotated_90", "D5650.2", "Xilanh Xoay chưa quay 90 độ");
-        public static readonly PlcTagDefinition ZNotHomed = CreateBit("message.z_not_homed", "D5650.3", "Trục Z chưa về gốc");
-        public static readonly PlcTagDefinition OpenGripperBeforeHome = CreateBit("message.open_gripper_before_home", "D5650.4", "Mở tay kẹp trước khi về gốc");
-        public static readonly PlcTagDefinition ProductionCompleted = CreateBit("message.production_completed", "D5650.5", "Đã Hoàn Thành Sản Xuất");
-    }
+
 
     /// <summary>
     /// Tags cho PLC Line 1 (192.168.1.6:502) — nhóm Data Auto + Edit Model.
@@ -844,7 +836,6 @@ public static class PlcTagCatalog
         typeof(DataMachine),
         typeof(Manual),
         typeof(Alarms),
-        typeof(ConfirmMessages),
         typeof(Agv));
 
     public static IReadOnlyDictionary<string, PlcTagDefinition> ByName { get; } =
@@ -858,8 +849,7 @@ public static class PlcTagCatalog
         typeof(DataTrayCart),
         typeof(DataMachine),
         typeof(Manual),
-        typeof(Agv),
-        typeof(ConfirmMessages));
+        typeof(Agv));
 
     /// <summary>Tất cả tags của PLC Line 1.</summary>
     public static IReadOnlyList<PlcTagDefinition> AllLine1 { get; } = CollectAllTags(typeof(Line1));
