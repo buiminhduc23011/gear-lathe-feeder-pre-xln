@@ -20,6 +20,7 @@ import {
   canAccessShelfDeclaration
 } from "../config/access";
 import { useAuth } from "../contexts/AuthContext";
+import packageJson from "../../package.json";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Text, Title } = Typography;
@@ -292,7 +293,7 @@ function MainLayout() {
         </Content>
 
         <Footer style={{ textAlign: "center", color: "#667085", background: "transparent", padding: "4px 12px 10px" }}>
-          Pinion Grinding Robot Web | Designed by STI.Automation Version 1.0.0
+          Pinion Grinding Robot Web | Designed by STI.Automation Version {packageJson.version}
         </Footer>
       </Layout>
     </Layout>

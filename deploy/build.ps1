@@ -67,6 +67,24 @@ if ($SelfContained) {
 } else {
     Write-Host '  Mode        : Framework-dependent'
 }
+# --- Step 0 : Sync version from Directory.Build.props -------------------------
+$PropsFile = Join-Path $RepoRoot 'Directory.Build.props'
+$PackageJsonFile = Join-Path $FrontendPath 'package.json'
+$AppVersion = '1.0.0'
+
+if (Test-Path $PropsFile) {
+    $propsContent = Get-Content $PropsFile -Raw
+    if ($propsContent -match '<Version>(.*?)</Version>') {
+        $AppVersion = $Matches[1].Trim()
+        if (Test-Path $PackageJsonFile) {
+            $jsonContent = Get-Content $PackageJsonFile -Raw
+            $jsonContent = $jsonContent -replace '"version":\s*".*?"', """version"": ""$AppVersion"""
+            Set-Content -Path $PackageJsonFile -Value $jsonContent -NoNewline
+        }
+    }
+}
+
+Write-Host "  App Version : $AppVersion" -ForegroundColor Green
 Write-Host ''
 
 # --- Step 1 : Build React frontend -------------------------------------------

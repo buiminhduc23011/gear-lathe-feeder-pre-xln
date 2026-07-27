@@ -1,5 +1,4 @@
 #define MyAppName "GearLatheFeeder.Desktop"
-#define MyAppVersion "1.0.0"
 #define MyAppExeName "GearLatheFeeder.Desktop.exe"
 #define RepoRoot AddBackslash(SourcePath) + ".."
 #define DesktopProjectPath AddBackslash(RepoRoot) + "src\\Desktop.App\\Desktop.App.csproj"
@@ -13,6 +12,11 @@
 #endif
 
 #define MyAppSourceDir "..\src\Desktop.App\bin\Release\net10.0-windows"
+#define MyAppExePath MyAppSourceDir + "\" + MyAppExeName
+#ifndef MyAppVersion
+  #define MyAppVersion GetVersionNumbersString(MyAppExePath)
+#endif
+
 #define MyAppIcon "..\src\Desktop.App\Resources\Images\Logo.ico"
 #define DotNetDesktopRuntimeUrl "https://dotnet.microsoft.com/download/dotnet/10.0"
 
