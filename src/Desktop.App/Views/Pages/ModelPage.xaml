@@ -498,81 +498,227 @@
                                         <DataTemplate>
                                             <Border Margin="0,0,0,8" Padding="12,10" Background="{DynamicResource Brush.Surface.Panel}" BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1" CornerRadius="10">
                                                 <StackPanel>
-                                                    <!--  Name + position  -->
+                                                    <!--  Header: tên trục + vị trí + Servo badge  -->
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
-                                                        <TextBlock VerticalAlignment="Center" FontSize="14" FontWeight="SemiBold" Text="{Binding DisplayName}" />
-                                                        <TextBlock
-                                                            Grid.Column="1"
-                                                            HorizontalAlignment="Right"
-                                                            VerticalAlignment="Center"
-                                                            FontSize="16"
-                                                            FontWeight="SemiBold"
-                                                            Foreground="{StaticResource Brush.Action.Primary}"
-                                                            Text="{Binding CurrentPositionText, StringFormat='{}{0} mm'}" />
+                                                        <StackPanel>
+                                                            <TextBlock FontSize="14" FontWeight="SemiBold" Text="{Binding DisplayName}" />
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock
+                                                                    Margin="0,4,5,0"
+                                                                    FontFamily="{DynamicResource FontFamily.Data}"
+                                                                    FontSize="{DynamicResource FontSize.Value}"
+                                                                    FontWeight="SemiBold"
+                                                                    Foreground="{DynamicResource Brush.Text.Primary}"
+                                                                    Text="{Binding CurrentPositionText}" />
+                                                                <TextBlock
+                                                                    VerticalAlignment="Center"
+                                                                    Style="{StaticResource SectionSubtitleText}"
+                                                                    Text="mm" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+
+                                                        <!--  Servo ON/OFF badge  -->
+                                                        <Border Grid.Column="1" VerticalAlignment="Top">
+                                                            <Border.Style>
+                                                                <Style BasedOn="{StaticResource ServoBadge}" TargetType="Border">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsServoOn}" Value="True">
+                                                                            <Setter Property="Background" Value="{StaticResource Brush.Status.RunningSurface}" />
+                                                                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Status.Running}" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                            <TextBlock Text="{Binding ServoText}">
+                                                                <TextBlock.Style>
+                                                                    <Style BasedOn="{StaticResource ServoBadgeText}" TargetType="TextBlock">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsServoOn}" Value="True">
+                                                                                <Setter Property="Foreground" Value="{StaticResource Brush.Status.Running}" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
+                                                        </Border>
                                                     </Grid>
 
-                                                    <!--  Row 1: [Vị trí] [Tốc độ] [Home]  -->
-                                                    <Grid Margin="0,8,0,6">
+                                                    <!--  Status dots: Homed · Homing · Lim− · Lim+  -->
+                                                    <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                                                        <StackPanel Margin="0,0,12,0" Orientation="Horizontal">
+                                                            <Ellipse>
+                                                                <Ellipse.Style>
+                                                                    <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsHomed}" Value="True">
+                                                                                <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Ellipse.Style>
+                                                            </Ellipse>
+                                                            <TextBlock
+                                                                Margin="4,0,0,0"
+                                                                VerticalAlignment="Center"
+                                                                FontSize="{DynamicResource FontSize.Caption}"
+                                                                Foreground="{DynamicResource Brush.Text.Secondary}"
+                                                                Text="Homed" />
+                                                        </StackPanel>
+                                                        <StackPanel Margin="0,0,12,0" Orientation="Horizontal">
+                                                            <Ellipse>
+                                                                <Ellipse.Style>
+                                                                    <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsHoming}" Value="True">
+                                                                                <Setter Property="Fill" Value="{StaticResource Brush.Status.Warning}" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Ellipse.Style>
+                                                            </Ellipse>
+                                                            <TextBlock
+                                                                Margin="4,0,0,0"
+                                                                VerticalAlignment="Center"
+                                                                FontSize="{DynamicResource FontSize.Caption}"
+                                                                Foreground="{DynamicResource Brush.Text.Secondary}"
+                                                                Text="Homing" />
+                                                        </StackPanel>
+                                                        <StackPanel Margin="0,0,12,0" Orientation="Horizontal">
+                                                            <Ellipse>
+                                                                <Ellipse.Style>
+                                                                    <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsNegativeLimitActive}" Value="True">
+                                                                                <Setter Property="Fill" Value="{StaticResource Brush.Status.Fault}" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Ellipse.Style>
+                                                            </Ellipse>
+                                                            <TextBlock
+                                                                Margin="4,0,0,0"
+                                                                VerticalAlignment="Center"
+                                                                FontSize="{DynamicResource FontSize.Caption}"
+                                                                Foreground="{DynamicResource Brush.Text.Secondary}"
+                                                                Text="Limit −" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Ellipse>
+                                                                <Ellipse.Style>
+                                                                    <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsPositiveLimitActive}" Value="True">
+                                                                                <Setter Property="Fill" Value="{StaticResource Brush.Status.Fault}" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Ellipse.Style>
+                                                            </Ellipse>
+                                                            <TextBlock
+                                                                Margin="4,0,0,0"
+                                                                VerticalAlignment="Center"
+                                                                FontSize="{DynamicResource FontSize.Caption}"
+                                                                Foreground="{DynamicResource Brush.Text.Secondary}"
+                                                                Text="Limit +" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+
+                                                    <!--  Speed input  -->
+                                                    <Grid Margin="0,12,0,0">
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="6" />
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="6" />
                                                             <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
-
-                                                        <StackPanel Grid.Column="0">
-                                                            <TextBlock Style="{StaticResource AxisInputLabel}" Text="Vị trí (mm)" />
-                                                            <TextBox
-                                                                MinHeight="30"
-                                                                LostFocus="MovePointInput_LostFocus"
-                                                                Style="{StaticResource NumericTextBox}"
-                                                                Text="{Binding MovePointInput, UpdateSourceTrigger=PropertyChanged}">
-                                                                <TextBox.InputBindings>
-                                                                    <KeyBinding
-                                                                        Key="Return"
-                                                                        Command="{Binding DataContext.WriteMovePointValueCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                        CommandParameter="{Binding}" />
-                                                                </TextBox.InputBindings>
-                                                            </TextBox>
-                                                        </StackPanel>
-
-                                                        <StackPanel Grid.Column="2">
-                                                            <TextBlock Style="{StaticResource AxisInputLabel}" Text="Tốc độ (mm/s)" />
-                                                            <TextBox
-                                                                MinHeight="30"
-                                                                LostFocus="SpeedInput_LostFocus"
-                                                                Style="{StaticResource NumericTextBox}"
-                                                                Text="{Binding ManualSpeedInput, UpdateSourceTrigger=PropertyChanged}">
-                                                                <TextBox.InputBindings>
-                                                                    <KeyBinding
-                                                                        Key="Return"
-                                                                        Command="{Binding DataContext.ApplyAxisSpeedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                        CommandParameter="{Binding}" />
-                                                                </TextBox.InputBindings>
-                                                            </TextBox>
-                                                        </StackPanel>
-
-                                                        <StackPanel Grid.Column="4" VerticalAlignment="Bottom">
-                                                            <TextBlock Style="{StaticResource AxisInputLabel}" Text=" " />
-                                                            <Button
-                                                                MinWidth="52"
-                                                                MinHeight="30"
-                                                                Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                CommandParameter="{Binding HomeTagName}"
-                                                                Content="Home"
-                                                                Style="{StaticResource ButtonSecondary}" />
-                                                        </StackPanel>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <TextBlock
+                                                            VerticalAlignment="Center"
+                                                            Style="{StaticResource AxisInputLabel}"
+                                                            Text="Tốc độ (mm/s)" />
+                                                        <TextBox
+                                                            Grid.Row="0"
+                                                            Grid.Column="1"
+                                                            MinHeight="30"
+                                                            LostFocus="SpeedInput_LostFocus"
+                                                            Style="{StaticResource NumericTextBox}"
+                                                            Text="{Binding ManualSpeedInput, UpdateSourceTrigger=PropertyChanged}">
+                                                            <TextBox.InputBindings>
+                                                                <KeyBinding
+                                                                    Key="Return"
+                                                                    Command="{Binding DataContext.ApplyAxisSpeedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                    CommandParameter="{Binding}" />
+                                                            </TextBox.InputBindings>
+                                                        </TextBox>
+                                                        <TextBlock
+                                                            Grid.Row="1"
+                                                            Grid.Column="1"
+                                                            Margin="0,3,0,0"
+                                                            FontSize="{DynamicResource FontSize.Caption}"
+                                                            Foreground="{DynamicResource Brush.Action.Danger}"
+                                                            Text="{Binding ManualSpeedValidationMessage}"
+                                                            Visibility="{Binding HasManualSpeedValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
                                                     </Grid>
 
-                                                    <!--  Row 2: [Jog-] [Jog+] [Chạy]  -->
-                                                    <UniformGrid Columns="3" Rows="1">
+                                                    <!--  Move-point input + Chạy tới điểm  -->
+                                                    <Grid Margin="0,8,0,0">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="8" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <TextBlock
+                                                            Grid.Row="0"
+                                                            Grid.Column="0"
+                                                            VerticalAlignment="Center"
+                                                            Style="{StaticResource AxisInputLabel}"
+                                                            Text="Tới điểm (mm)" />
+                                                        <TextBox
+                                                            Grid.Row="0"
+                                                            Grid.Column="1"
+                                                            MinHeight="30"
+                                                            LostFocus="MovePointInput_LostFocus"
+                                                            Style="{StaticResource NumericTextBox}"
+                                                            Text="{Binding MovePointInput, UpdateSourceTrigger=PropertyChanged}">
+                                                            <TextBox.InputBindings>
+                                                                <KeyBinding
+                                                                    Key="Return"
+                                                                    Command="{Binding DataContext.WriteMovePointValueCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                    CommandParameter="{Binding}" />
+                                                            </TextBox.InputBindings>
+                                                        </TextBox>
+                                                        <TextBlock
+                                                            Grid.Row="1"
+                                                            Grid.Column="1"
+                                                            Margin="0,3,0,0"
+                                                            FontSize="{DynamicResource FontSize.Caption}"
+                                                            Foreground="{DynamicResource Brush.Action.Danger}"
+                                                            Text="{Binding MovePointValidationMessage}"
+                                                            Visibility="{Binding HasMovePointValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                                        <Button
+                                                            Grid.Row="3"
+                                                            Grid.Column="0"
+                                                            Grid.ColumnSpan="2"
+                                                            Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}"
+                                                            Content="Chạy tới điểm"
+                                                            Style="{StaticResource ButtonPrimary}" />
+                                                    </Grid>
+
+                                                    <!--  Jog buttons: [Jog−] [Home] [Jog+]  -->
+                                                    <UniformGrid Margin="0,12,0,0" Columns="3" Rows="1">
                                                         <controls:HoldToRunButton
-                                                            Margin="0,0,3,0"
+                                                            Margin="0,0,4,0"
                                                             Content="{Binding NegativeLabel}"
                                                             PressCommand="{Binding DataContext.StartJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                             PressCommandParameter="{Binding NegativeJogTagName}"
@@ -597,8 +743,13 @@
                                                                 </Style>
                                                             </controls:HoldToRunButton.Style>
                                                         </controls:HoldToRunButton>
+                                                        <Button
+                                                            Margin="0,0,4,0"
+                                                            Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding HomeTagName}"
+                                                            Content="Home"
+                                                            Style="{StaticResource ButtonSecondary}" />
                                                         <controls:HoldToRunButton
-                                                            Margin="0,0,3,0"
                                                             Content="{Binding PositiveLabel}"
                                                             PressCommand="{Binding DataContext.StartJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                             PressCommandParameter="{Binding PositiveJogTagName}"
@@ -623,12 +774,8 @@
                                                                 </Style>
                                                             </controls:HoldToRunButton.Style>
                                                         </controls:HoldToRunButton>
-                                                        <Button
-                                                            Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                            CommandParameter="{Binding}"
-                                                            Content="Chạy"
-                                                            Style="{StaticResource ButtonPrimary}" />
                                                     </UniformGrid>
+
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>
@@ -643,25 +790,57 @@
                                         <DataTemplate>
                                             <Border Margin="0,0,0,8" Padding="14,12" Background="{DynamicResource Brush.Surface.Panel}" BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1" CornerRadius="10">
                                                 <StackPanel>
-                                                    <!--  Name + LED  -->
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <Ellipse Width="10" Height="10" Margin="0,0,8,0">
-                                                            <Ellipse.Style>
-                                                                <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding IsPrimaryFeedbackActive}" Value="True">
-                                                                            <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </Ellipse.Style>
-                                                        </Ellipse>
-                                                        <TextBlock VerticalAlignment="Center" FontSize="13" FontWeight="SemiBold" Text="{Binding Title}" />
+                                                    <!--  Title + Subtitle  -->
+                                                    <TextBlock FontSize="13" FontWeight="SemiBold" Text="{Binding Title}" />
+                                                    <TextBlock
+                                                        Margin="0,4,0,0"
+                                                        Style="{StaticResource SectionSubtitleText}"
+                                                        Text="{Binding Subtitle}" />
+                                                    <!--  Feedback status dots  -->
+                                                    <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                                                        <StackPanel Margin="0,0,14,0" Orientation="Horizontal">
+                                                            <Ellipse>
+                                                                <Ellipse.Style>
+                                                                    <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsPrimaryFeedbackActive}" Value="True">
+                                                                                <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Ellipse.Style>
+                                                            </Ellipse>
+                                                            <TextBlock
+                                                                Margin="4,0,0,0"
+                                                                VerticalAlignment="Center"
+                                                                FontSize="{DynamicResource FontSize.Caption}"
+                                                                Foreground="{DynamicResource Brush.Text.Secondary}"
+                                                                Text="{Binding PrimaryFeedbackLabel}" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Ellipse>
+                                                                <Ellipse.Style>
+                                                                    <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsSecondaryFeedbackActive}" Value="True">
+                                                                                <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Ellipse.Style>
+                                                            </Ellipse>
+                                                            <TextBlock
+                                                                Margin="4,0,0,0"
+                                                                VerticalAlignment="Center"
+                                                                FontSize="{DynamicResource FontSize.Caption}"
+                                                                Foreground="{DynamicResource Brush.Text.Secondary}"
+                                                                Text="{Binding SecondaryFeedbackLabel}" />
+                                                        </StackPanel>
                                                     </StackPanel>
                                                     <!--  Buttons  -->
-                                                    <UniformGrid Margin="0,10,0,0" Columns="2" Rows="1">
+                                                    <UniformGrid Margin="0,12,0,0" Columns="2" Rows="1">
                                                         <Button
-                                                            Margin="0,0,4,0"
+                                                            Margin="0,0,6,0"
                                                             Padding="12,6"
                                                             Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                             CommandParameter="{Binding PrimaryCommandTagName}"
