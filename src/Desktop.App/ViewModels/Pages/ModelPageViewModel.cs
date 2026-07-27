@@ -273,24 +273,19 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
 
     private async Task LoadAxisLimitsAsync()
     {
-        var fields = await _plcParameterSettingsService.LoadGroupAsync(PlcParameterGroups.DataMachine).ConfigureAwait(false);
+        var fields = await _plcParameterSettingsService.LoadGroupAsync(PlcParameterGroups.DataTrayCart).ConfigureAwait(false);
         var fieldLookup = fields.ToDictionary(field => field.TagName, StringComparer.OrdinalIgnoreCase);
 
         ApplyAxisLimit("axis_x", AxisX, CreateAxisLimitProfile(
             fieldLookup,
-            PlcTagCatalog.DataMachine.AxisXSpeedLimit.Name,
-            PlcTagCatalog.DataMachine.AxisXNegativeLimit.Name,
-            PlcTagCatalog.DataMachine.AxisXPositiveLimit.Name));
-        ApplyAxisLimit("axis_y", AxisY, CreateAxisLimitProfile(
-            fieldLookup,
-            PlcTagCatalog.DataMachine.AxisYSpeedLimit.Name,
-            PlcTagCatalog.DataMachine.AxisYNegativeLimit.Name,
-            PlcTagCatalog.DataMachine.AxisYPositiveLimit.Name));
+            PlcTagCatalog.DataTrayCart.AxisXSpeedLimit.Name,
+            PlcTagCatalog.DataTrayCart.AxisXNegativeLimit.Name,
+            PlcTagCatalog.DataTrayCart.AxisXPositiveLimit.Name));
         ApplyAxisLimit("axis_z", AxisZ, CreateAxisLimitProfile(
             fieldLookup,
-            PlcTagCatalog.DataMachine.AxisZSpeedLimit.Name,
-            PlcTagCatalog.DataMachine.AxisZNegativeLimit.Name,
-            PlcTagCatalog.DataMachine.AxisZPositiveLimit.Name));
+            PlcTagCatalog.DataTrayCart.AxisZSpeedLimit.Name,
+            PlcTagCatalog.DataTrayCart.AxisZNegativeLimit.Name,
+            PlcTagCatalog.DataTrayCart.AxisZPositiveLimit.Name));
 
         ValidateRobotFields();
     }

@@ -337,101 +337,57 @@ public static class PlcTagCatalog
 
     public static class DataTrayCart
     {
-        public static readonly PlcTagDefinition Cart1SmallTrayPos1X = CreateWord("data.cart_1_small_tray_pos_1_x", "D21000", PlcTagDataType.Float, "Vị trí trục X xe 1 khay nhỏ ở vị trí 1");
-        public static readonly PlcTagDefinition Cart1SmallTrayPos1Y = CreateWord("data.cart_1_small_tray_pos_1_y", "D21002", PlcTagDataType.Float, "Vị trí trục Y xe 1 khay nhỏ ở vị trí 1");
-        public static readonly PlcTagDefinition Cart1SmallTrayPos1Z = CreateWord("data.cart_1_small_tray_pos_1_z", "D21004", PlcTagDataType.Float, "Vị trí trục Z xe 1 khay nhỏ ở vị trí 1");
-        public static readonly PlcTagDefinition Cart1SmallTrayPos2X = CreateWord("data.cart_1_small_tray_pos_2_x", "D21006", PlcTagDataType.Float, "Vị trí trục X xe 1 khay nhỏ ở vị trí 2");
-        public static readonly PlcTagDefinition Cart1SmallTrayPos2Y = CreateWord("data.cart_1_small_tray_pos_2_y", "D21008", PlcTagDataType.Float, "Vị trí trục Y xe 1 khay nhỏ ở vị trí 2");
-        public static readonly PlcTagDefinition Cart1SmallTrayPos2Z = CreateWord("data.cart_1_small_tray_pos_2_z", "D21010", PlcTagDataType.Float, "Vị trí trục Z xe 1 khay nhỏ ở vị trí 2");
-
-        public static readonly PlcTagDefinition Cart1LargeTrayPos1X = CreateWord("data.cart_1_large_tray_pos_1_x", "D21012", PlcTagDataType.Float, "Vị trí trục X xe 1 khay lớn ở vị trí 1");
-        public static readonly PlcTagDefinition Cart1LargeTrayPos1Y = CreateWord("data.cart_1_large_tray_pos_1_y", "D21014", PlcTagDataType.Float, "Vị trí trục Y xe 1 khay lớn ở vị trí 1");
-        public static readonly PlcTagDefinition Cart1LargeTrayPos1Z = CreateWord("data.cart_1_large_tray_pos_1_z", "D21016", PlcTagDataType.Float, "Vị trí trục Z xe 1 khay lớn ở vị trí 1");
-        public static readonly PlcTagDefinition Cart1LargeTrayPos2X = CreateWord("data.cart_1_large_tray_pos_2_x", "D21018", PlcTagDataType.Float, "Vị trí trục X xe 1 khay lớn ở vị trí 2");
-        public static readonly PlcTagDefinition Cart1LargeTrayPos2Y = CreateWord("data.cart_1_large_tray_pos_2_y", "D21020", PlcTagDataType.Float, "Vị trí trục Y xe 1 khay lớn ở vị trí 2");
-        public static readonly PlcTagDefinition Cart1LargeTrayPos2Z = CreateWord("data.cart_1_large_tray_pos_2_z", "D21022", PlcTagDataType.Float, "Vị trí trục Z xe 1 khay lớn ở vị trí 2");
-
-        public static readonly PlcTagDefinition Cart2SmallTrayPos1X = CreateWord("data.cart_2_small_tray_pos_1_x", "D21024", PlcTagDataType.Float, "Vị trí trục X xe 2 khay nhỏ ở vị trí 1");
-        public static readonly PlcTagDefinition Cart2SmallTrayPos1Y = CreateWord("data.cart_2_small_tray_pos_1_y", "D21026", PlcTagDataType.Float, "Vị trí trục Y xe 2 khay nhỏ ở vị trí 1");
-        public static readonly PlcTagDefinition Cart2SmallTrayPos1Z = CreateWord("data.cart_2_small_tray_pos_1_z", "D21028", PlcTagDataType.Float, "Vị trí trục Z xe 2 khay nhỏ ở vị trí 1");
-        public static readonly PlcTagDefinition Cart2SmallTrayPos2X = CreateWord("data.cart_2_small_tray_pos_2_x", "D21030", PlcTagDataType.Float, "Vị trí trục X xe 2 khay nhỏ ở vị trí 2");
-        public static readonly PlcTagDefinition Cart2SmallTrayPos2Y = CreateWord("data.cart_2_small_tray_pos_2_y", "D21032", PlcTagDataType.Float, "Vị trí trục Y xe 2 khay nhỏ ở vị trí 2");
-        public static readonly PlcTagDefinition Cart2SmallTrayPos2Z = CreateWord("data.cart_2_small_tray_pos_2_z", "D21034", PlcTagDataType.Float, "Vị trí trục Z xe 2 khay nhỏ ở vị trí 2");
-
-        public static readonly PlcTagDefinition Cart2LargeTrayPos1X = CreateWord("data.cart_2_large_tray_pos_1_x", "D21036", PlcTagDataType.Float, "Vị trí trục X xe 2 khay lớn ở vị trí 1");
-        public static readonly PlcTagDefinition Cart2LargeTrayPos1Y = CreateWord("data.cart_2_large_tray_pos_1_y", "D21038", PlcTagDataType.Float, "Vị trí trục Y xe 2 khay lớn ở vị trí 1");
-        public static readonly PlcTagDefinition Cart2LargeTrayPos1Z = CreateWord("data.cart_2_large_tray_pos_1_z", "D21040", PlcTagDataType.Float, "Vị trí trục Z xe 2 khay lớn ở vị trí 1");
-        public static readonly PlcTagDefinition Cart2LargeTrayPos2X = CreateWord("data.cart_2_large_tray_pos_2_x", "D21042", PlcTagDataType.Float, "Vị trí trục X xe 2 khay lớn ở vị trí 2");
-        public static readonly PlcTagDefinition Cart2LargeTrayPos2Y = CreateWord("data.cart_2_large_tray_pos_2_y", "D21044", PlcTagDataType.Float, "Vị trí trục Y xe 2 khay lớn ở vị trí 2");
-        public static readonly PlcTagDefinition Cart2LargeTrayPos2Z = CreateWord("data.cart_2_large_tray_pos_2_z", "D21046", PlcTagDataType.Float, "Vị trí trục Z xe 2 khay lớn ở vị trí 2");
-
-        // --- Thông số Tray Nhỏ ---
-        public static readonly PlcTagDefinition SmallTrayColumnSpacing = CreateWord("data.small_tray_column_spacing", "D21048", PlcTagDataType.Float, "Khoảng cách 2 cột trên tray nhỏ");
-        public static readonly PlcTagDefinition SmallTrayRowSpacing = CreateWord("data.small_tray_row_spacing", "D21050", PlcTagDataType.Float, "Khoảng cách 2 hàng trên tray nhỏ");
-        public static readonly PlcTagDefinition SmallTrayJigHeight = CreateWord("data.small_tray_jig_height", "D21052", PlcTagDataType.Float, "Độ cao Jig Tray Nhỏ");
-        public static readonly PlcTagDefinition SmallTrayColumns = CreateWord("data.small_tray_columns", "D21054", PlcTagDataType.Int16, "Số cột Tray nhỏ");
-        public static readonly PlcTagDefinition SmallTrayRows = CreateWord("data.small_tray_rows", "D21056", PlcTagDataType.Int16, "Số hàng Tray nhỏ");
-        // --- Thông số Tray Lớn ---
-        public static readonly PlcTagDefinition LargeTrayColumnSpacing = CreateWord("data.large_tray_column_spacing", "D21058", PlcTagDataType.Float, "Khoảng cách 2 cột trên tray lớn");
-        public static readonly PlcTagDefinition LargeTrayRowSpacing = CreateWord("data.large_tray_row_spacing", "D21060", PlcTagDataType.Float, "Khoảng cách 2 hàng trên tray lớn");
-        public static readonly PlcTagDefinition LargeTrayColumns = CreateWord("data.large_tray_columns", "D21062", PlcTagDataType.Int16, "Số cột Tray Lớn");
-        public static readonly PlcTagDefinition LargeTrayRows = CreateWord("data.large_tray_rows", "D21064", PlcTagDataType.Int16, "Số hàng Tray Lớn");
-        public static readonly PlcTagDefinition LargeTrayJigHeight = CreateWord("data.large_tray_jig_height", "D21066", PlcTagDataType.Float, "Độ cao Jig Tray Lớn");
+        public static readonly PlcTagDefinition AxisXSpeedLimit = CreateWord("data.axis_x_speed_limit", "D21000", PlcTagDataType.Float, "Giới hạn tốc độ trục X");
+        public static readonly PlcTagDefinition AxisZSpeedLimit = CreateWord("data.axis_z_speed_limit", "D21002", PlcTagDataType.Float, "Giới hạn tốc độ trục Z");
+        public static readonly PlcTagDefinition LifterSpeedLimit = CreateWord("data.lifter_speed_limit", "D21004", PlcTagDataType.Float, "Giới hạn Tốc độ trục cấp phôi");
+        public static readonly PlcTagDefinition RotarySpeedLimit = CreateWord("data.rotary_speed_limit", "D21006", PlcTagDataType.Float, "Giới hạn Tốc độ bàn xoay");
+        public static readonly PlcTagDefinition AxisXPositiveLimit = CreateWord("data.axis_x_positive_limit", "D21008", PlcTagDataType.Float, "Limit trục X+");
+        public static readonly PlcTagDefinition AxisXNegativeLimit = CreateWord("data.axis_x_negative_limit", "D21010", PlcTagDataType.Float, "Limit trục X-");
+        public static readonly PlcTagDefinition AxisZPositiveLimit = CreateWord("data.axis_z_positive_limit", "D21012", PlcTagDataType.Float, "Limit trục Z+");
+        public static readonly PlcTagDefinition AxisZNegativeLimit = CreateWord("data.axis_z_negative_limit", "D21014", PlcTagDataType.Float, "Limit trục Z-");
+        public static readonly PlcTagDefinition LifterTopLimit = CreateWord("data.lifter_top_limit", "D21016", PlcTagDataType.Float, "Limit trên trục nâng phôi");
+        public static readonly PlcTagDefinition LifterBottomLimit = CreateWord("data.lifter_bottom_limit", "D21018", PlcTagDataType.Float, "Limit dưới trục nâng phôi");
+        public static readonly PlcTagDefinition AxisXAutoSpeed = CreateWord("data.axis_x_auto_speed", "D21020", PlcTagDataType.Float, "Tốc độ chạy tự động trục X");
+        public static readonly PlcTagDefinition AxisZAutoSpeed = CreateWord("data.axis_z_auto_speed", "D21022", PlcTagDataType.Float, "Tốc độ chạy tự động trục Z");
+        public static readonly PlcTagDefinition LifterAutoSpeed = CreateWord("data.lifter_auto_speed", "D21024", PlcTagDataType.Float, "Tốc độ chạy tự động trục nâng phôi");
+        public static readonly PlcTagDefinition RotaryAutoSpeed = CreateWord("data.rotary_auto_speed", "D21026", PlcTagDataType.Float, "Tốc độ chạy tự động bàn nâng");
+        public static readonly PlcTagDefinition AxisXFeedFastSpeed = CreateWord("data.axis_x_feed_fast_speed", "D21028", PlcTagDataType.Float, "Tốc độ trục X cấp hàng đi nhanh");
+        public static readonly PlcTagDefinition AxisXFeedSlowSpeed = CreateWord("data.axis_x_feed_slow_speed", "D21030", PlcTagDataType.Float, "Tốc độ trục X cấp hàng đi chậm");
+        public static readonly PlcTagDefinition AxisXPickSpeed = CreateWord("data.axis_x_pick_speed", "D21032", PlcTagDataType.Float, "Tốc độ trục X lấy hàng");
+        public static readonly PlcTagDefinition AxisZInMachineSpeed = CreateWord("data.axis_z_in_machine_speed", "D21034", PlcTagDataType.Float, "Tốc độ Z trong máy mài");
+        public static readonly PlcTagDefinition AxisXTorqueUpperLimit = CreateWord("data.axis_x_torque_upper_limit", "D21036", PlcTagDataType.Int16, "Giới hạn trên Momen trục X");
+        public static readonly PlcTagDefinition AxisXTorqueLowerLimit = CreateWord("data.axis_x_torque_lower_limit", "D21038", PlcTagDataType.Int16, "Giới hạn dưới Momen trục X");
+        public static readonly PlcTagDefinition AxisZTorqueUpperLimit = CreateWord("data.axis_z_torque_upper_limit", "D21040", PlcTagDataType.Int16, "Giới hạn trên Momen trục Z");
+        public static readonly PlcTagDefinition AxisZTorqueLowerLimit = CreateWord("data.axis_z_torque_lower_limit", "D21042", PlcTagDataType.Int16, "Giới hạn dưới Momen trục Z");
+        public static readonly PlcTagDefinition AxisXOffset = CreateWord("data.axis_x_offset", "D21044", PlcTagDataType.Float, "Ofset tọa độ trục X");
+        public static readonly PlcTagDefinition AxisZOffset = CreateWord("data.axis_z_offset", "D21046", PlcTagDataType.Float, "Ofset tọa độ trục Z");
+        public static readonly PlcTagDefinition LifterOffset = CreateWord("data.lifter_offset", "D21048", PlcTagDataType.Float, "Ofset tọa độ trục nâng");
     }
 
     public static class DataMachine
     {
-        public static readonly PlcTagDefinition AxisXSpeedLimit = CreateWord("data.axis_x_speed_limit", "D21070", PlcTagDataType.Float, "Giới hạn tốc độ trục X");
-        public static readonly PlcTagDefinition AxisYSpeedLimit = CreateWord("data.axis_y_speed_limit", "D21072", PlcTagDataType.Float, "Giới hạn tốc độ trục Y");
-        public static readonly PlcTagDefinition AxisZSpeedLimit = CreateWord("data.axis_z_speed_limit", "D21074", PlcTagDataType.Float, "Giới hạn tốc độ trục Z");
-        public static readonly PlcTagDefinition AxisXPositiveLimit = CreateWord("data.axis_x_positive_limit", "D21076", PlcTagDataType.Float, "Giới hạn trục X+");
-        public static readonly PlcTagDefinition AxisXNegativeLimit = CreateWord("data.axis_x_negative_limit", "D21078", PlcTagDataType.Float, "Giới hạn trục X-");
-        public static readonly PlcTagDefinition AxisYPositiveLimit = CreateWord("data.axis_y_positive_limit", "D21080", PlcTagDataType.Float, "Giới hạn trục Y+");
-        public static readonly PlcTagDefinition AxisYNegativeLimit = CreateWord("data.axis_y_negative_limit", "D21082", PlcTagDataType.Float, "Giới hạn trục Y-");
-        public static readonly PlcTagDefinition AxisZPositiveLimit = CreateWord("data.axis_z_positive_limit", "D21084", PlcTagDataType.Float, "Giới hạn trục Z+");
-        public static readonly PlcTagDefinition AxisZNegativeLimit = CreateWord("data.axis_z_negative_limit", "D21086", PlcTagDataType.Float, "Giới hạn trục Z-");
-        public static readonly PlcTagDefinition AxisZPickDownSpeed = CreateWord("data.axis_z_pick_down_speed", "D21088", PlcTagDataType.Float, "Tốc độ xuống gắp hàng trục Z");
-        public static readonly PlcTagDefinition AxisZPickSpeed = CreateWord("data.axis_z_pick_speed", "D21090", PlcTagDataType.Float, "Tốc độ lấy hàng trục Z");
-        public static readonly PlcTagDefinition AxisZDropSpeed = CreateWord("data.axis_z_drop_speed", "D21092", PlcTagDataType.Float, "Tốc độ thả hàng trục Z");
-        public static readonly PlcTagDefinition AxisXAutoSpeed = CreateWord("data.axis_x_auto_speed", "D21094", PlcTagDataType.Float, "Tốc độ chạy tự động trục X");
-        public static readonly PlcTagDefinition AxisYAutoSpeed = CreateWord("data.axis_y_auto_speed", "D21096", PlcTagDataType.Float, "Tốc độ chạy tự động trục Y");
-        public static readonly PlcTagDefinition AxisZAutoSpeed = CreateWord("data.axis_z_auto_speed", "D21098", PlcTagDataType.Float, "Tốc độ chạy tự động trục Z");
-        public static readonly PlcTagDefinition WaitPickPositionX = CreateWord("data.wait_pick_position_x", "D21100", PlcTagDataType.Float, "Tọa độ X vị trí chờ gắp hàng");
-        public static readonly PlcTagDefinition WaitPickPositionY = CreateWord("data.wait_pick_position_y", "D21102", PlcTagDataType.Float, "Tọa độ Y vị trí chờ gắp hàng");
-        public static readonly PlcTagDefinition WaitPickPositionZ = CreateWord("data.wait_pick_position_z", "D21104", PlcTagDataType.Float, "Tọa độ Z vị trí chờ gắp hàng");
-        public static readonly PlcTagDefinition SafeRotatePositionZ = CreateWord("data.safe_rotate_position_z", "D21106", PlcTagDataType.Float, "Tọa độ Z an toàn xoay trên");
-        public static readonly PlcTagDefinition SafeRotatePositionX = CreateWord("data.safe_rotate_position_x", "D21140", PlcTagDataType.Float, "Tọa độ An Toàn xoay X");
-        public static readonly PlcTagDefinition SafeRotatePositionZLower = CreateWord("data.safe_rotate_position_z_lower", "D21142", PlcTagDataType.Float, "Tọa độ An toàn xoay Z dưới");
-        public static readonly PlcTagDefinition PlaceProductLine1X = CreateWord("data.place_product_line1_x", "D21144", PlcTagDataType.Float, "Tọa độ X đặt sản phẩm Line 1");
-        public static readonly PlcTagDefinition PlaceProductLine1Y = CreateWord("data.place_product_line1_y", "D21146", PlcTagDataType.Float, "Tọa độ Y đặt sản phẩm Line 1");
-        public static readonly PlcTagDefinition PlaceProductLine1Z = CreateWord("data.place_product_line1_z", "D21148", PlcTagDataType.Float, "Tọa độ Z đặt sản phẩm Line 1");
-        public static readonly PlcTagDefinition PlaceProductLine2X = CreateWord("data.place_product_line2_x", "D21150", PlcTagDataType.Float, "Tọa độ X đặt sản phẩm Line 2");
-        public static readonly PlcTagDefinition PlaceProductLine2Y = CreateWord("data.place_product_line2_y", "D21152", PlcTagDataType.Float, "Tọa độ Y đặt sản phẩm Line 2");
-        public static readonly PlcTagDefinition PlaceProductLine2Z = CreateWord("data.place_product_line2_z", "D21154", PlcTagDataType.Float, "Tọa độ Z đặt sản phẩm Line 2");
-        public static readonly PlcTagDefinition MasterShaftOp1Diameter = CreateWord("data.master_shaft_op1_diameter", "D21156", PlcTagDataType.Float, "Đường kính OP1 trục Master");
-        public static readonly PlcTagDefinition AxisXTorqueUpperLimit = CreateWord("data.axis_x_torque_upper_limit", "D21158", PlcTagDataType.Int16, "Giới hạn trên Momen trục X");
-        public static readonly PlcTagDefinition AxisXTorqueLowerLimit = CreateWord("data.axis_x_torque_lower_limit", "D21159", PlcTagDataType.Int16, "Giới hạn dưới Momen trục X");
-        public static readonly PlcTagDefinition AxisYTorqueUpperLimit = CreateWord("data.axis_y_torque_upper_limit", "D21160", PlcTagDataType.Int16, "Giới hạn trên Momen trục Y");
-        public static readonly PlcTagDefinition AxisYTorqueLowerLimit = CreateWord("data.axis_y_torque_lower_limit", "D21161", PlcTagDataType.Int16, "Giới hạn dưới Momen trục Y");
-        public static readonly PlcTagDefinition AxisZTorqueUpperLimit = CreateWord("data.axis_z_torque_upper_limit", "D21162", PlcTagDataType.Int16, "Giới hạn trên Momen trục Z");
-        public static readonly PlcTagDefinition AxisZTorqueLowerLimit = CreateWord("data.axis_z_torque_lower_limit", "D21163", PlcTagDataType.Int16, "Giới hạn dưới Momen trục Z");
+        // --- Tọa độ Master & Máy tiện OP1 / OP2 (Image 3) ---
+        public static readonly PlcTagDefinition MasterPickInputX = CreateWord("data.master_pick_input_x", "D21060", PlcTagDataType.Float, "Tọa độ X Master lấy phôi đầu vào");
+        public static readonly PlcTagDefinition MasterPickInputZ = CreateWord("data.master_pick_input_z", "D21062", PlcTagDataType.Float, "Tọa độ Z Master lấy phôi đầu vào");
+        public static readonly PlcTagDefinition LatheOp1JawFaceX = CreateWord("data.lathe_op1_jaw_face_x", "D21064", PlcTagDataType.Float, "Tọa độ X Mặt chấu kẹp máy tiện OP1");
+        public static readonly PlcTagDefinition LatheOp1SafeUpDownX = CreateWord("data.lathe_op1_safe_up_down_x", "D21066", PlcTagDataType.Float, "Tọa độ X An toàn lên xuống máy tiện OP1");
+        public static readonly PlcTagDefinition LatheOp1JawCenterZ = CreateWord("data.lathe_op1_jaw_center_z", "D21068", PlcTagDataType.Float, "Tọa độ Z tâm chấu kẹp máy tiện OP1");
+        public static readonly PlcTagDefinition LatheOp2JawFaceX = CreateWord("data.lathe_op2_jaw_face_x", "D21070", PlcTagDataType.Float, "Tọa độ X Mặt chấu kẹp máy tiện OP2");
+        public static readonly PlcTagDefinition LatheOp2SafeUpDownX = CreateWord("data.lathe_op2_safe_up_down_x", "D21072", PlcTagDataType.Float, "Tọa độ X An toàn lên xuống máy tiện OP2");
+        public static readonly PlcTagDefinition LatheOp2JawCenterZ = CreateWord("data.lathe_op2_jaw_center_z", "D21074", PlcTagDataType.Float, "Tọa độ Z tâm chấu kẹp máy tiện OP2");
+        public static readonly PlcTagDefinition MasterDropProductX = CreateWord("data.master_drop_product_x", "D21076", PlcTagDataType.Float, "Tọa độ X Master Thả hàng thành phẩm");
+        public static readonly PlcTagDefinition MasterDropProductZ = CreateWord("data.master_drop_product_z", "D21078", PlcTagDataType.Float, "Tọa độ Z Master Thả hàng thành phẩm");
+        public static readonly PlcTagDefinition MasterDropFlipX = CreateWord("data.master_drop_flip_x", "D21080", PlcTagDataType.Float, "Tọa độ X Master thả hàng đảo chiều phôi");
+        public static readonly PlcTagDefinition MasterPickPostFlipX = CreateWord("data.master_pick_post_flip_x", "D21082", PlcTagDataType.Float, "Tọa độ X Master lấy hàng phôi sau đảo chiều");
+        public static readonly PlcTagDefinition MasterDropFlipZ = CreateWord("data.master_drop_flip_z", "D21084", PlcTagDataType.Float, "Tọa độ Z Master thả hàng đảo chiều phôi");
+
+        // --- Momen status readouts (Image 2) ---
+        public static readonly PlcTagDefinition MomentXMin = CreateWord("data.moment_x_min", "D5190", PlcTagDataType.Int16, "Momen X Min");
+        public static readonly PlcTagDefinition MomentXMax = CreateWord("data.moment_x_max", "D5191", PlcTagDataType.Int16, "Momen X Max");
+        public static readonly PlcTagDefinition MomentZMin = CreateWord("data.moment_z_min", "D5192", PlcTagDataType.Int16, "Momen Z Min");
+        public static readonly PlcTagDefinition MomentZMax = CreateWord("data.moment_z_max", "D5193", PlcTagDataType.Int16, "Momen Z Max");
     }
 
-    public static class DataOriginCheck
-    {
-        public static readonly PlcTagDefinition MoveToOriginCheckSpeedLimit = CreateWord("data.move_to_origin_check_speed_limit", "D21108", PlcTagDataType.Float, "Tốc độ trục X tới vị trí bắt đầu check gốc");
-        public static readonly PlcTagDefinition OriginCheckSpeedLimit = CreateWord("data.origin_check_speed_limit", "D21110", PlcTagDataType.Float, "Tốc độ check Gốc");
-        public static readonly PlcTagDefinition OffsetX = CreateWord("data.origin_check_offset_x", "D21112", PlcTagDataType.Float, "Ofset tọa độ trục X");
-        public static readonly PlcTagDefinition OffsetY = CreateWord("data.origin_check_offset_y", "D21114", PlcTagDataType.Float, "Ofset Tọa độ trục Y");
-        public static readonly PlcTagDefinition OffsetZ = CreateWord("data.origin_check_offset_z", "D21116", PlcTagDataType.Float, "Ofset tọa độ trục Z");
-        public static readonly PlcTagDefinition JigClampThickness = CreateWord("data.jig_clamp_thickness", "D21118", PlcTagDataType.Float, "Độ dày Jig kẹp");
-        public static readonly PlcTagDefinition OriginXLine1 = CreateWord("data.origin_x_line_1", "D21120", PlcTagDataType.Float, "Tọa độ Gốc X Line 1");
-        public static readonly PlcTagDefinition OriginYLine1 = CreateWord("data.origin_y_line_1", "D21122", PlcTagDataType.Float, "Tọa độ Gốc Y Line 1");
-        public static readonly PlcTagDefinition OriginZLine1 = CreateWord("data.origin_z_line_1", "D21124", PlcTagDataType.Float, "Tọa độ Gốc Z Line 1");
-        public static readonly PlcTagDefinition OriginXLine2 = CreateWord("data.origin_x_line_2", "D21126", PlcTagDataType.Float, "Tọa độ Gốc X Line 2");
-        public static readonly PlcTagDefinition OriginYLine2 = CreateWord("data.origin_y_line_2", "D21128", PlcTagDataType.Float, "Tọa độ Gốc Y Line 2");
-        public static readonly PlcTagDefinition OriginZLine2 = CreateWord("data.origin_z_line_2", "D21130", PlcTagDataType.Float, "Tọa độ Gốc Z Line 2");
-    }
 
     public static class Manual
     {
@@ -878,158 +834,18 @@ public static class PlcTagCatalog
             CreateBit("agv.swap_done_line2", "D5641.3", "AGV báo đã đảo xong kệ line 2");
     }
 
-    public static IReadOnlyList<PlcTagDefinition> All { get; } =
-    [
-        Words.D5120,
-        Words.D5121,
-        Words.D5122,
-        Words.D5123,
-        Words.D5124,
-        Words.D5130,
-        Words.D5131,
-        Words.D5132,
-        Words.D5133,
-        Inputs.X0_00,
-        Inputs.X0_01,
-        Inputs.X0_02,
-        Inputs.X0_03,
-        Inputs.X0_04,
-        Inputs.X0_05,
-        Inputs.X0_06,
-        Inputs.X0_07,
-        Inputs.X0_08,
-        Inputs.X0_09,
-        Inputs.X0_10,
-        Inputs.X0_11,
-        Inputs.X0_12,
-        Inputs.X0_13,
-        Inputs.X0_14,
-        Inputs.X0_15,
-        Inputs.X1_00,
-        Inputs.X1_01,
-        Inputs.X1_02,
-        Inputs.X1_03,
-        Inputs.X1_04,
-        Inputs.X1_05,
-        Inputs.X1_06,
-        Inputs.X1_07,
-        Inputs.X1_08,
-        Inputs.X1_09,
-        Inputs.X1_10,
-        Inputs.X1_11,
-        Inputs.X1_12,
-        Inputs.X1_13,
-        Inputs.X1_14,
-        Inputs.X1_15,
-        Inputs.X2_00,
-        Inputs.X2_01,
-        Inputs.X2_02,
-        Inputs.X2_03,
-        Inputs.X2_04,
-        Inputs.X2_05,
-        Inputs.X2_06,
-        Inputs.X2_07,
-        Inputs.X2_08,
-        Inputs.X2_09,
-        Inputs.X2_10,
-        Inputs.X2_11,
-        Inputs.X2_12,
-        Inputs.X2_13,
-        Inputs.X2_14,
-        Inputs.X2_15,
-        Inputs.X3_00,
-        Inputs.X3_01,
-        Inputs.X3_02,
-        Inputs.X3_03,
-        Inputs.X3_04,
-        Inputs.X3_05,
-        Inputs.X3_06,
-        Inputs.X3_07,
-        Inputs.X3_08,
-        Inputs.X3_09,
-        Inputs.X3_10,
-        Inputs.X3_11,
-        Inputs.X3_12,
-        Inputs.X3_13,
-        Inputs.X3_14,
-        Inputs.X3_15,
-        Inputs.X4_00,
-        Inputs.X4_01,
-        Inputs.X4_02,
-        Inputs.X4_03,
-        Inputs.X4_04,
-        Inputs.X4_05,
-        Inputs.X4_06,
-        Inputs.X4_07,
-        Inputs.X4_08,
-        Inputs.X4_09,
-        Inputs.X4_10,
-        Inputs.X4_11,
-        Inputs.X4_12,
-        Inputs.X4_13,
-        Inputs.X4_14,
-        Inputs.X4_15,
-        Outputs.Y0_00,
-        Outputs.Y0_01,
-        Outputs.Y0_02,
-        Outputs.Y0_03,
-        Outputs.Y0_04,
-        Outputs.Y0_05,
-        Outputs.Y0_06,
-        Outputs.Y0_07,
-        Outputs.Y0_08,
-        Outputs.Y0_09,
-        Outputs.Y0_10,
-        Outputs.Y0_11,
-        Outputs.Y1_00,
-        Outputs.Y1_01,
-        Outputs.Y1_02,
-        Outputs.Y1_03,
-        Outputs.Y1_04,
-        Outputs.Y1_05,
-        Outputs.Y1_06,
-        Outputs.Y1_07,
-        Outputs.Y1_08,
-        Outputs.Y1_09,
-        Outputs.Y1_10,
-        Outputs.Y1_11,
-        Outputs.Y1_12,
-        Outputs.Y1_13,
-        Outputs.Y1_14,
-        Outputs.Y1_15,
-        Outputs.Y2_00,
-        Outputs.Y2_01,
-        Outputs.Y2_02,
-        Outputs.Y2_03,
-        Outputs.Y2_04,
-        Outputs.Y2_05,
-        Outputs.Y2_06,
-        Outputs.Y2_07,
-        Outputs.Y2_08,
-        Outputs.Y2_09,
-        Outputs.Y2_10,
-        Outputs.Y2_11,
-        Outputs.Y2_12,
-        Outputs.Y2_13,
-        Outputs.Y2_14,
-        Outputs.Y2_15,
-        Outputs.Y3_00,
-        Outputs.Y3_01,
-        Outputs.Y3_02,
-        Outputs.Y3_03,
-        Outputs.Y3_04,
-        Outputs.Y3_05,
-        Outputs.Y3_06,
-        Outputs.Y3_07,
-        Outputs.Y3_08,
-        Outputs.Y3_09,
-        Outputs.Y3_10,
-        Outputs.Y3_11,
-        Outputs.Y3_12,
-        Outputs.Y3_13,
-        Outputs.Y3_14,
-        Outputs.Y3_15
-    ];
+    public static IReadOnlyList<PlcTagDefinition> All { get; } = CollectAllTags(
+        typeof(Words),
+        typeof(Inputs),
+        typeof(Outputs),
+        typeof(DataAutos),
+        typeof(RobotTest),
+        typeof(DataTrayCart),
+        typeof(DataMachine),
+        typeof(Manual),
+        typeof(Alarms),
+        typeof(ConfirmMessages),
+        typeof(Agv));
 
     public static IReadOnlyDictionary<string, PlcTagDefinition> ByName { get; } =
         All.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
@@ -1041,7 +857,6 @@ public static class PlcTagCatalog
         typeof(RobotTest),
         typeof(DataTrayCart),
         typeof(DataMachine),
-        typeof(DataOriginCheck),
         typeof(Manual),
         typeof(Agv),
         typeof(ConfirmMessages));
@@ -1109,6 +924,7 @@ public static class PlcTagCatalog
             .Where(static field => field.FieldType == typeof(PlcTagDefinition))
             .Select(static field => (PlcTagDefinition?)field.GetValue(null))
             .OfType<PlcTagDefinition>()
+            .DistinctBy(static tag => tag.Name, StringComparer.OrdinalIgnoreCase)
             .ToList()
             .AsReadOnly();
     }

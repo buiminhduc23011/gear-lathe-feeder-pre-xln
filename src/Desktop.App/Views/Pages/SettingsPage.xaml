@@ -159,18 +159,13 @@
                         Style="{StaticResource SettingsSegmentButton}" />
                     <ToggleButton
                         Command="{Binding SelectDataTrayCartTabCommand}"
-                        Content="Thông số khay/xe"
+                        Content="Thông số máy"
                         IsChecked="{Binding IsDataTrayCartTabSelected, Mode=OneWay}"
                         Style="{StaticResource SettingsSegmentButton}" />
                     <ToggleButton
                         Command="{Binding SelectDataMachineTabCommand}"
-                        Content="Thông số máy"
+                        Content="Thông số chạy"
                         IsChecked="{Binding IsDataMachineTabSelected, Mode=OneWay}"
-                        Style="{StaticResource SettingsSegmentButton}" />
-                    <ToggleButton
-                        Command="{Binding SelectDataOriginCheckTabCommand}"
-                        Content="Thông số Check gốc"
-                        IsChecked="{Binding IsDataOriginCheckTabSelected, Mode=OneWay}"
                         Style="{StaticResource SettingsSegmentButton}" />
                     <ToggleButton
                         Command="{Binding SelectAgvSettingsTabCommand}"
@@ -390,11 +385,11 @@
                 <StackPanel IsEnabled="{Binding IsEditable}" Visibility="{Binding IsDataTrayCartTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Border Style="{StaticResource SectionCard.Subtle}">
                         <StackPanel>
-                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số khay và xe hàng" />
+                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số máy" />
                             <TextBlock
                                 Margin="0,8,0,0"
                                 Style="{StaticResource SectionSubtitleText}"
-                                Text="Thông số mặc định của Tray và Xe Hàng." />
+                                Text="Giới hạn tốc độ, vị trí limit và tốc độ tự động của máy." />
 
                             <ItemsControl Margin="0,14,0,0" ItemTemplate="{StaticResource SettingsParameterItemTemplate}" ItemsSource="{Binding DataTrayCartParameters}">
                                 <ItemsControl.ItemsPanel>
@@ -410,11 +405,11 @@
                 <StackPanel IsEnabled="{Binding IsEditable}" Visibility="{Binding IsDataMachineTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Border Style="{StaticResource SectionCard.Subtle}">
                         <StackPanel>
-                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số máy" />
+                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số chạy" />
                             <TextBlock
                                 Margin="0,8,0,0"
                                 Style="{StaticResource SectionSubtitleText}"
-                                Text="Giá trị mặc định giới hạn tốc độ, vị trí các trục tọa độ." />
+                                Text="Vị trí tọa độ Master, OP1, OP2 và thông số Momen." />
 
                             <ItemsControl Margin="0,14,0,0" ItemTemplate="{StaticResource SettingsParameterItemTemplate}" ItemsSource="{Binding DataMachineParameters}">
                                 <ItemsControl.ItemsPanel>
@@ -427,25 +422,6 @@
                     </Border>
                 </StackPanel>
 
-                <StackPanel IsEnabled="{Binding IsEditable}" Visibility="{Binding IsDataOriginCheckTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Border Style="{StaticResource SectionCard.Subtle}">
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số Check Gốc" />
-                            <TextBlock
-                                Margin="0,8,0,0"
-                                Style="{StaticResource SectionSubtitleText}"
-                                Text="Tham số đo đạc tốc độ, độ lệch và vị trí gốc cho Line 1 và Line 2." />
-
-                            <ItemsControl Margin="0,14,0,0" ItemTemplate="{StaticResource SettingsParameterItemTemplate}" ItemsSource="{Binding DataOriginCheckParameters}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <primitives:UniformGrid Columns="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource ResponsiveColumnsConverter}}" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
 
                 <!-- AGV Settings Tab -->
                 <StackPanel IsEnabled="{Binding IsEditable}" Visibility="{Binding IsAgvSettingsTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">

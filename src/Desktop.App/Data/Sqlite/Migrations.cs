@@ -90,18 +90,7 @@ public static class Migrations
     private static async Task EnsureDefaultPlcParameterSettingsAsync(SqliteConnection connection, CancellationToken cancellationToken)
     {
         var updatedAtUtc = DateTimeOffset.UtcNow.ToString("O");
-        (string TagName, string GroupName, string ValueText)[] defaultSettings =
-        [
-            (PlcTagCatalog.DataMachine.SafeRotatePositionX.Name, PlcParameterGroups.DataMachine, "0"),
-            (PlcTagCatalog.DataMachine.SafeRotatePositionZLower.Name, PlcParameterGroups.DataMachine, "0"),
-            (PlcTagCatalog.DataMachine.MasterShaftOp1Diameter.Name, PlcParameterGroups.DataMachine, "0"),
-            (PlcTagCatalog.DataMachine.AxisXTorqueUpperLimit.Name, PlcParameterGroups.DataMachine, "0"),
-            (PlcTagCatalog.DataMachine.AxisXTorqueLowerLimit.Name, PlcParameterGroups.DataMachine, "0"),
-            (PlcTagCatalog.DataMachine.AxisYTorqueUpperLimit.Name, PlcParameterGroups.DataMachine, "0"),
-            (PlcTagCatalog.DataMachine.AxisYTorqueLowerLimit.Name, PlcParameterGroups.DataMachine, "0"),
-            (PlcTagCatalog.DataMachine.AxisZTorqueUpperLimit.Name, PlcParameterGroups.DataMachine, "0"),
-            (PlcTagCatalog.DataMachine.AxisZTorqueLowerLimit.Name, PlcParameterGroups.DataMachine, "0"),
-        ];
+        (string TagName, string GroupName, string ValueText)[] defaultSettings = [];
 
         foreach (var setting in defaultSettings)
         {

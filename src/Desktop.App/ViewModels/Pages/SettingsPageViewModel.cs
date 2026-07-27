@@ -47,7 +47,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
 
         DataTrayCartParameters.CollectionChanged += OnParameterCollectionChanged;
         DataMachineParameters.CollectionChanged += OnParameterCollectionChanged;
-        DataOriginCheckParameters.CollectionChanged += OnParameterCollectionChanged;
         _plcParameterSyncService.SyncStatesChanged += OnSyncStatesChanged;
         AppSession.SessionChanged += OnSessionChanged;
 
@@ -97,8 +96,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private bool isDataMachineTabSelected;
 
-    [ObservableProperty]
-    private bool isDataOriginCheckTabSelected;
 
     [ObservableProperty]
     private bool isAgvSettingsTabSelected;
@@ -150,7 +147,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
 
     public ObservableCollection<EditablePlcParameterField> DataMachineParameters { get; } = [];
 
-    public ObservableCollection<EditablePlcParameterField> DataOriginCheckParameters { get; } = [];
 
     public bool HasValidationMessage => !string.IsNullOrWhiteSpace(ValidationMessage);
 
@@ -176,7 +172,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         await LoadMachineSettingsAsync(showFeedback: false);
         await ReloadParameterGroupAsync(PlcParameterGroups.DataTrayCart);
         await ReloadParameterGroupAsync(PlcParameterGroups.DataMachine);
-        await ReloadParameterGroupAsync(PlcParameterGroups.DataOriginCheck);
         await LoadTrayConfigsAsync();
     }
 
@@ -329,7 +324,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = true;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = false;
-        IsDataOriginCheckTabSelected = false;
         IsAgvSettingsTabSelected = false;
         IsTraySettingsTabSelected = false;
     }
@@ -340,7 +334,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = true;
         IsDataMachineTabSelected = false;
-        IsDataOriginCheckTabSelected = false;
         IsAgvSettingsTabSelected = false;
         IsTraySettingsTabSelected = false;
     }
@@ -351,18 +344,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = true;
-        IsDataOriginCheckTabSelected = false;
-        IsAgvSettingsTabSelected = false;
-        IsTraySettingsTabSelected = false;
-    }
-
-    [RelayCommand]
-    private void SelectDataOriginCheckTab()
-    {
-        IsMachineSettingsTabSelected = false;
-        IsDataTrayCartTabSelected = false;
-        IsDataMachineTabSelected = false;
-        IsDataOriginCheckTabSelected = true;
         IsAgvSettingsTabSelected = false;
         IsTraySettingsTabSelected = false;
     }
@@ -373,7 +354,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = false;
-        IsDataOriginCheckTabSelected = false;
         IsAgvSettingsTabSelected = true;
         IsTraySettingsTabSelected = false;
     }
@@ -384,7 +364,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = false;
-        IsDataOriginCheckTabSelected = false;
         IsAgvSettingsTabSelected = false;
         IsTraySettingsTabSelected = true;
     }
@@ -462,11 +441,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         await ReloadParameterGroupAsync(PlcParameterGroups.DataMachine);
     }
 
-    [RelayCommand]
-    private async Task ReloadDataOriginCheckAsync()
-    {
-        await ReloadParameterGroupAsync(PlcParameterGroups.DataOriginCheck);
-    }
 
     public void Dispose()
     {
@@ -480,7 +454,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         _plcParameterSyncService.SyncStatesChanged -= OnSyncStatesChanged;
         DataTrayCartParameters.CollectionChanged -= OnParameterCollectionChanged;
         DataMachineParameters.CollectionChanged -= OnParameterCollectionChanged;
-        DataOriginCheckParameters.CollectionChanged -= OnParameterCollectionChanged;
 
         foreach (var field in DataTrayCartParameters)
         {
@@ -492,10 +465,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
             field.PropertyChanged -= OnParameterFieldPropertyChanged;
         }
 
-        foreach (var field in DataOriginCheckParameters)
-        {
-            field.PropertyChanged -= OnParameterFieldPropertyChanged;
-        }
     }
 
     private async Task LoadMachineSettingsAsync(bool showFeedback)
@@ -570,7 +539,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
             {
                 PlcParameterGroups.DataTrayCart => DataTrayCartParameters,
                 PlcParameterGroups.DataMachine => DataMachineParameters,
-                PlcParameterGroups.DataOriginCheck => DataOriginCheckParameters,
                 _ => throw new ArgumentOutOfRangeException(nameof(groupName))
             };
             targetCollection.Clear();
@@ -819,7 +787,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         {
             ApplySyncStates(DataTrayCartParameters, e.SyncStates);
             ApplySyncStates(DataMachineParameters, e.SyncStates);
-            ApplySyncStates(DataOriginCheckParameters, e.SyncStates);
         });
     }
 
