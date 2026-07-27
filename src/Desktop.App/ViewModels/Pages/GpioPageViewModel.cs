@@ -18,15 +18,9 @@ public partial class GpioPageViewModel : ObservableObject, IDisposable
 
     private readonly Dictionary<string, GpioIoItem> _itemsByTagName;
     private readonly List<PlcTagDisplayItem> _allTags;
-    private readonly List<PlcTagDisplayItem> _allTagsLine1;
-    private readonly List<PlcTagDisplayItem> _allTagsLine2;
     private readonly object _pendingSnapshotLock = new();
     private readonly IPlcService _plcService;
-    private readonly IPlcService? _plcServiceLine1;
-    private readonly IPlcService? _plcServiceLine2;
     private readonly Dictionary<string, PlcTagDisplayItem> _tagsByTagName;
-    private readonly Dictionary<string, PlcTagDisplayItem> _tagsByTagNameLine1;
-    private readonly Dictionary<string, PlcTagDisplayItem> _tagsByTagNameLine2;
     private readonly DispatcherTimer _searchDebounceTimer;
     private bool _isDisposed;
     private bool _isInitialized;
@@ -35,24 +29,18 @@ public partial class GpioPageViewModel : ObservableObject, IDisposable
     private IReadOnlyDictionary<string, object?>? _pendingSnapshot;
     private readonly int _pageSize = DefaultPageSize;
 
-    public GpioPageViewModel(IPlcService plcService, IPlcService? plcServiceLine1 = null, IPlcService? plcServiceLine2 = null)
+    public GpioPageViewModel(IPlcService plcService)
     {
         _plcService = plcService;
-        _plcServiceLine1 = plcServiceLine1;
-        _plcServiceLine2 = plcServiceLine2;
 
         Inputs = CreateItems(typeof(PlcTagCatalog.Inputs));
         Outputs = CreateItems(typeof(PlcTagCatalog.Outputs));
-        _itemsByTagName = Inputs.Concat(Outputs).ToDictionary(item => item.TagName, StringComparer.OrdinalIgnoreCase);
+        _itemsByTagName = Inputs.Concat(Outputs)
+            .GroupBy(item => item.TagName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
 
         _allTags = CreateTagItems(PlcTagCatalog.All, _plcService);
         _tagsByTagName = _allTags.ToDictionary(item => item.Name, StringComparer.OrdinalIgnoreCase);
-
-        _allTagsLine1 = CreateTagItems(PlcTagCatalog.AllLine1, _plcServiceLine1);
-        _tagsByTagNameLine1 = _allTagsLine1.ToDictionary(item => item.Name, StringComparer.OrdinalIgnoreCase);
-
-        _allTagsLine2 = CreateTagItems(PlcTagCatalog.AllLine2, _plcServiceLine2);
-        _tagsByTagNameLine2 = _allTagsLine2.ToDictionary(item => item.Name, StringComparer.OrdinalIgnoreCase);
 
         Tags = new ObservableCollection<PlcTagDisplayItem>();
 
@@ -62,18 +50,6 @@ public partial class GpioPageViewModel : ObservableObject, IDisposable
 
         _plcService.ConnectionChanged += OnConnectionChanged;
         _plcService.DataUpdated += OnDataUpdated;
-
-        if (_plcServiceLine1 is not null)
-        {
-            _plcServiceLine1.ConnectionChanged += OnLine1ConnectionChanged;
-            _plcServiceLine1.DataUpdated += OnLine1DataUpdated;
-        }
-
-        if (_plcServiceLine2 is not null)
-        {
-            _plcServiceLine2.ConnectionChanged += OnLine2ConnectionChanged;
-            _plcServiceLine2.DataUpdated += OnLine2DataUpdated;
-        }
 
         _searchDebounceTimer = new DispatcherTimer
         {
@@ -116,12 +92,6 @@ public partial class GpioPageViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private bool isDataPlcTabSelected;
-
-    [ObservableProperty]
-    private bool isLine1TabSelected;
-
-    [ObservableProperty]
-    private bool isLine2TabSelected;
 
     [ObservableProperty]
     private bool isConnected;
@@ -192,20 +162,7 @@ public partial class GpioPageViewModel : ObservableObject, IDisposable
 
         try
         {
-            var robotSnapshotTask = LoadInitialSnapshotAsync(_plcService);
-            var line1SnapshotTask = LoadInitialSnapshotAsync(_plcServiceLine1);
-            var line2SnapshotTask = LoadInitialSnapshotAsync(_plcServiceLine2);
-
-            await Task.WhenAll(robotSnapshotTask, line1SnapshotTask, line2SnapshotTask).ConfigureAwait(false);
-
-            initialSnapshot = robotSnapshotTask.Result;
-
-            await InvokeOnUiThreadAsync(
-                () =>
-                {
-                    ApplyLineSnapshotFromCacheOrSnapshot(_allTagsLine1, _plcServiceLine1, line1SnapshotTask.Result);
-                    ApplyLineSnapshotFromCacheOrSnapshot(_allTagsLine2, _plcServiceLine2, line2SnapshotTask.Result);
-                });
+            initialSnapshot = await LoadInitialSnapshotAsync(_plcService).ConfigureAwait(false);
         }
         catch
         {
@@ -246,17 +203,7 @@ public partial class GpioPageViewModel : ObservableObject, IDisposable
         _plcService.ConnectionChanged -= OnConnectionChanged;
         _plcService.DataUpdated -= OnDataUpdated;
 
-        if (_plcServiceLine1 is not null)
-        {
-            _plcServiceLine1.ConnectionChanged -= OnLine1ConnectionChanged;
-            _plcServiceLine1.DataUpdated -= OnLine1DataUpdated;
-        }
 
-        if (_plcServiceLine2 is not null)
-        {
-            _plcServiceLine2.ConnectionChanged -= OnLine2ConnectionChanged;
-            _plcServiceLine2.DataUpdated -= OnLine2DataUpdated;
-        }
 
         _searchDebounceTimer.Stop();
     }
@@ -286,36 +233,6 @@ public partial class GpioPageViewModel : ObservableObject, IDisposable
         }
 
         PostToUiThread(ProcessPendingSnapshots);
-    }
-
-    private void OnLine1DataUpdated(object? sender, PlcDataChangedEventArgs e)
-    {
-        if (_isDisposed || e.Snapshot.Count == 0)
-        {
-            return;
-        }
-
-        PostToUiThread(() => ApplyLineSnapshot(e.Snapshot, _tagsByTagNameLine1));
-    }
-
-    private void OnLine2DataUpdated(object? sender, PlcDataChangedEventArgs e)
-    {
-        if (_isDisposed || e.Snapshot.Count == 0)
-        {
-            return;
-        }
-
-        PostToUiThread(() => ApplyLineSnapshot(e.Snapshot, _tagsByTagNameLine2));
-    }
-
-    private void OnLine1ConnectionChanged(object? sender, bool isConnected)
-    {
-        HandleLineConnectionChanged(_plcServiceLine1, _allTagsLine1, isConnected);
-    }
-
-    private void OnLine2ConnectionChanged(object? sender, bool isConnected)
-    {
-        HandleLineConnectionChanged(_plcServiceLine2, _allTagsLine2, isConnected);
     }
 
     private void ApplyLineSnapshot(IReadOnlyDictionary<string, object?> snapshot, Dictionary<string, PlcTagDisplayItem> tagsByName)
@@ -357,6 +274,8 @@ public partial class GpioPageViewModel : ObservableObject, IDisposable
                 .Where(field => field.FieldType == typeof(PlcTagDefinition))
                 .Select(field => (PlcTagDefinition?)field.GetValue(null))
                 .OfType<PlcTagDefinition>()
+                .GroupBy(tag => tag.Name, StringComparer.OrdinalIgnoreCase)
+                .Select(g => g.First())
                 .OrderBy(tag => tag.Address, StringComparer.OrdinalIgnoreCase)
                 .Select(
                     tag => new GpioIoItem
@@ -544,9 +463,7 @@ public partial class GpioPageViewModel : ObservableObject, IDisposable
 
     private IEnumerable<PlcTagDisplayItem> GetFilteredTags()
     {
-        var source = IsLine1TabSelected ? _allTagsLine1
-            : IsLine2TabSelected ? _allTagsLine2
-            : _allTags;
+        var source = _allTags;
 
         if (string.IsNullOrWhiteSpace(FilterText))
         {
@@ -629,40 +546,26 @@ public partial class GpioPageViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private void SelectInputTab()
     {
-        SetActiveTab(input: true, output: false, dataPlc: false, line1: false, line2: false);
+        SetActiveTab(input: true, output: false, dataPlc: false);
     }
 
     [RelayCommand]
     private void SelectOutputTab()
     {
-        SetActiveTab(input: false, output: true, dataPlc: false, line1: false, line2: false);
+        SetActiveTab(input: false, output: true, dataPlc: false);
     }
 
     [RelayCommand]
     private void SelectDataPlcTab()
     {
-        SetActiveTab(input: false, output: false, dataPlc: true, line1: false, line2: false);
+        SetActiveTab(input: false, output: false, dataPlc: true);
     }
 
-    [RelayCommand]
-    private void SelectLine1Tab()
-    {
-        SetActiveTab(input: false, output: false, dataPlc: false, line1: true, line2: false);
-    }
-
-    [RelayCommand]
-    private void SelectLine2Tab()
-    {
-        SetActiveTab(input: false, output: false, dataPlc: false, line1: false, line2: true);
-    }
-
-    private void SetActiveTab(bool input, bool output, bool dataPlc, bool line1, bool line2)
+    private void SetActiveTab(bool input, bool output, bool dataPlc)
     {
         IsInputTabSelected = input;
         IsOutputTabSelected = output;
         IsDataPlcTabSelected = dataPlc;
-        IsLine1TabSelected = line1;
-        IsLine2TabSelected = line2;
         PageIndex = 1;
         ApplyFilter();
     }
