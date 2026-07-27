@@ -144,29 +144,13 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
 
     private void SyncRunStopFromPlc()
     {
-        var line1Paused = _plcService.GetValue<bool>(PlcTagCatalog.DataAutos.OrderLine1PausedByPc.Name);
-        var line2Paused = _plcService.GetValue<bool>(PlcTagCatalog.DataAutos.OrderLine2PausedByPc.Name);
-        IsRunning = !line1Paused && !line2Paused;
+        var paused = _plcService.GetValue<bool>(PlcTagCatalog.DataAutos.PausedByPc.Name);
+        IsRunning = !paused;
     }
 
     private async Task SyncRunStopToPlcAsync(bool isRunning)
     {
-        await WritePausedByPcForAllLinesAsync(paused: !isRunning);
-    }
-
-    private async Task WritePausedByPcForAllLinesAsync(bool paused)
-    {
-        await WritePausedByPcAsync(AgvPosition.Position1, paused);
-        await WritePausedByPcAsync(AgvPosition.Position2, paused);
-    }
-
-    private Task WritePausedByPcAsync(AgvPosition position, bool paused)
-    {
-        var tagName = position == AgvPosition.Position1
-            ? PlcTagCatalog.DataAutos.OrderLine1PausedByPc.Name
-            : PlcTagCatalog.DataAutos.OrderLine2PausedByPc.Name;
-
-        return _plcService.WriteAsync(tagName, paused);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.PausedByPc.Name, !isRunning);
     }
 
     private void OnAgvStateChanged(object? sender, EventArgs e)

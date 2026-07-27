@@ -10,7 +10,6 @@ using Desktop.App.Services.Abstractions;
 using Desktop.App.Services.Api;
 using Desktop.App.Services.Plc;
 using Desktop.App.Services.Agv;
-using Desktop.App.Services.Line;
 using Desktop.App.ViewModels;
 using HandyControl.Themes;
 using Desktop.App.Session;

@@ -23,20 +23,12 @@ internal sealed class RobotCurrentOrderService : IRobotCurrentOrderService
 
     public Task MarkSwapRequestedAsync(AgvPosition machineSlot)
     {
-        var tag = machineSlot == AgvPosition.Position1
-            ? PlcTagCatalog.Agv.AgvRequestSwapLine1
-            : PlcTagCatalog.Agv.AgvRequestSwapLine2;
-
-        return _plcService.WriteAsync(tag.Name, true);
+        return _plcService.WriteAsync(PlcTagCatalog.DataAutos.AgvRequestShelfFlip.Name, true);
     }
 
     public Task MarkSwapCompletedAsync(AgvPosition machineSlot)
     {
-        var tag = machineSlot == AgvPosition.Position1
-            ? PlcTagCatalog.Agv.AgvSwapDoneLine1
-            : PlcTagCatalog.Agv.AgvSwapDoneLine2;
-
-        return _plcService.WriteAsync(tag.Name, true);
+        return _plcService.WriteAsync(PlcTagCatalog.DataAutos.AgvShelfFlipCompleted.Name, true);
     }
 
     public Task LoadCurrentOrderAsync(AgvPosition machineSlot, int shelfProductCount, int shelfOrderCount, int shelfLayoutType, AgvOrderData currentOrder)
@@ -60,10 +52,6 @@ internal sealed class RobotCurrentOrderService : IRobotCurrentOrderService
 
     public Task SetShelfOrdersCompletedAsync(AgvPosition machineSlot, bool completed)
     {
-        var tag = machineSlot == AgvPosition.Position1
-            ? PlcTagCatalog.DataAutos.OrderLine1ShelfOrdersCompleted
-            : PlcTagCatalog.DataAutos.OrderLine2ShelfOrdersCompleted;
-
-        return _plcService.WriteAsync(tag.Name, completed);
+        return _plcService.WriteAsync(PlcTagCatalog.DataAutos.ShelfOrdersCompleted.Name, completed);
     }
 }

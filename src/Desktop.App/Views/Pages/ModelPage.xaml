@@ -375,33 +375,7 @@
                                                     <TextBlock Margin="0,4,0,0" Style="{StaticResource SectionSubtitleText}" Text="Thông số chiều cao sản phẩm và offset Jig cho robot." />
                                                 </StackPanel>
 
-                                                <Grid
-                                                    Grid.Column="1"
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Top"
-                                                    MinWidth="200">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="8" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Button
-                                                        Grid.Column="0"
-                                                        MinWidth="96"
-                                                        Background="#16A34A"
-                                                        BorderBrush="#15803D"
-                                                        Command="{Binding WriteRobotTestLine1Command}"
-                                                        Content="Ghi Test"
-                                                        Foreground="White"
-                                                        Style="{StaticResource ButtonPrimary}" />
-                                                    <Button
-                                                        Grid.Column="2"
-                                                        MinWidth="96"
-                                                        Command="{Binding CancelRobotPickLine1Command}"
-                                                        Content="Hủy Pick"
-                                                        Style="{StaticResource ButtonDanger}" />
-                                                </Grid>
-                                            </Grid>
+                                             </Grid>
                                             <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding RobotFields}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>

@@ -33,12 +33,7 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
     private string? _activeJogTagName;
     private int? _resolvedMachineId;
 
-    private static readonly RobotTestWriteField[] RobotTestWriteFields =
-    [
-        new("jigProductHeight", PlcTagCatalog.RobotTest.JigProductHeight),
-        new("jigCenterOffset", PlcTagCatalog.RobotTest.JigCenterOffset),
-        new("jigDepthOffset", PlcTagCatalog.RobotTest.JigDepthOffset),
-    ];
+
 
     // Tab state (control panel)
     [ObservableProperty] private bool _isAxisTabSelected = true;
@@ -657,191 +652,6 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         IsDirty = true;
     }
 
-    // ══ Robot test parameters ══
-
-    [RelayCommand(CanExecute = nameof(CanIssueCommands))]
-    private Task WriteRobotTestLine1Async(CancellationToken cancellationToken)
-    {
-        return WriteRobotTestAsync(PlcTagCatalog.RobotTest.RunLine1, "Line 1", cancellationToken);
-    }
-
-    [RelayCommand(CanExecute = nameof(CanIssueCommands))]
-    private Task WriteRobotTestLine2Async(CancellationToken cancellationToken)
-    {
-        return WriteRobotTestAsync(PlcTagCatalog.RobotTest.RunLine2, "Line 2", cancellationToken);
-    }
-
-    [RelayCommand(CanExecute = nameof(CanIssueCommands))]
-    private Task CancelRobotPickLine1Async()
-    {
-        return RunOneShotAsync(PlcTagCatalog.RobotTest.CancelPickLine1.Name);
-    }
-
-    [RelayCommand(CanExecute = nameof(CanIssueCommands))]
-    private Task CancelRobotPickLine2Async()
-    {
-        return RunOneShotAsync(PlcTagCatalog.RobotTest.CancelPickLine2.Name);
-    }
-
-    private async Task WriteRobotTestAsync(PlcTagDefinition runTag, string lineName, CancellationToken cancellationToken)
-    {
-        if (!CanIssueCommands)
-        {
-            return;
-        }
-
-        if (!TryBuildRobotTestWrites(out var writes, out var errorMessage))
-        {
-            await _notificationDialog.ShowErrorAsync("Lỗi", errorMessage);
-            return;
-        }
-
-        try
-        {
-            foreach (var write in writes)
-            {
-                await _plcService.WriteAsync(write.Tag.Name, write.Value, cancellationToken).ConfigureAwait(false);
-            }
-
-            await VerifyRobotTestWritesAsync(writes, cancellationToken).ConfigureAwait(false);
-            // Only raise the run bit after PLC readback confirms every test parameter.
-            await _plcService.WriteAsync(runTag.Name, true, cancellationToken).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể ghi test {lineName}: {ex.Message}");
-        }
-    }
-
-    private async Task VerifyRobotTestWritesAsync(IReadOnlyList<RobotTestWriteValue> writes, CancellationToken cancellationToken)
-    {
-        var snapshot = await _plcService.ReadAllAsync(cancellationToken).ConfigureAwait(false);
-
-        foreach (var write in writes)
-        {
-            if (!snapshot.TryGetValue(write.Tag.Name, out var actualValue) || !RobotTestValueMatches(actualValue, write.Value))
-            {
-                throw new InvalidOperationException(
-                    $"{write.Tag.Description}: PLC doc lai '{actualValue ?? "null"}' khac gia tri ghi '{Convert.ToString(write.Value, CultureInfo.InvariantCulture)}'.");
-            }
-        }
-    }
-
-    private static bool RobotTestValueMatches(object? actualValue, object expectedValue)
-    {
-        if (expectedValue is int expectedInt)
-        {
-            return actualValue switch
-            {
-                int value => value == expectedInt,
-                short value => value == expectedInt,
-                long value => value == expectedInt,
-                string value when int.TryParse(value, out var parsed) => parsed == expectedInt,
-                _ => false
-            };
-        }
-
-        if (expectedValue is not float expectedFloat)
-        {
-            return Equals(actualValue, expectedValue);
-        }
-
-        return actualValue switch
-        {
-            float value => ManualNumeric.AreClose(value, expectedFloat),
-            double value => ManualNumeric.AreClose((float)value, expectedFloat),
-            decimal value => ManualNumeric.AreClose((float)value, expectedFloat),
-            int value => ManualNumeric.AreClose(value, expectedFloat),
-            short value => ManualNumeric.AreClose(value, expectedFloat),
-            long value => ManualNumeric.AreClose(value, expectedFloat),
-            string value when ManualNumeric.TryParse(value, out var parsed) => ManualNumeric.AreClose(parsed, expectedFloat),
-            _ => false
-        };
-    }
-
-    private bool TryBuildRobotTestWrites(out IReadOnlyList<RobotTestWriteValue> writes, out string errorMessage)
-    {
-        const int additionalRobotTestWriteCount = 2; // DiameterOp1 + TrayType
-        var result = new List<RobotTestWriteValue>(RobotTestWriteFields.Length + additionalRobotTestWriteCount);
-
-        foreach (var writeField in RobotTestWriteFields)
-        {
-            if (!TryReadRobotTestField(writeField.FieldKey, out var value, out errorMessage))
-            {
-                writes = [];
-                return false;
-            }
-
-            if (string.Equals(writeField.FieldKey, "jigProductHeight", StringComparison.OrdinalIgnoreCase) && value <= 0f)
-            {
-                errorMessage = "Độ cao trên Jig phải > 0 mới cho chạy test.";
-                writes = [];
-                return false;
-            }
-
-            result.Add(new RobotTestWriteValue(writeField.Tag, value));
-        }
-
-        if (!ManualNumeric.TryParse(DiameterOp1Input, out var diameterOp1))
-        {
-            errorMessage = "Đường kính Op1: giá trị không hợp lệ.";
-            writes = [];
-            return false;
-        }
-
-        result.Add(new RobotTestWriteValue(PlcTagCatalog.RobotTest.DiameterOp1, diameterOp1));
-
-        if (TrayTypeInput is not 0 and not 1)
-        {
-            errorMessage = "Loai tray: hay chon Nho hoac To truoc khi ghi test.";
-            writes = [];
-            return false;
-        }
-
-        result.Add(new RobotTestWriteValue(PlcTagCatalog.RobotTest.TrayType, TrayTypeInput.Value));
-        writes = result;
-        errorMessage = string.Empty;
-        return true;
-    }
-
-    private bool TryReadRobotTestField(string fieldKey, out float value, out string errorMessage)
-    {
-        var field = RobotFields.FirstOrDefault(f => string.Equals(f.Key, fieldKey, StringComparison.OrdinalIgnoreCase));
-        if (field is null)
-        {
-            value = 0f;
-            errorMessage = $"Không tìm thấy thông số Robot '{fieldKey}'.";
-            return false;
-        }
-
-        ValidateRobotField(field);
-        if (field.HasValidationMessage)
-        {
-            value = 0f;
-            errorMessage = field.ValidationMessage;
-            return false;
-        }
-
-        if (string.IsNullOrWhiteSpace(field.ValueText))
-        {
-            value = 0f;
-            field.ValidationMessage = $"{field.Label}: chưa nhập giá trị.";
-            errorMessage = field.ValidationMessage;
-            return false;
-        }
-
-        if (!ManualNumeric.TryParse(field.ValueText, out value))
-        {
-            field.ValidationMessage = $"{field.Label}: giá trị không hợp lệ.";
-            errorMessage = field.ValidationMessage;
-            return false;
-        }
-
-        field.ValidationMessage = string.Empty;
-        errorMessage = string.Empty;
-        return true;
-    }
-
     // ══ Jog commands ══
 
     [RelayCommand(CanExecute = nameof(CanStartJog))]
@@ -1389,10 +1199,7 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         WriteMovePointValueCommand.NotifyCanExecuteChanged();
         MoveAxisToPointCommand.NotifyCanExecuteChanged();
         RunOneShotCommand.NotifyCanExecuteChanged();
-        WriteRobotTestLine1Command.NotifyCanExecuteChanged();
-        WriteRobotTestLine2Command.NotifyCanExecuteChanged();
-        CancelRobotPickLine1Command.NotifyCanExecuteChanged();
-        CancelRobotPickLine2Command.NotifyCanExecuteChanged();
+
     }
 
     private void OnAxisPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -1538,10 +1345,6 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         isPrimaryAction = false;
         return false;
     }
-
-    private sealed record RobotTestWriteField(string FieldKey, PlcTagDefinition Tag);
-
-    private sealed record RobotTestWriteValue(PlcTagDefinition Tag, object Value);
 }
 
 public sealed record TrayTypeOption(int? Value, string Label);

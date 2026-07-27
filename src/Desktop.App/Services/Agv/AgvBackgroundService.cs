@@ -448,9 +448,7 @@ public class AgvBackgroundService : IDisposable
 
     internal Task ProcessPositionForTestAsync(AgvPosition position)
     {
-        return position == AgvPosition.Position1
-            ? ProcessPositionAsync(Position1State, PlcTagCatalog.Agv.MachineReadyForSwapLine1, PlcTagCatalog.DataAutos.OrderLine1Quantity, PlcTagCatalog.DataAutos.RanQuantityOrderLine1, PlcTagCatalog.DataAutos.OrderLine1CurrentPickIndex, PlcTagCatalog.DataAutos.OrderLine1IsLoading)
-            : ProcessPositionAsync(Position2State, PlcTagCatalog.Agv.MachineReadyForSwapLine2, PlcTagCatalog.DataAutos.OrderLine2Quantity, PlcTagCatalog.DataAutos.RanQuantityOrderLine2, PlcTagCatalog.DataAutos.OrderLine2CurrentPickIndex, PlcTagCatalog.DataAutos.OrderLine2IsLoading);
+        return ProcessPositionAsync(Position1State, PlcTagCatalog.DataAutos.MachineReadyForShelfFlip, PlcTagCatalog.DataAutos.QuantityInOrder, PlcTagCatalog.DataAutos.PickedCount, PlcTagCatalog.DataAutos.CurrentPickIndex, PlcTagCatalog.DataAutos.OrderDataLoadCommand);
     }
 
     public void Reconfigure(AppOptions options)
@@ -491,8 +489,7 @@ public class AgvBackgroundService : IDisposable
 
         try
         {
-            await ProcessPositionAsync(Position1State, PlcTagCatalog.Agv.MachineReadyForSwapLine1, PlcTagCatalog.DataAutos.OrderLine1Quantity, PlcTagCatalog.DataAutos.RanQuantityOrderLine1, PlcTagCatalog.DataAutos.OrderLine1CurrentPickIndex, PlcTagCatalog.DataAutos.OrderLine1IsLoading);
-            await ProcessPositionAsync(Position2State, PlcTagCatalog.Agv.MachineReadyForSwapLine2, PlcTagCatalog.DataAutos.OrderLine2Quantity, PlcTagCatalog.DataAutos.RanQuantityOrderLine2, PlcTagCatalog.DataAutos.OrderLine2CurrentPickIndex, PlcTagCatalog.DataAutos.OrderLine2IsLoading);
+            await ProcessPositionAsync(Position1State, PlcTagCatalog.DataAutos.MachineReadyForShelfFlip, PlcTagCatalog.DataAutos.QuantityInOrder, PlcTagCatalog.DataAutos.PickedCount, PlcTagCatalog.DataAutos.CurrentPickIndex, PlcTagCatalog.DataAutos.OrderDataLoadCommand);
 
             StateChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -527,10 +524,7 @@ public class AgvBackgroundService : IDisposable
 
         // 2. Read PLC Ready Flag (Machine ready for swap)
         state.IsPlcReady = _plcService.GetValue<bool>(readyTag.Name);
-        var orderCompletedTag = state.Position == AgvPosition.Position1
-            ? PlcTagCatalog.DataAutos.CurrentOrderCompleted
-            : PlcTagCatalog.DataAutos.CurrentOrderCompletedLine2;
-        var isOrderCompleted = _plcService.GetValue<bool>(orderCompletedTag.Name);
+        var isOrderCompleted = _plcService.GetValue<bool>(PlcTagCatalog.DataAutos.CurrentOrderCompleted.Name);
         var orderSequenceBeforeTransition = state.CurrentOrderSequence;
         var orderBeforeTransition = _declarationProgressTransition.ResolveCurrentOrder(state);
         AgvDeclarationProgressTransitionResult transitionResult;

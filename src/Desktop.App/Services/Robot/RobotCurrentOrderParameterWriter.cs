@@ -99,13 +99,12 @@ internal sealed class RobotCurrentOrderParameterWriter
 
     public Task SetProductionResultAcknowledgedAsync(AgvPosition machineSlot, bool acknowledged)
     {
-        var tags = GetLineTags(machineSlot);
-        return _plcService.WriteAsync(tags.ProductionResultAcknowledged.Name, acknowledged);
+        return _plcService.WriteAsync(PlcTagCatalog.DataAutos.ProductionResultAcknowledged.Name, acknowledged);
     }
 
     public Task SetClearRequestedAsync(AgvPosition machineSlot, bool requested)
     {
-        return _plcService.WriteAsync(GetLineClearRequestTag(machineSlot).Name, requested);
+        return _plcService.WriteAsync(PlcTagCatalog.DataAutos.CancelOrderCommand.Name, requested);
     }
 
     public void AttachModelProfileApiClient(IModelProfileApiClient modelProfileApiClient)
@@ -138,92 +137,4 @@ internal sealed class RobotCurrentOrderParameterWriter
         await _jigTypeResolver.EnsureProfileEnabledForWriteAsync(order.ModelId, order.ModelName);
         return BuildProfileLineDataFromSnapshot(order);
     }
-
-    private static LineOrderTags GetLineTags(AgvPosition position)
-    {
-        return position == AgvPosition.Position1
-            ? new LineOrderTags(
-                PlcTagCatalog.DataAutos.Shelf1ProductCount,
-                PlcTagCatalog.DataAutos.Shelf1OrderCount,
-                PlcTagCatalog.DataAutos.OrderLine1Code,
-                PlcTagCatalog.DataAutos.OrderLine1ModelId,
-                PlcTagCatalog.DataAutos.OrderLine1Quantity,
-                PlcTagCatalog.DataAutos.OrderLine1JigType,
-                PlcTagCatalog.DataAutos.OrderLine1StartPosition,
-                PlcTagCatalog.DataAutos.OrderLine1TrayIndex,
-                PlcTagCatalog.DataAutos.OrderLine1TrayType,
-                PlcTagCatalog.DataAutos.OrderLine1Sequence,
-                /*
-                PlcTagCatalog.DataAutos.OrderLine1CheckPoint1X,
-                PlcTagCatalog.DataAutos.OrderLine1CheckPoint1Y,
-                PlcTagCatalog.DataAutos.OrderLine1CheckPoint1Z,
-                */
-                PlcTagCatalog.DataAutos.OrderLine1PartHoverHeight,
-                PlcTagCatalog.DataAutos.OrderLine1JigCenterOffset,
-                PlcTagCatalog.DataAutos.OrderLine1JigDepthOffset,
-                PlcTagCatalog.DataAutos.OrderLine1DiameterOp1,
-                PlcTagCatalog.DataAutos.OrderLine1CurrentPickIndex,
-                PlcTagCatalog.DataAutos.OrderLine1IsLoading,
-                PlcTagCatalog.DataAutos.OrderLine1ProductionResultAcknowledged,
-                PlcTagCatalog.DataAutos.CurrentOrderLoadCompleted,
-                PlcTagCatalog.DataAutos.OrderLine1ShelfOrdersCompleted)
-            : new LineOrderTags(
-                PlcTagCatalog.DataAutos.Shelf2ProductCount,
-                PlcTagCatalog.DataAutos.Shelf2OrderCount,
-                PlcTagCatalog.DataAutos.OrderLine2Code,
-                PlcTagCatalog.DataAutos.OrderLine2ModelId,
-                PlcTagCatalog.DataAutos.OrderLine2Quantity,
-                PlcTagCatalog.DataAutos.OrderLine2JigType,
-                PlcTagCatalog.DataAutos.OrderLine2StartPosition,
-                PlcTagCatalog.DataAutos.OrderLine2TrayIndex,
-                PlcTagCatalog.DataAutos.OrderLine2TrayType,
-                PlcTagCatalog.DataAutos.OrderLine2Sequence,
-                /*
-                PlcTagCatalog.DataAutos.OrderLine2CheckPoint1X,
-                PlcTagCatalog.DataAutos.OrderLine2CheckPoint1Y,
-                PlcTagCatalog.DataAutos.OrderLine2CheckPoint1Z,
-                */
-                PlcTagCatalog.DataAutos.OrderLine2PartHoverHeight,
-                PlcTagCatalog.DataAutos.OrderLine2JigCenterOffset,
-                PlcTagCatalog.DataAutos.OrderLine2JigDepthOffset,
-                PlcTagCatalog.DataAutos.OrderLine2DiameterOp1,
-                PlcTagCatalog.DataAutos.OrderLine2CurrentPickIndex,
-                PlcTagCatalog.DataAutos.OrderLine2IsLoading,
-                PlcTagCatalog.DataAutos.OrderLine2ProductionResultAcknowledged,
-                PlcTagCatalog.DataAutos.CurrentOrderLoadCompletedLine2,
-                PlcTagCatalog.DataAutos.OrderLine2ShelfOrdersCompleted);
-    }
-
-    private static PlcTagDefinition GetLineClearRequestTag(AgvPosition position)
-    {
-        return position == AgvPosition.Position1
-            ? PlcTagCatalog.DataAutos.OrderLine1ClearRequestedByPc
-            : PlcTagCatalog.DataAutos.OrderLine2ClearRequestedByPc;
-    }
-
-    private sealed record LineOrderTags(
-        PlcTagDefinition ShelfProductCount,
-        PlcTagDefinition ShelfOrderCount,
-        PlcTagDefinition OrderCode,
-        PlcTagDefinition ModelId,
-        PlcTagDefinition Quantity,
-        PlcTagDefinition JigType,
-        PlcTagDefinition StartPosition,
-        PlcTagDefinition TrayIndex,
-        PlcTagDefinition TrayType,
-        PlcTagDefinition Sequence,
-        /*
-        PlcTagDefinition CheckPoint1X,
-        PlcTagDefinition CheckPoint1Y,
-        PlcTagDefinition CheckPoint1Z,
-        */
-        PlcTagDefinition PartHoverHeight,
-        PlcTagDefinition JigCenterOffset,
-        PlcTagDefinition JigDepthOffset,
-        PlcTagDefinition DiameterOp1,
-        PlcTagDefinition CurrentPickIndex,
-        PlcTagDefinition IsLoading,
-        PlcTagDefinition ProductionResultAcknowledged,
-        PlcTagDefinition CurrentOrderLoadCompleted,
-        PlcTagDefinition ShelfOrdersCompleted);
 }

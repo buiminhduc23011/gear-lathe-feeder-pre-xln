@@ -217,18 +217,7 @@ public partial class ProductionLifecycleReportPageViewModel : ObservableObject, 
 
     private bool GetEffectiveLoadingStatus(ProductionLifecycleDeclarationDto item)
     {
-        var shelfIndex = item.ShelfIndex;
-        if (shelfIndex == 1)
-        {
-            return _plcService.GetValue(PlcTagCatalog.DataAutos.OrderLine1IsLoading.Name, item.IsLoadingParameters);
-        }
-
-        if (shelfIndex == 2)
-        {
-            return _plcService.GetValue(PlcTagCatalog.DataAutos.OrderLine2IsLoading.Name, item.IsLoadingParameters);
-        }
-
-        return item.IsLoadingParameters;
+        return _plcService.GetValue(PlcTagCatalog.DataAutos.OrderDataLoadCommand.Name, item.IsLoadingParameters);
     }
 
     public void Dispose()

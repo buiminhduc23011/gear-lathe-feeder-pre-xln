@@ -289,68 +289,10 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition AgvShelfFlipCompleted = CreateBit("data.agv_shelf_flip_completed", "D5573.1", "AGV báo đã đảo xong kệ");
         public static readonly PlcTagDefinition MachineReadyForShelfFlip = CreateBit("data.machine_ready_for_shelf_flip", "D5574.0", "Máy báo sẵn sàng cho đảo kệ");
 
-        // --- Aliases for backward compatibility ---
-        public static readonly PlcTagDefinition Shelf1ProductCount = OrderCountOnRotaryTable;
-        public static readonly PlcTagDefinition Shelf1OrderCount = OrderCountOnRotaryTable;
-        public static readonly PlcTagDefinition OrderLine1Code = OrderCode;
-        public static readonly PlcTagDefinition OrderLine1ModelId = ModelId;
-        public static readonly PlcTagDefinition OrderLine1Quantity = QuantityInOrder;
-        public static readonly PlcTagDefinition OrderLine1JigType = JigSupplyType;
-        public static readonly PlcTagDefinition OrderLine1StartPosition = CreateWord("data.order_line_1_start_position", "D5537", PlcTagDataType.Int16, "StartPosition");
-        public static readonly PlcTagDefinition OrderLine1TrayIndex = CreateWord("data.order_line_1_tray_index", "D5538", PlcTagDataType.Int16, "TrayIndex");
-        public static readonly PlcTagDefinition OrderLine1TrayType = CreateWord("data.order_line_1_tray_type", "D5539", PlcTagDataType.Int16, "TrayType");
-        public static readonly PlcTagDefinition OrderLine1Sequence = CreateWord("data.order_line_1_sequence", "D5537_seq", PlcTagDataType.Int16, "Sequence");
-        public static readonly PlcTagDefinition OrderLine1PartHoverHeight = OuterFinishedDiameter;
-        public static readonly PlcTagDefinition OrderLine1JigCenterOffset = PickDropZOffset;
-        public static readonly PlcTagDefinition OrderLine1JigDepthOffset = ChuckStepDepth;
-        public static readonly PlcTagDefinition OrderLine1DiameterOp1 = Op1TurnedThickness;
-        public static readonly PlcTagDefinition OrderLine1PickedCount = PickedCount;
-        public static readonly PlcTagDefinition OrderLine1CurrentPickIndex = CurrentPickIndex;
-        public static readonly PlcTagDefinition OrderLine1IsLoading = OrderDataLoadCommand;
-        public static readonly PlcTagDefinition OrderLine1ProductionResultAcknowledged = ProductionResultAcknowledged;
-        public static readonly PlcTagDefinition OrderLine1PausedByPc = PausedByPc;
-        public static readonly PlcTagDefinition OrderLine1ClearRequestedByPc = CancelOrderCommand;
-        public static readonly PlcTagDefinition OrderLine1ShelfOrdersCompleted = ShelfOrdersCompleted;
-        public static readonly PlcTagDefinition RanQuantityOrderLine1 = PickedCount;
 
-        public static readonly PlcTagDefinition Shelf2ProductCount = OrderCountOnRotaryTable;
-        public static readonly PlcTagDefinition Shelf2OrderCount = OrderCountOnRotaryTable;
-        public static readonly PlcTagDefinition OrderLine2Code = OrderCode;
-        public static readonly PlcTagDefinition OrderLine2ModelId = ModelId;
-        public static readonly PlcTagDefinition OrderLine2Quantity = QuantityInOrder;
-        public static readonly PlcTagDefinition OrderLine2JigType = JigSupplyType;
-        public static readonly PlcTagDefinition OrderLine2StartPosition = OrderLine1StartPosition;
-        public static readonly PlcTagDefinition OrderLine2TrayIndex = OrderLine1TrayIndex;
-        public static readonly PlcTagDefinition OrderLine2TrayType = OrderLine1TrayType;
-        public static readonly PlcTagDefinition OrderLine2Sequence = OrderLine1Sequence;
-        public static readonly PlcTagDefinition OrderLine2PartHoverHeight = OuterFinishedDiameter;
-        public static readonly PlcTagDefinition OrderLine2JigCenterOffset = PickDropZOffset;
-        public static readonly PlcTagDefinition OrderLine2JigDepthOffset = ChuckStepDepth;
-        public static readonly PlcTagDefinition OrderLine2DiameterOp1 = Op1TurnedThickness;
-        public static readonly PlcTagDefinition OrderLine2PickedCount = PickedCount;
-        public static readonly PlcTagDefinition OrderLine2CurrentPickIndex = CurrentPickIndex;
-        public static readonly PlcTagDefinition OrderLine2IsLoading = OrderDataLoadCommand;
-        public static readonly PlcTagDefinition OrderLine2ProductionResultAcknowledged = ProductionResultAcknowledged;
-        public static readonly PlcTagDefinition OrderLine2PausedByPc = PausedByPc;
-        public static readonly PlcTagDefinition OrderLine2ClearRequestedByPc = CancelOrderCommand;
-        public static readonly PlcTagDefinition OrderLine2ShelfOrdersCompleted = ShelfOrdersCompleted;
-        public static readonly PlcTagDefinition CurrentOrderLoadCompletedLine2 = CurrentOrderLoadCompleted;
-        public static readonly PlcTagDefinition CurrentOrderCompletedLine2 = CurrentOrderCompleted;
-        public static readonly PlcTagDefinition RanQuantityOrderLine2 = PickedCount;
     }
 
-    public static class RobotTest
-    {
-        public static readonly PlcTagDefinition JigProductHeight = CreateWord("robot_test.jig_product_height", "D5672", PlcTagDataType.Float, "Test độ cao trên Jig");
-        public static readonly PlcTagDefinition JigCenterOffset = CreateWord("robot_test.jig_center_offset", "D5674", PlcTagDataType.Float, "Test Ofset Tâm Jig");
-        public static readonly PlcTagDefinition JigDepthOffset = CreateWord("robot_test.jig_depth_offset", "D5676", PlcTagDataType.Float, "Test Ofset độ cao âm xuống Jig");
-        public static readonly PlcTagDefinition DiameterOp1 = CreateWord("robot_test.diameter_op1", "D5678", PlcTagDataType.Float, "Test đường kính Op1");
-        public static readonly PlcTagDefinition TrayType = CreateWord("robot_test.tray_type", "D5681", PlcTagDataType.Int16, "Test Loại Tray");
-        public static readonly PlcTagDefinition RunLine1 = CreateBit("robot_test.run_line1", "M2070", "Chạy gấp hàng Line 1");
-        public static readonly PlcTagDefinition RunLine2 = CreateBit("robot_test.run_line2", "M2071", "Chạy gấp hàng Line 2");
-        public static readonly PlcTagDefinition CancelPickLine1 = CreateBit("robot_test.cancel_pick_line1", "M2072", "Hủy gắp hàng Line 1");
-        public static readonly PlcTagDefinition CancelPickLine2 = CreateBit("robot_test.cancel_pick_line2", "M2073", "Hủy gắp hàng Line 2");
-    }
+
 
     public static class DataTrayCart
     {
@@ -646,214 +588,21 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition YSoftLimitLeft = XSoftLimitOutside;
         public static readonly PlcTagDefinition YSoftLimitRight = XSoftLimitInside;
         public static readonly PlcTagDefinition YOverMoment = XOverMoment;
-        public static readonly PlcTagDefinition PlcLine1Disconnected = CreateBit("alarm.plc_line_1_disconnected", "D5145.0", "Mất kết nối PLC line 1");
-        public static readonly PlcTagDefinition PlcLine2Disconnected = CreateBit("alarm.plc_line_2_disconnected", "D5145.1", "Mất kết nối PLC line 2");
         public static readonly PlcTagDefinition PcDisconnected = CreateBit("alarm.pc_disconnected", "D5145.2", "Mất kết nối PC");
         public static readonly PlcTagDefinition OrderNotEntered = CreateBit("alarm.order_not_entered", "D5145.3", "Chưa nhập order");
-        public static readonly PlcTagDefinition ProductParametersMissingLine1 = CreateBit("alarm.product_parameters_missing_line_1", "D5145.4", "Lỗi thiếu thông số sản phẩm line 1");
-        public static readonly PlcTagDefinition ProductParametersMissingLine2 = CreateBit("alarm.product_parameters_missing_line_2", "D5145.5", "Lỗi thiếu thông số sản phẩm line 2");
     }
 
 
-
-    /// <summary>
-    /// Tags cho PLC Line 1 (192.168.1.6:502) — nhóm Data Auto + Edit Model.
-    /// Được đọc/ghi qua kết nối PLC Line 1.
-    /// </summary>
-    public static class Line1
-    {
-        // --- Data Auto ---
-        public static readonly PlcTagDefinition AutoModelName = CreateWord("line1.auto.model_name", "D6000", PlcTagDataType.String, "Tên Model", 40);
-        public static readonly PlcTagDefinition AutoJigType = CreateWord("line1.auto.jig_type", "D6020", PlcTagDataType.Int32, "Loại tay kẹp Line 1");
-        public static readonly PlcTagDefinition AutoPickInputX = CreateWord("line1.auto.pick_input_x", "D6022", PlcTagDataType.Float, "Tọa độ X gắp sản phẩm đầu vào line");
-        public static readonly PlcTagDefinition AutoPickInputZ = CreateWord("line1.auto.pick_input_z", "D6024", PlcTagDataType.Float, "Tọa độ Z gắp sản phẩm đầu vào line");
-        public static readonly PlcTagDefinition AutoPickOp1X = CreateWord("line1.auto.pick_op1_x", "D6026", PlcTagDataType.Float, "Tọa độ X an toàn lên xuống Op1");
-        public static readonly PlcTagDefinition AutoPickOp1Z = CreateWord("line1.auto.pick_op1_z", "D6028", PlcTagDataType.Float, "Tọa độ Z an toàn lên xuống Op1");
-        public static readonly PlcTagDefinition AutoPickOp2X = CreateWord("line1.auto.pick_op2_x", "D6030", PlcTagDataType.Float, "Tọa độ X an toàn lên xuống Op2");
-        public static readonly PlcTagDefinition AutoPickOp2Z = CreateWord("line1.auto.pick_op2_z", "D6032", PlcTagDataType.Float, "Tọa độ Z an toàn lên xuống Op2");
-        public static readonly PlcTagDefinition AutoDropOp1X = CreateWord("line1.auto.drop_op1_x", "D6034", PlcTagDataType.Float, "Tọa độ X chống tâm Op1");
-        public static readonly PlcTagDefinition AutoDropOp1Z = CreateWord("line1.auto.drop_op1_z", "D6036", PlcTagDataType.Float, "Tọa độ Z chống tâm Op1");
-        public static readonly PlcTagDefinition AutoDropOp2X = CreateWord("line1.auto.drop_op2_x", "D6038", PlcTagDataType.Float, "Tọa độ X chống tâm Op2");
-        public static readonly PlcTagDefinition AutoDropOp2Z = CreateWord("line1.auto.drop_op2_z", "D6040", PlcTagDataType.Float, "Tọa độ Z chống tâm Op2");
-        public static readonly PlcTagDefinition AutoDropMeasureX = CreateWord("line1.auto.drop_measure_x", "D6042", PlcTagDataType.Float, "Tọa độ X chống tâm máy đo");
-        public static readonly PlcTagDefinition AutoDropMeasureZ = CreateWord("line1.auto.drop_measure_z", "D6044", PlcTagDataType.Float, "Tọa độ Z chống tâm máy đo");
-        public static readonly PlcTagDefinition AutoJigSupportInput = CreateWord("line1.auto.jig_support_input", "D6046", PlcTagDataType.Float, "Tọa độ Jig đỡ trục đầu vào");
-        public static readonly PlcTagDefinition AutoGrindTimeOp1 = CreateWord("line1.auto.grind_time_op1", "D6048", PlcTagDataType.Int16, "Thời gian mài Op1");
-        public static readonly PlcTagDefinition AutoGrindTimeOp2 = CreateWord("line1.auto.grind_time_op2", "D6049", PlcTagDataType.Int16, "Thời gian mài Op2");
-        public static readonly PlcTagDefinition AutoProgramId = CreateWord("line1.auto.program_id", "D6050", PlcTagDataType.Int16, "ProgramID");
-        public static readonly PlcTagDefinition AutoLoadDataModel = CreateBit("line1.auto.load_data_model", "D6055.0", "Load dataModel");
-        public static readonly PlcTagDefinition AutoDoneLoadDataModel = CreateBit("line1.auto.done_load_data_model", "D6056.0", "Done LoaddataModel");
-        public static readonly PlcTagDefinition AutoModelNameToLoad = CreateWord("line1.auto.model_name_to_load", "D6060", PlcTagDataType.String, "Tên Model cần Load", 30);
-        public static readonly PlcTagDefinition AutoDiameterOp1 = CreateWord("line1.auto.diameter_op1", "D6076", PlcTagDataType.Float, "Đường kính Op1");
-        public static readonly PlcTagDefinition AutoDiameterOp2 = CreateWord("line1.auto.diameter_op2", "D6078", PlcTagDataType.Float, "Đường kính Op2");
-
-        // --- Edit Model Data ---
-        public static readonly PlcTagDefinition IdModel = CreateWord("line1.edit.id_model", "D6080", PlcTagDataType.String, "ID Model", 40);
-        public static readonly PlcTagDefinition JigType = CreateWord("line1.edit.jig_type", "D6100", PlcTagDataType.Int32, "Loại tay kẹp Line 1");
-        public static readonly PlcTagDefinition PickInputX = CreateWord("line1.edit.pick_input_x", "D6102", PlcTagDataType.Float, "Tọa độ X gắp sản phẩm đầu vào line");
-        public static readonly PlcTagDefinition PickInputZ = CreateWord("line1.edit.pick_input_z", "D6104", PlcTagDataType.Float, "Tọa độ Z gắp sản phẩm đầu vào line");
-        public static readonly PlcTagDefinition PickOp1X = CreateWord("line1.edit.pick_op1_x", "D6106", PlcTagDataType.Float, "Tọa độ X an toàn lên xuống Op1");
-        public static readonly PlcTagDefinition PickOp1Z = CreateWord("line1.edit.pick_op1_z", "D6108", PlcTagDataType.Float, "Tọa độ Z an toàn lên xuống Op1");
-        public static readonly PlcTagDefinition PickOp2X = CreateWord("line1.edit.pick_op2_x", "D6110", PlcTagDataType.Float, "Tọa độ X an toàn lên xuống Op2");
-        public static readonly PlcTagDefinition PickOp2Z = CreateWord("line1.edit.pick_op2_z", "D6112", PlcTagDataType.Float, "Tọa độ Z an toàn lên xuống Op2");
-        public static readonly PlcTagDefinition DropOp1X = CreateWord("line1.edit.drop_op1_x", "D6114", PlcTagDataType.Float, "Tọa độ X chống tâm Op1");
-        public static readonly PlcTagDefinition DropOp1Z = CreateWord("line1.edit.drop_op1_z", "D6116", PlcTagDataType.Float, "Tọa độ Z chống tâm Op1");
-        public static readonly PlcTagDefinition DropOp2X = CreateWord("line1.edit.drop_op2_x", "D6118", PlcTagDataType.Float, "Tọa độ X chống tâm Op2");
-        public static readonly PlcTagDefinition DropOp2Z = CreateWord("line1.edit.drop_op2_z", "D6120", PlcTagDataType.Float, "Tọa độ Z chống tâm Op2");
-        public static readonly PlcTagDefinition DropMeasureX = CreateWord("line1.edit.drop_measure_x", "D6122", PlcTagDataType.Float, "Tọa độ X chống tâm máy đo");
-        public static readonly PlcTagDefinition DropMeasureZ = CreateWord("line1.edit.drop_measure_z", "D6124", PlcTagDataType.Float, "Tọa độ Z chống tâm máy đo");
-        public static readonly PlcTagDefinition JigSupportInput = CreateWord("line1.edit.jig_support_input", "D6126", PlcTagDataType.Float, "Tọa độ Jig đỡ trục đầu vào");
-        public static readonly PlcTagDefinition GrindTimeOp1 = CreateWord("line1.edit.grind_time_op1", "D6128", PlcTagDataType.Int32, "Thời gian mài Op1");
-        public static readonly PlcTagDefinition GrindTimeOp2 = CreateWord("line1.edit.grind_time_op2", "D6130", PlcTagDataType.Int32, "Thời gian mài Op2");
-        public static readonly PlcTagDefinition DiameterOp1 = CreateWord("line1.edit.diameter_op1", "D6132", PlcTagDataType.Float, "Đường kính Op1");
-        public static readonly PlcTagDefinition DiameterOp2 = CreateWord("line1.edit.diameter_op2", "D6134", PlcTagDataType.Float, "Đường kính Op2");
-
-        // --- Edit Model Search ---
-        public static readonly PlcTagDefinition ModelSearchName = CreateWord("line1.edit.model_search_name", "D6210", PlcTagDataType.String, "Tên Model tìm kiếm", 30);
-        public static readonly PlcTagDefinition ModelResult1 = CreateWord("line1.edit.model_result_1", "D6225", PlcTagDataType.String, "Tên Model trả về 1", 30);
-        public static readonly PlcTagDefinition ModelResult2 = CreateWord("line1.edit.model_result_2", "D6240", PlcTagDataType.String, "Tên Model trả về 2", 30);
-        public static readonly PlcTagDefinition ModelResult3 = CreateWord("line1.edit.model_result_3", "D6255", PlcTagDataType.String, "Tên Model trả về 3", 30);
-        public static readonly PlcTagDefinition ModelResult4 = CreateWord("line1.edit.model_result_4", "D6270", PlcTagDataType.String, "Tên Model trả về 4", 30);
-        public static readonly PlcTagDefinition ModelResult5 = CreateWord("line1.edit.model_result_5", "D6285", PlcTagDataType.String, "Tên Model trả về 5", 30);
-        public static readonly PlcTagDefinition ModelResult6 = CreateWord("line1.edit.model_result_6", "D6300", PlcTagDataType.String, "Tên Model trả về 6", 30);
-
-        // --- Edit Control Bits ---
-        public static readonly PlcTagDefinition Search = CreateBit("line1.edit.search", "D6160.0", "Tìm kiếm");
-        public static readonly PlcTagDefinition EditModel = CreateBit("line1.edit.edit_model", "D6160.1", "Edit");
-        public static readonly PlcTagDefinition Next = CreateBit("line1.edit.next", "D6160.2", "Next");
-        public static readonly PlcTagDefinition Previous = CreateBit("line1.edit.previous", "D6160.3", "Previous");
-        public static readonly PlcTagDefinition SaveModel = CreateBit("line1.edit.save_model", "D6160.4", "Lưu Model");
-        public static readonly PlcTagDefinition SaveSuccess = CreateBit("line1.edit.save_success", "D6161.0", "Lưu thành công");
-        public static readonly PlcTagDefinition ErrorFlag = CreateBit("line1.edit.error_flag", "D6161.1", "Cờ lỗi");
-
-        // --- Pagination ---
-        public static readonly PlcTagDefinition Page = CreateWord("line1.edit.page", "D6170", PlcTagDataType.Int16, "Trang");
-        public static readonly PlcTagDefinition TotalPages = CreateWord("line1.edit.total_pages", "D6172", PlcTagDataType.Int16, "Tổng số trang");
-
-        // --- Authentication ---
-        public static readonly PlcTagDefinition AccountName = CreateWord("line1.edit.account_name", "D6180", PlcTagDataType.String, "Tên tài khoản", 30);
-        public static readonly PlcTagDefinition Password = CreateWord("line1.edit.password", "D6195", PlcTagDataType.String, "Mật khẩu", 30);
-
-        // --- Error Message ---
-        public static readonly PlcTagDefinition ErrorMessage = CreateWord("line1.edit.error_message", "D6315", PlcTagDataType.String, "Trả về message lỗi", 40);
-    }
-
-    /// <summary>
-    /// Tags cho PLC Line 2 (192.168.1.7:502) — nhóm Data Auto + Edit Model.
-    /// Được đọc/ghi qua kết nối PLC Line 2. Cùng địa chỉ với Line 1.
-    /// </summary>
-    public static class Line2
-    {
-        // --- Data Auto ---
-        public static readonly PlcTagDefinition AutoModelName = CreateWord("line2.auto.model_name", "D6000", PlcTagDataType.String, "Tên Model", 40);
-        public static readonly PlcTagDefinition AutoJigType = CreateWord("line2.auto.jig_type", "D6020", PlcTagDataType.Int32, "Loại tay kẹp Line 2");
-        public static readonly PlcTagDefinition AutoPickInputX = CreateWord("line2.auto.pick_input_x", "D6022", PlcTagDataType.Float, "Tọa độ X gắp sản phẩm đầu vào line");
-        public static readonly PlcTagDefinition AutoPickInputZ = CreateWord("line2.auto.pick_input_z", "D6024", PlcTagDataType.Float, "Tọa độ Z gắp sản phẩm đầu vào line");
-        public static readonly PlcTagDefinition AutoPickOp1X = CreateWord("line2.auto.pick_op1_x", "D6026", PlcTagDataType.Float, "Tọa độ X an toàn lên xuống Op1");
-        public static readonly PlcTagDefinition AutoPickOp1Z = CreateWord("line2.auto.pick_op1_z", "D6028", PlcTagDataType.Float, "Tọa độ Z an toàn lên xuống Op1");
-        public static readonly PlcTagDefinition AutoPickOp2X = CreateWord("line2.auto.pick_op2_x", "D6030", PlcTagDataType.Float, "Tọa độ X an toàn lên xuống Op2");
-        public static readonly PlcTagDefinition AutoPickOp2Z = CreateWord("line2.auto.pick_op2_z", "D6032", PlcTagDataType.Float, "Tọa độ Z an toàn lên xuống Op2");
-        public static readonly PlcTagDefinition AutoDropOp1X = CreateWord("line2.auto.drop_op1_x", "D6034", PlcTagDataType.Float, "Tọa độ X chống tâm Op1");
-        public static readonly PlcTagDefinition AutoDropOp1Z = CreateWord("line2.auto.drop_op1_z", "D6036", PlcTagDataType.Float, "Tọa độ Z chống tâm Op1");
-        public static readonly PlcTagDefinition AutoDropOp2X = CreateWord("line2.auto.drop_op2_x", "D6038", PlcTagDataType.Float, "Tọa độ X chống tâm Op2");
-        public static readonly PlcTagDefinition AutoDropOp2Z = CreateWord("line2.auto.drop_op2_z", "D6040", PlcTagDataType.Float, "Tọa độ Z chống tâm Op2");
-        public static readonly PlcTagDefinition AutoDropMeasureX = CreateWord("line2.auto.drop_measure_x", "D6042", PlcTagDataType.Float, "Tọa độ X chống tâm máy đo");
-        public static readonly PlcTagDefinition AutoDropMeasureZ = CreateWord("line2.auto.drop_measure_z", "D6044", PlcTagDataType.Float, "Tọa độ Z chống tâm máy đo");
-        public static readonly PlcTagDefinition AutoJigSupportInput = CreateWord("line2.auto.jig_support_input", "D6046", PlcTagDataType.Float, "Tọa độ Jig đỡ trục đầu vào");
-        public static readonly PlcTagDefinition AutoGrindTimeOp1 = CreateWord("line2.auto.grind_time_op1", "D6048", PlcTagDataType.Int16, "Thời gian mài Op1");
-        public static readonly PlcTagDefinition AutoGrindTimeOp2 = CreateWord("line2.auto.grind_time_op2", "D6049", PlcTagDataType.Int16, "Thời gian mài Op2");
-        public static readonly PlcTagDefinition AutoProgramId = CreateWord("line2.auto.program_id", "D6050", PlcTagDataType.Int16, "ProgramID");
-        public static readonly PlcTagDefinition AutoLoadDataModel = CreateBit("line2.auto.load_data_model", "D6055.0", "Load dataModel");
-        public static readonly PlcTagDefinition AutoDoneLoadDataModel = CreateBit("line2.auto.done_load_data_model", "D6056.0", "Done LoaddataModel");
-        public static readonly PlcTagDefinition AutoModelNameToLoad = CreateWord("line2.auto.model_name_to_load", "D6060", PlcTagDataType.String, "Tên Model cần Load", 30);
-        public static readonly PlcTagDefinition AutoDiameterOp1 = CreateWord("line2.auto.diameter_op1", "D6076", PlcTagDataType.Float, "Đường kính Op1");
-        public static readonly PlcTagDefinition AutoDiameterOp2 = CreateWord("line2.auto.diameter_op2", "D6078", PlcTagDataType.Float, "Đường kính Op2");
-
-        // --- Edit Model Data ---
-        public static readonly PlcTagDefinition IdModel = CreateWord("line2.edit.id_model", "D6080", PlcTagDataType.String, "ID Model", 40);
-        public static readonly PlcTagDefinition JigType = CreateWord("line2.edit.jig_type", "D6100", PlcTagDataType.Int32, "Loại tay kẹp Line 2");
-        public static readonly PlcTagDefinition PickInputX = CreateWord("line2.edit.pick_input_x", "D6102", PlcTagDataType.Float, "Tọa độ X gắp sản phẩm đầu vào line");
-        public static readonly PlcTagDefinition PickInputZ = CreateWord("line2.edit.pick_input_z", "D6104", PlcTagDataType.Float, "Tọa độ Z gắp sản phẩm đầu vào line");
-        public static readonly PlcTagDefinition PickOp1X = CreateWord("line2.edit.pick_op1_x", "D6106", PlcTagDataType.Float, "Tọa độ X an toàn lên xuống Op1");
-        public static readonly PlcTagDefinition PickOp1Z = CreateWord("line2.edit.pick_op1_z", "D6108", PlcTagDataType.Float, "Tọa độ Z an toàn lên xuống Op1");
-        public static readonly PlcTagDefinition PickOp2X = CreateWord("line2.edit.pick_op2_x", "D6110", PlcTagDataType.Float, "Tọa độ X an toàn lên xuống Op2");
-        public static readonly PlcTagDefinition PickOp2Z = CreateWord("line2.edit.pick_op2_z", "D6112", PlcTagDataType.Float, "Tọa độ Z an toàn lên xuống Op2");
-        public static readonly PlcTagDefinition DropOp1X = CreateWord("line2.edit.drop_op1_x", "D6114", PlcTagDataType.Float, "Tọa độ X chống tâm Op1");
-        public static readonly PlcTagDefinition DropOp1Z = CreateWord("line2.edit.drop_op1_z", "D6116", PlcTagDataType.Float, "Tọa độ Z chống tâm Op1");
-        public static readonly PlcTagDefinition DropOp2X = CreateWord("line2.edit.drop_op2_x", "D6118", PlcTagDataType.Float, "Tọa độ X chống tâm Op2");
-        public static readonly PlcTagDefinition DropOp2Z = CreateWord("line2.edit.drop_op2_z", "D6120", PlcTagDataType.Float, "Tọa độ Z chống tâm Op2");
-        public static readonly PlcTagDefinition DropMeasureX = CreateWord("line2.edit.drop_measure_x", "D6122", PlcTagDataType.Float, "Tọa độ X chống tâm máy đo");
-        public static readonly PlcTagDefinition DropMeasureZ = CreateWord("line2.edit.drop_measure_z", "D6124", PlcTagDataType.Float, "Tọa độ Z chống tâm máy đo");
-        public static readonly PlcTagDefinition JigSupportInput = CreateWord("line2.edit.jig_support_input", "D6126", PlcTagDataType.Float, "Tọa độ Jig đỡ trục đầu vào");
-        public static readonly PlcTagDefinition GrindTimeOp1 = CreateWord("line2.edit.grind_time_op1", "D6128", PlcTagDataType.Int32, "Thời gian mài Op1");
-        public static readonly PlcTagDefinition GrindTimeOp2 = CreateWord("line2.edit.grind_time_op2", "D6130", PlcTagDataType.Int32, "Thời gian mài Op2");
-        public static readonly PlcTagDefinition DiameterOp1 = CreateWord("line2.edit.diameter_op1", "D6132", PlcTagDataType.Float, "Đường kính Op1");
-        public static readonly PlcTagDefinition DiameterOp2 = CreateWord("line2.edit.diameter_op2", "D6134", PlcTagDataType.Float, "Đường kính Op2");
-
-        // --- Edit Model Search ---
-        public static readonly PlcTagDefinition ModelSearchName = CreateWord("line2.edit.model_search_name", "D6210", PlcTagDataType.String, "Tên Model tìm kiếm", 30);
-        public static readonly PlcTagDefinition ModelResult1 = CreateWord("line2.edit.model_result_1", "D6225", PlcTagDataType.String, "Tên Model trả về 1", 30);
-        public static readonly PlcTagDefinition ModelResult2 = CreateWord("line2.edit.model_result_2", "D6240", PlcTagDataType.String, "Tên Model trả về 2", 30);
-        public static readonly PlcTagDefinition ModelResult3 = CreateWord("line2.edit.model_result_3", "D6255", PlcTagDataType.String, "Tên Model trả về 3", 30);
-        public static readonly PlcTagDefinition ModelResult4 = CreateWord("line2.edit.model_result_4", "D6270", PlcTagDataType.String, "Tên Model trả về 4", 30);
-        public static readonly PlcTagDefinition ModelResult5 = CreateWord("line2.edit.model_result_5", "D6285", PlcTagDataType.String, "Tên Model trả về 5", 30);
-        public static readonly PlcTagDefinition ModelResult6 = CreateWord("line2.edit.model_result_6", "D6300", PlcTagDataType.String, "Tên Model trả về 6", 30);
-
-        // --- Edit Control Bits ---
-        public static readonly PlcTagDefinition Search = CreateBit("line2.edit.search", "D6160.0", "Tìm kiếm");
-        public static readonly PlcTagDefinition EditModel = CreateBit("line2.edit.edit_model", "D6160.1", "Edit");
-        public static readonly PlcTagDefinition Next = CreateBit("line2.edit.next", "D6160.2", "Next");
-        public static readonly PlcTagDefinition Previous = CreateBit("line2.edit.previous", "D6160.3", "Previous");
-        public static readonly PlcTagDefinition SaveModel = CreateBit("line2.edit.save_model", "D6160.4", "Lưu Model");
-        public static readonly PlcTagDefinition SaveSuccess = CreateBit("line2.edit.save_success", "D6161.0", "Lưu thành công");
-        public static readonly PlcTagDefinition ErrorFlag = CreateBit("line2.edit.error_flag", "D6161.1", "Cờ lỗi");
-
-        // --- Pagination ---
-        public static readonly PlcTagDefinition Page = CreateWord("line2.edit.page", "D6170", PlcTagDataType.Int16, "Trang");
-        public static readonly PlcTagDefinition TotalPages = CreateWord("line2.edit.total_pages", "D6172", PlcTagDataType.Int16, "Tổng số trang");
-
-        // --- Authentication ---
-        public static readonly PlcTagDefinition AccountName = CreateWord("line2.edit.account_name", "D6180", PlcTagDataType.String, "Tên tài khoản", 30);
-        public static readonly PlcTagDefinition Password = CreateWord("line2.edit.password", "D6195", PlcTagDataType.String, "Mật khẩu", 30);
-
-        // --- Error Message ---
-        public static readonly PlcTagDefinition ErrorMessage = CreateWord("line2.edit.error_message", "D6315", PlcTagDataType.String, "Trả về message lỗi", 40);
-    }
-
-    public static class Agv
-    {
-        // === Inputs từ PLC (đọc) ===
-        public static readonly PlcTagDefinition MachineReadyForSwapLine1 =
-            CreateBit("agv.machine_ready_swap_line1", "D5642.0", "Máy báo sẵn sàng cho đảo kệ line 1");
-
-        public static readonly PlcTagDefinition MachineReadyForSwapLine2 =
-            CreateBit("agv.machine_ready_swap_line2", "D5642.1", "Máy báo sẵn sàng cho đảo kệ line 2");
-
-        // === Outputs xuống PLC (ghi) ===
-        public static readonly PlcTagDefinition AgvRequestSwapLine1 =
-            CreateBit("agv.request_swap_line1", "D5641.0", "AGV yêu cầu đảo kệ line 1");
-
-        public static readonly PlcTagDefinition AgvRequestSwapLine2 =
-            CreateBit("agv.request_swap_line2", "D5641.1", "AGV yêu cầu đảo kệ line 2");
-
-        public static readonly PlcTagDefinition AgvSwapDoneLine1 =
-            CreateBit("agv.swap_done_line1", "D5641.2", "AGV báo đã đảo xong kệ line 1");
-
-        public static readonly PlcTagDefinition AgvSwapDoneLine2 =
-            CreateBit("agv.swap_done_line2", "D5641.3", "AGV báo đã đảo xong kệ line 2");
-    }
 
     public static IReadOnlyList<PlcTagDefinition> All { get; } = CollectAllTags(
         typeof(Words),
         typeof(Inputs),
         typeof(Outputs),
         typeof(DataAutos),
-        typeof(RobotTest),
         typeof(DataTrayCart),
         typeof(DataMachine),
         typeof(Manual),
-        typeof(Alarms),
-        typeof(Agv));
+        typeof(Alarms));
 
     public static IReadOnlyDictionary<string, PlcTagDefinition> ByName { get; } =
         All.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
@@ -862,23 +611,9 @@ public static class PlcTagCatalog
         typeof(Words),
         typeof(Outputs),
         typeof(DataAutos),
-        typeof(RobotTest),
         typeof(DataTrayCart),
         typeof(DataMachine),
-        typeof(Manual),
-        typeof(Agv));
-
-    /// <summary>Tất cả tags của PLC Line 1.</summary>
-    public static IReadOnlyList<PlcTagDefinition> AllLine1 { get; } = CollectAllTags(typeof(Line1));
-
-    /// <summary>Tất cả tags của PLC Line 2.</summary>
-    public static IReadOnlyList<PlcTagDefinition> AllLine2 { get; } = CollectAllTags(typeof(Line2));
-
-    public static IReadOnlyDictionary<string, PlcTagDefinition> ByNameLine1 { get; } =
-        CollectAllTags(typeof(Line1)).ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
-
-    public static IReadOnlyDictionary<string, PlcTagDefinition> ByNameLine2 { get; } =
-        CollectAllTags(typeof(Line2)).ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+        typeof(Manual));
 
     public static bool TryGet(string tagName, out PlcTagDefinition definition)
     {
