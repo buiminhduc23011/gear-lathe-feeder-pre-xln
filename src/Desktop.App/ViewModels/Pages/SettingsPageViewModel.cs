@@ -87,37 +87,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private string scanRateMs = string.Empty;
 
-    // --- PLC Line 1 ---
-    [ObservableProperty]
-    private string plcLine1Host = string.Empty;
-
-    [ObservableProperty]
-    private string plcLine1Port = string.Empty;
-
-    [ObservableProperty]
-    private string plcLine1Id = string.Empty;
-
-    [ObservableProperty]
-    private string selectedPlcLine1Type = SupportedPlcTypes[0];
-
-    [ObservableProperty]
-    private string scanRateLine1Ms = string.Empty;
-
-    // --- PLC Line 2 ---
-    [ObservableProperty]
-    private string plcLine2Host = string.Empty;
-
-    [ObservableProperty]
-    private string plcLine2Port = string.Empty;
-
-    [ObservableProperty]
-    private string plcLine2Id = string.Empty;
-
-    [ObservableProperty]
-    private string selectedPlcLine2Type = SupportedPlcTypes[0];
-
-    [ObservableProperty]
-    private string scanRateLine2Ms = string.Empty;
 
     [ObservableProperty]
     private bool isMachineSettingsTabSelected = true;
@@ -256,55 +225,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         OnFormValueChanged();
     }
 
-    partial void OnPlcLine1HostChanged(string value)
-    {
-        OnFormValueChanged();
-    }
-
-    partial void OnPlcLine1PortChanged(string value)
-    {
-        OnFormValueChanged();
-    }
-
-    partial void OnPlcLine1IdChanged(string value)
-    {
-        OnFormValueChanged();
-    }
-
-    partial void OnSelectedPlcLine1TypeChanged(string value)
-    {
-        OnFormValueChanged();
-    }
-
-    partial void OnScanRateLine1MsChanged(string value)
-    {
-        OnFormValueChanged();
-    }
-
-    partial void OnPlcLine2HostChanged(string value)
-    {
-        OnFormValueChanged();
-    }
-
-    partial void OnPlcLine2PortChanged(string value)
-    {
-        OnFormValueChanged();
-    }
-
-    partial void OnPlcLine2IdChanged(string value)
-    {
-        OnFormValueChanged();
-    }
-
-    partial void OnSelectedPlcLine2TypeChanged(string value)
-    {
-        OnFormValueChanged();
-    }
-
-    partial void OnScanRateLine2MsChanged(string value)
-    {
-        OnFormValueChanged();
-    }
 
     partial void OnIsBusyChanged(bool value)
     {
@@ -625,16 +545,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
             SelectedPlcType = NormalizePlcType(options.PlcConnectionMode);
             ApiBaseUrl = options.ApiBaseUrl;
             ScanRateMs = options.PollIntervalMs.ToString(CultureInfo.InvariantCulture);
-            PlcLine1Host = options.PlcLine1Host;
-            PlcLine1Port = options.PlcLine1Port.ToString(CultureInfo.InvariantCulture);
-            PlcLine1Id = options.PlcLine1SlaveId.ToString(CultureInfo.InvariantCulture);
-            SelectedPlcLine1Type = NormalizePlcType(options.PlcLine1ConnectionMode);
-            ScanRateLine1Ms = options.PlcLine1PollIntervalMs.ToString(CultureInfo.InvariantCulture);
-            PlcLine2Host = options.PlcLine2Host;
-            PlcLine2Port = options.PlcLine2Port.ToString(CultureInfo.InvariantCulture);
-            PlcLine2Id = options.PlcLine2SlaveId.ToString(CultureInfo.InvariantCulture);
-            SelectedPlcLine2Type = NormalizePlcType(options.PlcLine2ConnectionMode);
-            ScanRateLine2Ms = options.PlcLine2PollIntervalMs.ToString(CultureInfo.InvariantCulture);
             VirtualKeyboardEnabled = options.VirtualKeyboardEnabled;
             AgvBaseUrl = options.AgvBaseUrl;
 
@@ -713,16 +623,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
             || !string.Equals(PlcId.Trim(), _loadedOptions.PlcSlaveId.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
             || !string.Equals(SelectedPlcType.Trim(), NormalizePlcType(_loadedOptions.PlcConnectionMode), StringComparison.Ordinal)
             || !string.Equals(ScanRateMs.Trim(), _loadedOptions.PollIntervalMs.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
-            || !string.Equals(PlcLine1Host.Trim(), _loadedOptions.PlcLine1Host, StringComparison.Ordinal)
-            || !string.Equals(PlcLine1Port.Trim(), _loadedOptions.PlcLine1Port.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
-            || !string.Equals(PlcLine1Id.Trim(), _loadedOptions.PlcLine1SlaveId.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
-            || !string.Equals(SelectedPlcLine1Type.Trim(), NormalizePlcType(_loadedOptions.PlcLine1ConnectionMode), StringComparison.Ordinal)
-            || !string.Equals(ScanRateLine1Ms.Trim(), _loadedOptions.PlcLine1PollIntervalMs.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
-            || !string.Equals(PlcLine2Host.Trim(), _loadedOptions.PlcLine2Host, StringComparison.Ordinal)
-            || !string.Equals(PlcLine2Port.Trim(), _loadedOptions.PlcLine2Port.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
-            || !string.Equals(PlcLine2Id.Trim(), _loadedOptions.PlcLine2SlaveId.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
-            || !string.Equals(SelectedPlcLine2Type.Trim(), NormalizePlcType(_loadedOptions.PlcLine2ConnectionMode), StringComparison.Ordinal)
-            || !string.Equals(ScanRateLine2Ms.Trim(), _loadedOptions.PlcLine2PollIntervalMs.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal)
             || VirtualKeyboardEnabled != _loadedOptions.VirtualKeyboardEnabled
             || !string.Equals(AgvBaseUrl.Trim(), _loadedOptions.AgvBaseUrl, StringComparison.Ordinal)
 
@@ -824,65 +724,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         options.ApiBaseUrl = apiBaseUri.ToString().TrimEnd('/');
         options.VirtualKeyboardEnabled = VirtualKeyboardEnabled;
 
-        // --- PLC Line 1 ---
-        var normalizedPlcLine1Host = PlcLine1Host.Trim();
-        if (!string.IsNullOrWhiteSpace(normalizedPlcLine1Host) && !IsValidHost(normalizedPlcLine1Host))
-        {
-            options = null!;
-            errorMessage = "IP PLC Line 1 phải là host hoặc địa chỉ IP hợp lệ.";
-            return false;
-        }
-
-        if (!int.TryParse(PlcLine1Port.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var normalizedPlcLine1Port))
-        {
-            normalizedPlcLine1Port = 502;
-        }
-
-        if (!int.TryParse(PlcLine1Id.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var normalizedPlcLine1SlaveId))
-        {
-            normalizedPlcLine1SlaveId = 1;
-        }
-
-        if (!int.TryParse(ScanRateLine1Ms.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var normalizedPlcLine1PollIntervalMs))
-        {
-            normalizedPlcLine1PollIntervalMs = 100;
-        }
-
-        options.PlcLine1Host = string.IsNullOrWhiteSpace(normalizedPlcLine1Host) ? "127.0.0.1" : normalizedPlcLine1Host;
-        options.PlcLine1Port = normalizedPlcLine1Port;
-        options.PlcLine1SlaveId = normalizedPlcLine1SlaveId;
-        options.PlcLine1ConnectionMode = NormalizePlcType(SelectedPlcLine1Type);
-        options.PlcLine1PollIntervalMs = normalizedPlcLine1PollIntervalMs;
-
-        // --- PLC Line 2 ---
-        var normalizedPlcLine2Host = PlcLine2Host.Trim();
-        if (!string.IsNullOrWhiteSpace(normalizedPlcLine2Host) && !IsValidHost(normalizedPlcLine2Host))
-        {
-            options = null!;
-            errorMessage = "IP PLC Line 2 phải là host hoặc địa chỉ IP hợp lệ.";
-            return false;
-        }
-
-        if (!int.TryParse(PlcLine2Port.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var normalizedPlcLine2Port))
-        {
-            normalizedPlcLine2Port = 502;
-        }
-
-        if (!int.TryParse(PlcLine2Id.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var normalizedPlcLine2SlaveId))
-        {
-            normalizedPlcLine2SlaveId = 1;
-        }
-
-        if (!int.TryParse(ScanRateLine2Ms.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var normalizedPlcLine2PollIntervalMs))
-        {
-            normalizedPlcLine2PollIntervalMs = 100;
-        }
-
-        options.PlcLine2Host = string.IsNullOrWhiteSpace(normalizedPlcLine2Host) ? "127.0.0.1" : normalizedPlcLine2Host;
-        options.PlcLine2Port = normalizedPlcLine2Port;
-        options.PlcLine2SlaveId = normalizedPlcLine2SlaveId;
-        options.PlcLine2ConnectionMode = NormalizePlcType(SelectedPlcLine2Type);
-        options.PlcLine2PollIntervalMs = normalizedPlcLine2PollIntervalMs;
 
         // --- AGV ---
         if (!int.TryParse(AgvKe1AutoCallRemainingBelow.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out var normalizedAgvKe1Threshold) || normalizedAgvKe1Threshold < 0)

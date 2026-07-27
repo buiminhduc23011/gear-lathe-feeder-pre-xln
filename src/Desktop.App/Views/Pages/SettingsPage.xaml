@@ -289,7 +289,7 @@
                         </Border>
                     </Grid>
 
-                    <!--  Cài đặt PLC: Robot / Line 1 / Line 2  -->
+                    <!--  Cài đặt PLC  -->
                     <Border Margin="0,10,0,0" Style="{StaticResource SectionCard}">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -301,27 +301,15 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="110" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="12" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="12" />
+                                <ColumnDefinition Width="180" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <!--  Headers  -->
                             <TextBlock
-                                Grid.Column="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
                                 Style="{StaticResource SectionTitleText}"
-                                Text="PLC Robot" />
-                            <TextBlock
-                                Grid.Column="3"
-                                Style="{StaticResource SectionTitleText}"
-                                Text="PLC Line 1" />
-                            <TextBlock
-                                Grid.Column="5"
-                                Style="{StaticResource SectionTitleText}"
-                                Text="PLC Line 2" />
+                                Text="Cấu hình Kết nối PLC Main" />
 
                             <!--  IP PLC  -->
                             <TextBlock
@@ -335,18 +323,6 @@
                                 Margin="0,12,0,0"
                                 Style="{StaticResource FilterToolbarTextBox}"
                                 Text="{Binding PlcHost, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                Grid.Row="1"
-                                Grid.Column="3"
-                                Margin="0,12,0,0"
-                                Style="{StaticResource FilterToolbarTextBox}"
-                                Text="{Binding PlcLine1Host, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                Grid.Row="1"
-                                Grid.Column="5"
-                                Margin="0,12,0,0"
-                                Style="{StaticResource FilterToolbarTextBox}"
-                                Text="{Binding PlcLine2Host, UpdateSourceTrigger=PropertyChanged}" />
 
                             <!--  Port PLC  -->
                             <TextBlock
@@ -360,70 +336,32 @@
                                 Margin="0,12,0,0"
                                 Style="{StaticResource FilterToolbarTextBox}"
                                 Text="{Binding PlcPort, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                Grid.Row="2"
-                                Grid.Column="3"
-                                Margin="0,12,0,0"
-                                Style="{StaticResource FilterToolbarTextBox}"
-                                Text="{Binding PlcLine1Port, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                Grid.Row="2"
-                                Grid.Column="5"
-                                Margin="0,12,0,0"
-                                Style="{StaticResource FilterToolbarTextBox}"
-                                Text="{Binding PlcLine2Port, UpdateSourceTrigger=PropertyChanged}" />
 
                             <!--  PLC ID  -->
                             <TextBlock
                                 Grid.Row="3"
                                 Margin="0,12,0,0"
                                 Style="{StaticResource ParameterLabel}"
-                                Text="PLC ID" />
+                                Text="PLC ID (Slave ID)" />
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="1"
                                 Margin="0,12,0,0"
                                 Style="{StaticResource FilterToolbarTextBox}"
                                 Text="{Binding PlcId, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                Grid.Row="3"
-                                Grid.Column="3"
-                                Margin="0,12,0,0"
-                                Style="{StaticResource FilterToolbarTextBox}"
-                                Text="{Binding PlcLine1Id, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                Grid.Row="3"
-                                Grid.Column="5"
-                                Margin="0,12,0,0"
-                                Style="{StaticResource FilterToolbarTextBox}"
-                                Text="{Binding PlcLine2Id, UpdateSourceTrigger=PropertyChanged}" />
 
                             <!--  Type PLC  -->
                             <TextBlock
                                 Grid.Row="4"
                                 Margin="0,12,0,0"
                                 Style="{StaticResource ParameterLabel}"
-                                Text="Type PLC" />
+                                Text="Loại Kết Nối PLC" />
                             <ComboBox
                                 Grid.Row="4"
                                 Grid.Column="1"
                                 Margin="0,12,0,0"
                                 ItemsSource="{Binding PlcTypes}"
                                 SelectedItem="{Binding SelectedPlcType, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{StaticResource FilterToolbarComboBox}" />
-                            <ComboBox
-                                Grid.Row="4"
-                                Grid.Column="3"
-                                Margin="0,12,0,0"
-                                ItemsSource="{Binding PlcTypes}"
-                                SelectedItem="{Binding SelectedPlcLine1Type, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{StaticResource FilterToolbarComboBox}" />
-                            <ComboBox
-                                Grid.Row="4"
-                                Grid.Column="5"
-                                Margin="0,12,0,0"
-                                ItemsSource="{Binding PlcTypes}"
-                                SelectedItem="{Binding SelectedPlcLine2Type, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource FilterToolbarComboBox}" />
 
                             <!--  Scan rate  -->
@@ -438,18 +376,6 @@
                                 Margin="0,12,0,0"
                                 Style="{StaticResource FilterToolbarTextBox}"
                                 Text="{Binding ScanRateMs, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                Grid.Row="5"
-                                Grid.Column="3"
-                                Margin="0,12,0,0"
-                                Style="{StaticResource FilterToolbarTextBox}"
-                                Text="{Binding ScanRateLine1Ms, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                Grid.Row="5"
-                                Grid.Column="5"
-                                Margin="0,12,0,0"
-                                Style="{StaticResource FilterToolbarTextBox}"
-                                Text="{Binding ScanRateLine2Ms, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </Border>
 

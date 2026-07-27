@@ -22,6 +22,7 @@
                 Text="{Binding VersionText, StringFormat='{}{0} | Released: 23/03/2026 | Design by STI.Automation'}" />
 
             <WrapPanel Grid.Column="1" VerticalAlignment="Center">
+                <!--  PLC scan rate + badge  -->
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="1"
@@ -30,7 +31,7 @@
                     VerticalAlignment="Center"
                     FontFamily="{DynamicResource FontFamily.Data}"
                     Foreground="{DynamicResource Brush.Text.Secondary}"
-                    Text="{Binding ScanRateText, StringFormat='Robot: {0}'}" />
+                    Text="{Binding ScanRateText, StringFormat='PLC: {0}'}" />
                 <Border Margin="6,0,6,0">
                     <Border.Style>
                         <Style BasedOn="{StaticResource StatusBadge.Danger}" TargetType="Border">
@@ -55,68 +56,7 @@
                     </TextBlock>
                 </Border>
 
-                <!--  Line 1 scan rate + badge  -->
-                <TextBlock
-                    Margin="4,3,0,0"
-                    VerticalAlignment="Center"
-                    FontFamily="{DynamicResource FontFamily.Data}"
-                    Foreground="{DynamicResource Brush.Text.Secondary}"
-                    Text="{Binding ScanRateLine1Text, StringFormat='L1: {0}'}" />
-                <Border Margin="6,0,6,0">
-                    <Border.Style>
-                        <Style BasedOn="{StaticResource StatusBadge.Danger}" TargetType="Border">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsPlcLine1Connected}" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource Brush.Status.RunningSurface}" />
-                                    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Status.Running}" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                    <TextBlock Text="{Binding Line1BadgeText}">
-                        <TextBlock.Style>
-                            <Style BasedOn="{StaticResource StatusBadgeText.Danger}" TargetType="TextBlock">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsPlcLine1Connected}" Value="True">
-                                        <Setter Property="Foreground" Value="{DynamicResource Brush.Status.Running}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </Border>
-
-                <!--  Line 2 scan rate + badge  -->
-                <TextBlock
-                    Margin="4,3,0,0"
-                    VerticalAlignment="Center"
-                    FontFamily="{DynamicResource FontFamily.Data}"
-                    Foreground="{DynamicResource Brush.Text.Secondary}"
-                    Text="{Binding ScanRateLine2Text, StringFormat='L2: {0}'}" />
-                <Border Margin="6,0,6,0">
-                    <Border.Style>
-                        <Style BasedOn="{StaticResource StatusBadge.Danger}" TargetType="Border">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsPlcLine2Connected}" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource Brush.Status.RunningSurface}" />
-                                    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Status.Running}" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Border.Style>
-                    <TextBlock Text="{Binding Line2BadgeText}">
-                        <TextBlock.Style>
-                            <Style BasedOn="{StaticResource StatusBadgeText.Danger}" TargetType="TextBlock">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsPlcLine2Connected}" Value="True">
-                                        <Setter Property="Foreground" Value="{DynamicResource Brush.Status.Running}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </Border>
-
+                <!--  Server badge  -->
                 <Border Margin="6,0,6,0">
                     <Border.Style>
                         <Style BasedOn="{StaticResource StatusBadge.Danger}" TargetType="Border">
@@ -140,6 +80,7 @@
                         </TextBlock.Style>
                     </TextBlock>
                 </Border>
+
                 <TextBlock
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
@@ -157,9 +98,6 @@
                     </TextBlock.Text>
                 </TextBlock>
             </WrapPanel>
-
-
-
         </Grid>
     </Border>
 </UserControl>

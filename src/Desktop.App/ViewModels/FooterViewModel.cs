@@ -19,8 +19,6 @@ public partial class FooterViewModel : ObservableObject
 
     private readonly DispatcherTimer _clockTimer;
     private IPlcService? _plcService;
-    private IPlcService? _plcServiceLine1;
-    private IPlcService? _plcServiceLine2;
     private Uri? _serverBaseUri;
     private DateTimeOffset _lastServerPollUtc = DateTimeOffset.MinValue;
     private int _serverPollInFlight;
@@ -28,12 +26,6 @@ public partial class FooterViewModel : ObservableObject
 
     [ObservableProperty]
     private bool isPlcConnected;
-
-    [ObservableProperty]
-    private bool isPlcLine1Connected;
-
-    [ObservableProperty]
-    private bool isPlcLine2Connected;
 
     [ObservableProperty]
     private bool isServerConnected;
@@ -46,12 +38,6 @@ public partial class FooterViewModel : ObservableObject
 
     [ObservableProperty]
     private string scanRateText = "-- ms";
-
-    [ObservableProperty]
-    private string scanRateLine1Text = "-- ms";
-
-    [ObservableProperty]
-    private string scanRateLine2Text = "-- ms";
 
     public FooterViewModel()
     {
@@ -67,11 +53,7 @@ public partial class FooterViewModel : ObservableObject
     public string VersionText =>
         $"Desktop {Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0"}";
 
-    public string ConnectionBadgeText => "PLC Robot";
-
-    public string Line1BadgeText => "PLC Line 1";
-
-    public string Line2BadgeText => "PLC Line 2";
+    public string ConnectionBadgeText => "PLC";
 
     public string ServerBadgeText => "SERVER";
 
@@ -92,135 +74,39 @@ public partial class FooterViewModel : ObservableObject
         IsPlcConnected = _plcService.IsConnected;
     }
 
-    public void AttachPlcLine1Service(IPlcService plcService)
+    private void OnConnectionChanged(object? sender, bool isConnected)
     {
-        if (ReferenceEquals(_plcServiceLine1, plcService))
-        {
-            return;
-        }
-
-        if (_plcServiceLine1 is not null)
-        {
-            _plcServiceLine1.ConnectionChanged -= OnLine1ConnectionChanged;
-        }
-
-        _plcServiceLine1 = plcService;
-        _plcServiceLine1.ConnectionChanged += OnLine1ConnectionChanged;
-        IsPlcLine1Connected = _plcServiceLine1.IsConnected;
-    }
-
-    public void AttachPlcLine2Service(IPlcService plcService)
-    {
-        if (ReferenceEquals(_plcServiceLine2, plcService))
-        {
-            return;
-        }
-
-        if (_plcServiceLine2 is not null)
-        {
-            _plcServiceLine2.ConnectionChanged -= OnLine2ConnectionChanged;
-        }
-
-        _plcServiceLine2 = plcService;
-        _plcServiceLine2.ConnectionChanged += OnLine2ConnectionChanged;
-        IsPlcLine2Connected = _plcServiceLine2.IsConnected;
-    }
-
-    private void OnConnectionChanged(object? sender, bool connected)
-    {
-        PostToUiThread(() =>
-        {
-            IsPlcConnected = connected;
-            if (!connected)
-            {
-                ScanRateText = "-- ms";
-            }
-        });
-    }
-
-    private void OnLine1ConnectionChanged(object? sender, bool connected)
-    {
-        PostToUiThread(() =>
-        {
-            IsPlcLine1Connected = connected;
-            if (!connected)
-            {
-                ScanRateLine1Text = "-- ms";
-            }
-        });
-    }
-
-    private void OnLine2ConnectionChanged(object? sender, bool connected)
-    {
-        PostToUiThread(() =>
-        {
-            IsPlcLine2Connected = connected;
-            if (!connected)
-            {
-                ScanRateLine2Text = "-- ms";
-            }
-        });
+        PostToUiThread(() => IsPlcConnected = isConnected);
     }
 
     private void RefreshClock()
     {
-        var now = DateTime.Now;
-        CurrentTimeText = now.ToString("HH:mm:ss");
-        CurrentDateText = now.ToString("dd/MM/yyyy");
+        CurrentDateText = DateTime.Now.ToString("dd/MM/yyyy");
+        CurrentTimeText = DateTime.Now.ToString("HH:mm:ss");
 
-        if (_plcService is not null && IsPlcConnected)
+        if (_plcService is not null && _plcService.IsConnected)
         {
-            var ms = _plcService.LastScanElapsedMs;
-            ScanRateText = ms >= 0 ? $"{ms} ms" : "-- ms";
+            ScanRateText = $"{_plcService.LastScanElapsedMs} ms";
+        }
+        else
+        {
+            ScanRateText = "-- ms";
         }
 
-        if (_plcServiceLine1 is not null && IsPlcLine1Connected)
-        {
-            var ms = _plcServiceLine1.LastScanElapsedMs;
-            ScanRateLine1Text = ms >= 0 ? $"{ms} ms" : "-- ms";
-        }
-
-        if (_plcServiceLine2 is not null && IsPlcLine2Connected)
-        {
-            var ms = _plcServiceLine2.LastScanElapsedMs;
-            ScanRateLine2Text = ms >= 0 ? $"{ms} ms" : "-- ms";
-        }
-
-        TryStartServerPoll(DateTimeOffset.UtcNow);
+        CheckServerConnectionInBackground();
     }
 
-    private static void PostToUiThread(Action action)
+    private void CheckServerConnectionInBackground()
     {
-        var dispatcher = Application.Current?.Dispatcher;
-        if (dispatcher is not null && !dispatcher.CheckAccess())
-        {
-            _ = dispatcher.BeginInvoke(action, DispatcherPriority.DataBind);
-            return;
-        }
+        var baseUri = _serverBaseUri;
 
-        action();
-    }
-
-    private void OnCurrentSettingsChanged(object? sender, AppOptions options)
-    {
-        PostToUiThread(() => UpdateServerEndpoint(options));
-    }
-
-    private void UpdateServerEndpoint(AppOptions options)
-    {
-        _serverBaseUri = TryCreateServerUri(options.ApiBaseUrl);
-        _lastServerPollUtc = DateTimeOffset.MinValue;
-        Interlocked.Increment(ref _serverEndpointVersion);
-        IsServerConnected = false;
-    }
-
-    private void TryStartServerPoll(DateTimeOffset nowUtc)
-    {
-        if (_serverBaseUri is null)
+        if (baseUri is null)
         {
             IsServerConnected = false;
             return;
         }
+
+        var nowUtc = DateTimeOffset.UtcNow;
 
         if (nowUtc - _lastServerPollUtc < ServerPollInterval)
         {
@@ -233,56 +119,73 @@ public partial class FooterViewModel : ObservableObject
         }
 
         _lastServerPollUtc = nowUtc;
-        var endpoint = _serverBaseUri;
         var version = Interlocked.Read(ref _serverEndpointVersion);
-        _ = PollServerConnectionAsync(endpoint, version);
+
+        _ = Task.Run(async () =>
+        {
+            var isReachable = false;
+
+            try
+            {
+                using var cts = new CancellationTokenSource(ServerPollTimeout);
+                using var request = new HttpRequestMessage(HttpMethod.Head, baseUri);
+
+                using var response = await ServerStatusHttpClient
+                    .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token)
+                    .ConfigureAwait(false);
+
+                isReachable = true;
+            }
+            catch
+            {
+                isReachable = false;
+            }
+            finally
+            {
+                Interlocked.Exchange(ref _serverPollInFlight, 0);
+            }
+
+            if (Interlocked.Read(ref _serverEndpointVersion) == version)
+            {
+                PostToUiThread(() => IsServerConnected = isReachable);
+            }
+        });
     }
 
-    private async Task PollServerConnectionAsync(Uri endpoint, long version)
+    private void OnCurrentSettingsChanged(object? sender, AppOptions options)
     {
-        var isConnected = false;
-
-        try
-        {
-            using var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-            using var timeoutCts = new CancellationTokenSource(ServerPollTimeout);
-            using var response = await ServerStatusHttpClient.SendAsync(
-                request,
-                HttpCompletionOption.ResponseHeadersRead,
-                timeoutCts.Token);
-
-            isConnected = true;
-        }
-        catch
-        {
-            isConnected = false;
-        }
-        finally
-        {
-            Interlocked.Exchange(ref _serverPollInFlight, 0);
-        }
-
-        if (version != Interlocked.Read(ref _serverEndpointVersion))
-        {
-            return;
-        }
-
-        PostToUiThread(() => IsServerConnected = isConnected);
+        PostToUiThread(() => UpdateServerEndpoint(options));
     }
 
-    private static Uri? TryCreateServerUri(string? apiBaseUrl)
+    private void UpdateServerEndpoint(AppOptions options)
     {
-        var normalizedUrl = apiBaseUrl?.Trim();
-        if (string.IsNullOrWhiteSpace(normalizedUrl))
-        {
-            return null;
-        }
+        Interlocked.Increment(ref _serverEndpointVersion);
+        _lastServerPollUtc = DateTimeOffset.MinValue;
 
-        if (!Uri.TryCreate(normalizedUrl, UriKind.Absolute, out var uri))
+        if (Uri.TryCreate(options.ApiBaseUrl, UriKind.Absolute, out var uri)
+            && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
         {
-            return null;
+            _serverBaseUri = uri;
+            IsServerConnected = true;
         }
+        else
+        {
+            _serverBaseUri = null;
+            IsServerConnected = false;
+        }
+    }
 
-        return uri;
+    private static void PostToUiThread(Action action)
+    {
+        var dispatcher = Application.Current?.Dispatcher;
+
+        if (dispatcher is null || dispatcher.CheckAccess())
+        {
+            action();
+        }
+        else
+        {
+            dispatcher.BeginInvoke(action);
+        }
     }
 }

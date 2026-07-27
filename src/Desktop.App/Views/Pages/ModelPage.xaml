@@ -360,15 +360,8 @@
                                     </Grid>
                                 </Border>
 
-                                <!--  Tab selector (fields)  -->
-                                <StackPanel Margin="0,16,0,12" Orientation="Horizontal">
-                                    <ToggleButton Command="{Binding SelectRobotTabCommand}" Content="Robot" IsChecked="{Binding IsRobotTabSelected, Mode=OneWay}" Style="{StaticResource SettingsSegmentButton}" />
-                                    <ToggleButton Command="{Binding SelectLine1TabCommand}" Content="Line 1" IsChecked="{Binding IsLine1TabSelected, Mode=OneWay}" Style="{StaticResource SettingsSegmentButton}" />
-                                    <ToggleButton Command="{Binding SelectLine2TabCommand}" Content="Line 2" IsChecked="{Binding IsLine2TabSelected, Mode=OneWay}" Style="{StaticResource SettingsSegmentButton}" />
-                                </StackPanel>
-
-                                <!--  Robot tab  -->
-                                <StackPanel Visibility="{Binding IsRobotTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <!--  Robot Parameters Card  -->
+                                <StackPanel>
                                     <Border Style="{StaticResource SectionCard.Subtle}">
                                         <StackPanel>
                                             <Grid>
@@ -386,45 +379,26 @@
                                                     Grid.Column="1"
                                                     HorizontalAlignment="Right"
                                                     VerticalAlignment="Top"
-                                                    MinWidth="368">
+                                                    MinWidth="200">
                                                     <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="8" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="8" />
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="8" />
                                                         <ColumnDefinition Width="Auto" />
                                                     </Grid.ColumnDefinitions>
                                                     <Button
                                                         Grid.Column="0"
-                                                        MinWidth="86"
+                                                        MinWidth="96"
                                                         Background="#16A34A"
                                                         BorderBrush="#15803D"
                                                         Command="{Binding WriteRobotTestLine1Command}"
-                                                        Content="Ghi L1"
+                                                        Content="Ghi Test"
                                                         Foreground="White"
                                                         Style="{StaticResource ButtonPrimary}" />
                                                     <Button
                                                         Grid.Column="2"
-                                                        MinWidth="86"
-                                                        Background="#16A34A"
-                                                        BorderBrush="#15803D"
-                                                        Command="{Binding WriteRobotTestLine2Command}"
-                                                        Content="Ghi L2"
-                                                        Foreground="White"
-                                                        Style="{StaticResource ButtonPrimary}" />
-                                                    <Button
-                                                        Grid.Column="4"
-                                                        MinWidth="86"
+                                                        MinWidth="96"
                                                         Command="{Binding CancelRobotPickLine1Command}"
-                                                        Content="Hủy L1"
-                                                        Style="{StaticResource ButtonDanger}" />
-                                                    <Button
-                                                        Grid.Column="6"
-                                                        MinWidth="86"
-                                                        Command="{Binding CancelRobotPickLine2Command}"
-                                                        Content="Hủy L2"
+                                                        Content="Hủy Pick"
                                                         Style="{StaticResource ButtonDanger}" />
                                                 </Grid>
                                             </Grid>
@@ -469,55 +443,7 @@
                                                                         Style="{StaticResource ButtonSecondary}"
                                                                         Visibility="{Binding IsCoordinateField, Converter={StaticResource BoolToVisibilityConverter}}" />
                                                                 </Grid>
-                                                                <TextBlock Margin="0,4,0,0" FontSize="11" Foreground="{StaticResource Brush.Action.Danger}" Text="{Binding ValidationMessage}" Visibility="{Binding HasValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                                            </StackPanel>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </StackPanel>
-                                    </Border>
-                                </StackPanel>
-
-                                <!--  Line 1 tab  -->
-                                <StackPanel Visibility="{Binding IsLine1TabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <Border Style="{StaticResource SectionCard.Subtle}">
-                                        <StackPanel>
-                                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số Line 1" />
-                                            <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding Line1Fields}">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate><WrapPanel ItemWidth="200" /></ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Border Margin="0,0,8,8" Padding="10,8" Background="{DynamicResource Brush.Surface.Subpanel}" CornerRadius="8">
-                                                            <StackPanel>
-                                                                <TextBlock FontSize="12" Text="{Binding Label}" />
-                                                                <TextBlock Margin="0,6,0,0" FontSize="14" Text="{Binding DisplayText}" />
-                                                            </StackPanel>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </StackPanel>
-                                    </Border>
-                                </StackPanel>
-
-                                <!--  Line 2 tab  -->
-                                <StackPanel Visibility="{Binding IsLine2TabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <Border Style="{StaticResource SectionCard.Subtle}">
-                                        <StackPanel>
-                                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số Line 2" />
-                                            <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding Line2Fields}">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate><WrapPanel ItemWidth="200" /></ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Border Margin="0,0,8,8" Padding="10,8" Background="{DynamicResource Brush.Surface.Subpanel}" CornerRadius="8">
-                                                            <StackPanel>
-                                                                <TextBlock FontSize="12" Text="{Binding Label}" />
-                                                                <TextBlock Margin="0,6,0,0" FontSize="14" Text="{Binding DisplayText}" />
+                                                                <TextBlock Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource Brush.Action.Danger}" Text="{Binding ValidationMessage}" Visibility="{Binding HasValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
                                                             </StackPanel>
                                                         </Border>
                                                     </DataTemplate>

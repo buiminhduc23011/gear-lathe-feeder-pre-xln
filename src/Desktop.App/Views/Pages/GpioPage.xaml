@@ -93,18 +93,8 @@
                             Style="{StaticResource GpioSegmentButton}" />
                         <ToggleButton
                             Command="{Binding SelectDataPlcTabCommand}"
-                            Content="Robot"
+                            Content="Data PLC"
                             IsChecked="{Binding IsDataPlcTabSelected, Mode=OneWay}"
-                            Style="{StaticResource GpioSegmentButton}" />
-                        <ToggleButton
-                            Command="{Binding SelectLine1TabCommand}"
-                            Content="Line 1"
-                            IsChecked="{Binding IsLine1TabSelected, Mode=OneWay}"
-                            Style="{StaticResource GpioSegmentButton}" />
-                        <ToggleButton
-                            Command="{Binding SelectLine2TabCommand}"
-                            Content="Line 2"
-                            IsChecked="{Binding IsLine2TabSelected, Mode=OneWay}"
                             Style="{StaticResource GpioSegmentButton}" />
                     </StackPanel>
 
