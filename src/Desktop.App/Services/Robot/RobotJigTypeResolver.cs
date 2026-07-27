@@ -131,13 +131,24 @@ internal sealed class RobotJigTypeResolver
         var lineData = isLine2 ? profile.Line2Data : profile.Line1Data;
         var robotData = profile.RobotData;
 
-        var jigType = TryReadInt(robotData, "modelJigClampType", out var clampType)
+        var jigType = TryReadInt(robotData, "jigSupplyType", out var clampType)
             ? clampType
-            : (TryReadInt(lineData, "jigType", out var resolvedJigType) ? resolvedJigType : 0);
+            : (TryReadInt(robotData, "modelJigClampType", out var oldClampType)
+                ? oldClampType
+                : (TryReadInt(lineData, "jigType", out var resolvedJigType) ? resolvedJigType : 0));
 
         return new RobotProfileLineData
         {
             JigType = jigType,
+            OuterFinishedDiameter = ReadFloatOrDefault(robotData, "outerFinishedDiameter"),
+            InputBlankThickness = ReadFloatOrDefault(robotData, "inputBlankThickness"),
+            Op1TurnedThickness = ReadFloatOrDefault(robotData, "op1TurnedThickness"),
+            FinishedThickness = ReadFloatOrDefault(robotData, "finishedThickness"),
+            PickDropZOffset = ReadFloatOrDefault(robotData, "pickDropZOffset"),
+            ChuckStepDepth = ReadFloatOrDefault(robotData, "chuckStepDepth"),
+            InnerFinishedDiameter = ReadFloatOrDefault(robotData, "innerFinishedDiameter"),
+            InnerDiameterToGDiameterDistance = ReadFloatOrDefault(robotData, "innerDiameterToGDiameterDistance"),
+            MagnetCount = ReadIntOrDefault(robotData, "magnetCount"),
             PartHoverHeight = ReadFloatOrDefault(robotData, "jigProductHeight"),
             JigCenterOffset = ReadFloatOrDefault(robotData, "jigCenterOffset"),
             JigDepthOffset = ReadFloatOrDefault(robotData, "jigDepthOffset"),
@@ -148,6 +159,11 @@ internal sealed class RobotJigTypeResolver
     private static float ReadFloatOrDefault(IReadOnlyDictionary<string, object?> data, string key)
     {
         return TryReadFloat(data, key, out var value) ? value : 0f;
+    }
+
+    private static int ReadIntOrDefault(IReadOnlyDictionary<string, object?> data, string key)
+    {
+        return TryReadInt(data, key, out var value) ? value : 0;
     }
 
     private static bool TryReadInt(IReadOnlyDictionary<string, object?> data, string key, out int value)
@@ -185,7 +201,7 @@ internal sealed class RobotJigTypeResolver
             }
         }
 
-        if (int.TryParse(raw.ToString(), out var parsed))
+        if (raw is string s && int.TryParse(s, out var parsed))
         {
             value = parsed;
             return true;
@@ -266,9 +282,15 @@ internal sealed record RobotProfileLineData
     public static RobotProfileLineData Empty { get; } = new();
 
     public int JigType { get; init; }
-    public float CheckPoint1X { get; init; }
-    public float CheckPoint1Y { get; init; }
-    public float CheckPoint1Z { get; init; }
+    public float OuterFinishedDiameter { get; init; }
+    public float InputBlankThickness { get; init; }
+    public float Op1TurnedThickness { get; init; }
+    public float FinishedThickness { get; init; }
+    public float PickDropZOffset { get; init; }
+    public float ChuckStepDepth { get; init; }
+    public float InnerFinishedDiameter { get; init; }
+    public float InnerDiameterToGDiameterDistance { get; init; }
+    public int MagnetCount { get; init; }
     public float PartHoverHeight { get; init; }
     public float JigCenterOffset { get; init; }
     public float JigDepthOffset { get; init; }

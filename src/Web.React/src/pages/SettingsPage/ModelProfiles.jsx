@@ -37,31 +37,29 @@ import { showErrorMessage, showSuccessMessage } from "../../utils/appMessage";
 
 const { Paragraph, Text } = Typography;
 
-const GRIPPER_TYPE_OPTIONS = [
+const JIG_SUPPLY_TYPE_OPTIONS = [
   { value: 0, label: "0: Không xác định" },
-  { value: 1, label: "1: Tay kẹp nhỏ" },
-  { value: 2, label: "2: Tay kẹp to rộng 12mm" },
-  { value: 3, label: "3: Tay kẹp to rộng 25mm" }
+  { value: 1, label: "1: Jig Phi 20" },
+  { value: 2, label: "2: Jig Phi 30" },
+  { value: 3, label: "3: Jig Phi 40" },
+  { value: 4, label: "4: Jig có thể điều chỉnh" }
 ];
 
 const ROBOT_FIELDS = [
-  // Cải tiến theo yêu cầu mr.Tùng ngày 27/04/2026: Ẩn các điểm check gốc robot
-  /*
-  { key: "originCheck1X", label: "Tọa độ X gốc check 1", type: "real" },
-  { key: "originCheck1Y", label: "Tọa độ Y gốc check 1", type: "real" },
-  { key: "originCheck1Z", label: "Tọa độ Z gốc check 1", type: "real" },
-  { key: "originCheck2X", label: "Tọa độ X gốc check 2", type: "real" },
-  { key: "originCheck2Y", label: "Tọa độ Y gốc check 2", type: "real" },
-  { key: "originCheck2Z", label: "Tọa độ Z gốc check 2", type: "real" },
-  */
-  { key: "jigProductHeight", label: "Độ cao trên Jig", type: "real" },
-  { key: "jigCenterOffset", label: "Ofset Tâm Jig", type: "real" },
-  { key: "jigDepthOffset", label: "Ofset độ cao âm xuống Jig (Không tính OP2)", type: "real" },
+  { key: "outerFinishedDiameter", label: "Đường kính ngoài phôi thành phẩm", type: "real" },
+  { key: "inputBlankThickness", label: "Độ dày Phôi đầu vào", type: "real" },
+  { key: "op1TurnedThickness", label: "Độ dày phôi sau tiện OP1", type: "real" },
+  { key: "finishedThickness", label: "Độ dày Phôi thành phẩm", type: "real" },
+  { key: "pickDropZOffset", label: "Ofset tọa độ Z gắp thả hàng", type: "real" },
+  { key: "chuckStepDepth", label: "Chiều sâu bậc mâm cặp", type: "real" },
+  { key: "innerFinishedDiameter", label: "Đường kính trong phôi thành phẩm", type: "real" },
+  { key: "innerDiameterToGDiameterDistance", label: "Khoảng cách đường kính trong đến đường kính G", type: "real" },
+  { key: "magnetCount", label: "Số nam châm sử dụng", type: "int" },
   {
-    key: "modelJigClampType",
-    label: "Model Jig tay kẹp",
+    key: "jigSupplyType",
+    label: "Loại Jig cấp hàng",
     type: "select",
-    options: GRIPPER_TYPE_OPTIONS
+    options: JIG_SUPPLY_TYPE_OPTIONS
   }
 ];
 

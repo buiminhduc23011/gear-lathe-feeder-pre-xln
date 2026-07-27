@@ -586,20 +586,16 @@ public sealed class ModelProfileService : IModelProfileService
     {
         var missingFields = new List<string>();
 
-        if (!HasPositiveValue(diameterOp1))
+        robotData.TryGetValue("outerFinishedDiameter", out var outerFinishedDiameter);
+        if (!HasPositiveValue(outerFinishedDiameter) && !HasPositiveValue(diameterOp1))
         {
-            missingFields.Add("Đường kính Op1");
+            missingFields.Add("Đường kính ngoài phôi thành phẩm");
         }
 
-        if (!HasPositiveValue(diameterOp2))
+        robotData.TryGetValue("inputBlankThickness", out var inputBlankThickness);
+        if (!HasPositiveValue(inputBlankThickness) && !HasPositiveValue(diameterOp2))
         {
-            missingFields.Add("Đường kính Op2");
-        }
-
-        robotData.TryGetValue("jigProductHeight", out var jigProductHeight);
-        if (!HasPositiveValue(jigProductHeight))
-        {
-            missingFields.Add("Độ cao trên Jig");
+            missingFields.Add("Độ dày Phôi đầu vào");
         }
 
         return missingFields;
@@ -880,17 +876,16 @@ public sealed class ModelProfileService : IModelProfileService
 
     private static readonly (string Key, string Label)[] RobotFieldDefinitions =
     [
-        // Cải tiến theo yêu cầu mr.Tùng ngày 27/04/2026: Ẩn các điểm check gốc robot khỏi Excel import/export.
-        // ("originCheck1X", "Tọa độ X Gốc check1"),
-        // ("originCheck1Y", "Tọa độ Y Gốc check1"),
-        // ("originCheck1Z", "Tọa độ Z Gốc check1"),
-        // ("originCheck2X", "Tọa độ X Gốc check2"),
-        // ("originCheck2Y", "Tọa độ Y Gốc check2"),
-        // ("originCheck2Z", "Tọa độ Z Gốc check2"),
-        ("jigProductHeight", "Độ cao trên Jig"),
-        ("jigCenterOffset", "Ofset Tâm Jig"),
-        ("jigDepthOffset", "Ofset độ cao âm xuống Jig"),
-        ("modelJigClampType", "Model Jig tay kẹp"),
+        ("outerFinishedDiameter", "Đường kính ngoài phôi thành phẩm"),
+        ("inputBlankThickness", "Độ dày Phôi đầu vào"),
+        ("op1TurnedThickness", "Độ dày phôi sau tiện OP1"),
+        ("finishedThickness", "Độ dày Phôi thành phẩm"),
+        ("pickDropZOffset", "Ofset tọa độ Z gắp thả hàng"),
+        ("chuckStepDepth", "Chiều sâu bậc mâm cặp"),
+        ("innerFinishedDiameter", "Đường kính trong phôi thành phẩm"),
+        ("innerDiameterToGDiameterDistance", "Khoảng cách đường kính trong đến đường kính G"),
+        ("magnetCount", "Số nam châm sử dụng"),
+        ("jigSupplyType", "Loại Jig cấp hàng"),
     ];
 
     private static void WriteModelsSheet(XLWorkbook workbook, IReadOnlyList<ModelProfileEntity> profiles)

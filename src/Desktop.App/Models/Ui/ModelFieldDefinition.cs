@@ -10,15 +10,21 @@ public sealed record SelectOption(int Value, string Label)
 }
 
 /// <summary>Shared Jig-type options used by both Robot and Line field catalogs.</summary>
-public static class JigTypeOptions
+public static class JigSupplyTypeOptions
 {
     public static readonly SelectOption[] Items =
     [
         new(0, "0: Không xác định"),
-        new(1, "1: Tay kẹp nhỏ"),
-        new(2, "2: Tay kẹp to rộng 12mm"),
-        new(3, "3: Tay kẹp to rộng 25mm"),
+        new(1, "1: Jig Phi 20"),
+        new(2, "2: Jig Phi 30"),
+        new(3, "3: Jig Phi 40"),
+        new(4, "4: Jig có thể điều chỉnh"),
     ];
+}
+
+public static class JigTypeOptions
+{
+    public static SelectOption[] Items => JigSupplyTypeOptions.Items;
 }
 
 public sealed record ModelFieldDefinition(
@@ -35,39 +41,16 @@ public static class ModelFieldCatalog
 {
     public static readonly ModelFieldDefinition[] RobotFields =
     [
-        // Cải tiến theo yêu cầu mr.Tùng ngày 27/04/2026: Ẩn các điểm check gốc robot
-        /*
-        new("originCheck1X",      "Tọa độ X gốc check 1"),
-        new("originCheck1Y",      "Tọa độ Y gốc check 1"),
-        new("originCheck1Z",      "Tọa độ Z gốc check 1"),
-        new("originCheck2X",      "Tọa độ X gốc check 2"),
-        new("originCheck2Y",      "Tọa độ Y gốc check 2"),
-        new("originCheck2Z",      "Tọa độ Z gốc check 2"),
-        */
-        new("jigProductHeight",   "Độ cao trên Jig"),
-        new("jigCenterOffset",    "Ofset Tâm Jig"),
-        new("jigDepthOffset",     "Ofset độ cao âm xuống Jig (Không tính OP2)"),
-        new("modelJigClampType",  "Model Jig tay kẹp",  "int", JigTypeOptions.Items),
-    ];
-
-    public static readonly ModelFieldDefinition[] LineFields =
-    [
-        new("jigType",         "Loại tay kẹp",     "int", JigTypeOptions.Items),
-        new("pickInputX",      "Tọa độ X gắp SP đầu vào line"),
-        new("pickInputZ",      "Tọa độ Z gắp SP đầu vào line"),
-        new("pickOp1X",        "Tọa độ X an toàn lên xuống Op1"),
-        new("pickOp1Z",        "Tọa độ Z an toàn lên xuống Op1"),
-        new("pickOp2X",        "Tọa độ X an toàn lên xuống Op2"),
-        new("pickOp2Z",        "Tọa độ Z an toàn lên xuống Op2"),
-        new("placeOp1X",       "Tọa độ X chống tâm Op1"),
-        new("placeOp1Z",       "Tọa độ Z chống tâm Op1"),
-        new("placeOp2X",       "Tọa độ X chống tâm Op2"),
-        new("placeOp2Z",       "Tọa độ Z chống tâm Op2"),
-        new("placeMeasureX",   "Tọa độ X chống tâm máy đo"),
-        new("placeMeasureZ",   "Tọa độ Z chống tâm máy đo"),
-        new("jigProductHeight","Tọa độ Jig đỡ trục đầu vào"),
-        new("grindingTimeOp1", "Thời gian mài Op1",                "int"),
-        new("grindingTimeOp2", "Thời gian mài Op2",                "int"),
+        new("outerFinishedDiameter",            "Đường kính ngoài phôi thành phẩm"),
+        new("inputBlankThickness",               "Độ dày Phôi đầu vào"),
+        new("op1TurnedThickness",                "Độ dày phôi sau tiện OP1"),
+        new("finishedThickness",                 "Độ dày Phôi thành phẩm"),
+        new("pickDropZOffset",                   "Ofset tọa độ Z gắp thả hàng"),
+        new("chuckStepDepth",                    "Chiều sâu bậc mâm cặp"),
+        new("innerFinishedDiameter",             "Đường kính trong phôi thành phẩm"),
+        new("innerDiameterToGDiameterDistance",  "Khoảng cách đường kính trong đến đường kính G"),
+        new("magnetCount",                       "Số nam châm sử dụng", "int"),
+        new("jigSupplyType",                     "Loại Jig cấp hàng", "int", JigSupplyTypeOptions.Items),
     ];
 }
 

@@ -246,80 +246,97 @@ public static class PlcTagCatalog
 
     public static class DataAutos
     {
-        // --- Shelf 1 summary ---
-        public static readonly PlcTagDefinition Shelf1ProductCount = CreateWord("data.shelf_1_product_count", "D5500", PlcTagDataType.Int16, "Số lượng hàng trên kệ 1");
-        public static readonly PlcTagDefinition Shelf1OrderCount = CreateWord("data.shelf_1_order_count", "D5501", PlcTagDataType.Int16, "Số lượng order trên kệ 1");
+        // --- Order & Model Data (Image 1) ---
+        public static readonly PlcTagDefinition OrderCountOnRotaryTable = CreateWord("data.order_count_rotary_table", "D5500", PlcTagDataType.Int16, "Số lượng order trên bàn xoay");
+        public static readonly PlcTagDefinition OrderCode = CreateWord("data.order_code", "D5505", PlcTagDataType.String, "OrderId", 30);
+        public static readonly PlcTagDefinition ModelId = CreateWord("data.model_id", "D5520", PlcTagDataType.String, "ModelId (Tên Model)", 30);
+        public static readonly PlcTagDefinition QuantityInOrder = CreateWord("data.quantity_in_order", "D5535", PlcTagDataType.Int16, "Số lượng hàng trong order");
+        public static readonly PlcTagDefinition JigSupplyType = CreateWord("data.jig_supply_type", "D5536", PlcTagDataType.Int16, "Vị trí / Loại jig chứa hàng (1;2;3;4;)");
 
-        // --- Order Line 1 ---
-        public static readonly PlcTagDefinition OrderLine1Code = CreateWord("data.order_line_1_code", "D5505", PlcTagDataType.String, "OrderId line 1", 30);
-        public static readonly PlcTagDefinition OrderLine1ModelId = CreateWord("data.order_line_1_model_id", "D5520", PlcTagDataType.String, "ModelId line 1", 30);
-        public static readonly PlcTagDefinition OrderLine1ItemCode = OrderLine1ModelId;
-        public static readonly PlcTagDefinition OrderLine1Quantity = CreateWord("data.order_line_1_quantity", "D5535", PlcTagDataType.Int16, "Số lượng hàng trong order line 1");
-        public static readonly PlcTagDefinition OrderLine1JigType = CreateWord("data.order_line_1_jig_type", "D5536", PlcTagDataType.Int16, "Loại jig kẹp line 1");
-        public static readonly PlcTagDefinition OrderLine1StartPosition = CreateWord("data.order_line_1_start_position", "D5537", PlcTagDataType.Int16, "Vị trí sản phẩm đầu tiên của order trong tray line 1");
-        public static readonly PlcTagDefinition OrderLine1TrayIndex = CreateWord("data.order_line_1_tray_index", "D5538", PlcTagDataType.Int16, "Thứ tự tray trong kệ line 1");
-        public static readonly PlcTagDefinition OrderLine1TrayType = CreateWord("data.order_line_1_tray_type", "D5539", PlcTagDataType.Int16, "Loại tray line 1");
-        public static readonly PlcTagDefinition OrderLine1Sequence = CreateWord("data.order_line_1_sequence", "D5540", PlcTagDataType.Int16, "Số thứ tự order trong kệ line 1");
-        // Cải tiến theo yêu cầu mr.Tùng ngày 27/04/2026: Ẩn và ngừng ghi các điểm check gốc robot
-        /*
-        public static readonly PlcTagDefinition OrderLine1CheckPoint1X = CreateWord("data.order_line_1_check_point_1_x", "D5547", PlcTagDataType.Float, "Tọa độ X góc check 1 line 1");
-        public static readonly PlcTagDefinition OrderLine1CheckPoint1Y = CreateWord("data.order_line_1_check_point_1_y", "D5549", PlcTagDataType.Float, "Tọa độ Y góc check 1 line 1");
-        public static readonly PlcTagDefinition OrderLine1CheckPoint1Z = CreateWord("data.order_line_1_check_point_1_z", "D5551", PlcTagDataType.Float, "Tọa độ Z góc check 1 line 1");
-        */
-        public static readonly PlcTagDefinition OrderLine1PartHoverHeight = CreateWord("data.order_line_1_part_hover_height", "D5553", PlcTagDataType.Float, "Độ cao trên Jig line 1");
-        public static readonly PlcTagDefinition OrderLine1JigCenterOffset = CreateWord("data.order_line_1_jig_center_offset", "D5558", PlcTagDataType.Float, "Ofset Tâm Jig line 1");
-        public static readonly PlcTagDefinition OrderLine1JigDepthOffset = CreateWord("data.order_line_1_jig_depth_offset", "D5560", PlcTagDataType.Float, "Ofset độ cao âm xuống Jig line 1");
-        public static readonly PlcTagDefinition OrderLine1PickedCount = CreateWord("data.order_line_1_picked_count", "D5562", PlcTagDataType.Int16, "Số thứ tự của con hàng đã gắp trong order line 1");
-        public static readonly PlcTagDefinition OrderLine1DiameterOp1 = CreateWord("data.order_line_1_diameter_op1", "D5563", PlcTagDataType.Float, "Đường kính Op1 line 1");
-        public static readonly PlcTagDefinition OrderLine1IsLoading = CreateBit("data.order_line_1_is_loading", "D5555.0", "Đang load dữ liệu order line 1");
-        public static readonly PlcTagDefinition OrderLine1ProductionResultAcknowledged = CreateBit("data.order_line_1_production_result_acknowledged", "D5555.1", "Đã ghi nhận kết quả sản xuất order line 1");
-        public static readonly PlcTagDefinition OrderLine1PausedByPc = CreateBit("data.order_line_1_paused_by_pc", "D5555.2", "Tạm dừng Line 1 - kệ 1");
-        public static readonly PlcTagDefinition OrderLine1ClearRequestedByPc = CreateBit("data.order_line_1_clear_requested_by_pc", "D5555.3", "Hủy Order Line 1 - kệ 1");
-        public static readonly PlcTagDefinition OrderLine1ShelfOrdersCompleted = CreateBit("data.order_line_1_shelf_orders_completed", "D5555.4", "Đã Hoàn thành Order trên kệ line 1");
-        public static readonly PlcTagDefinition CurrentOrderRunStarted = CreateBit("data.current_order_run_started", "D5556.0", "Cờ báo chạy");
-        public static readonly PlcTagDefinition CurrentOrderLoadCompleted = CreateBit("data.current_order_load_completed", "D5556.1", "Cờ báo đã load xong dữ liệu order");
-        public static readonly PlcTagDefinition CurrentOrderCompleted = CreateBit("data.current_order_completed", "D5556.2", "Cờ báo chạy xong order hiện tại");
-        public static readonly PlcTagDefinition OrderLine1CurrentPickIndex = CreateWord("data.order_line_1_current_pick_index", "D5557", PlcTagDataType.Int16, "Số thứ tự của con hàng đang gắp trong order line 1");
-        public static readonly PlcTagDefinition RanQuantityOrderLine1 = OrderLine1PickedCount;
+        // --- Model Parameters (Image 1 & 2) ---
+        public static readonly PlcTagDefinition OuterFinishedDiameter = CreateWord("data.outer_finished_diameter", "D5540", PlcTagDataType.Float, "Đường kính ngoài phôi thành phẩm");
+        public static readonly PlcTagDefinition InputBlankThickness = CreateWord("data.input_blank_thickness", "D5542", PlcTagDataType.Float, "Độ dày Phôi đầu vào");
+        public static readonly PlcTagDefinition Op1TurnedThickness = CreateWord("data.op1_turned_thickness", "D5544", PlcTagDataType.Float, "Độ dày phôi sau tiện OP1");
+        public static readonly PlcTagDefinition FinishedThickness = CreateWord("data.finished_thickness", "D5546", PlcTagDataType.Float, "Độ dày Phôi thành phẩm");
+        public static readonly PlcTagDefinition PickDropZOffset = CreateWord("data.pick_drop_z_offset", "D5548", PlcTagDataType.Float, "Ofset tọa độ Z gắp thả hàng");
+        public static readonly PlcTagDefinition ChuckStepDepth = CreateWord("data.chuck_step_depth", "D5550", PlcTagDataType.Float, "Chiều sâu bậc mâm cặp");
+        public static readonly PlcTagDefinition InnerFinishedDiameter = CreateWord("data.inner_finished_diameter", "D5552", PlcTagDataType.Float, "Đường kính trong phôi thành phẩm");
+        public static readonly PlcTagDefinition InnerDiameterToGDiameterDistance = CreateWord("data.inner_diameter_to_g_distance", "D5554", PlcTagDataType.Float, "Khoảng cách đường kính trong đến đường kính G");
+        public static readonly PlcTagDefinition MagnetCount = CreateWord("data.magnet_count", "D5556", PlcTagDataType.Int16, "Số nam châm sử dụng");
 
-        // --- Shelf 2 summary ---
-        public static readonly PlcTagDefinition Shelf2ProductCount = CreateWord("data.shelf_2_product_count", "D5570", PlcTagDataType.Int16, "Số lượng hàng trên kệ 2");
-        public static readonly PlcTagDefinition Shelf2OrderCount = CreateWord("data.shelf_2_order_count", "D5571", PlcTagDataType.Int16, "Số lượng order trên kệ 2");
+        // --- Progress Tracking (Image 1) ---
+        public static readonly PlcTagDefinition CurrentPickIndex = CreateWord("data.current_pick_index", "D5557", PlcTagDataType.Int16, "Số thứ tự của con hàng đang gắp trong order");
+        public static readonly PlcTagDefinition PickedCount = CreateWord("data.picked_count", "D5558", PlcTagDataType.Int16, "Số thứ tự của con hàng đã gắp trong order");
 
-        // --- Order Line 2 ---
-        public static readonly PlcTagDefinition OrderLine2Code = CreateWord("data.order_line_2_code", "D5575", PlcTagDataType.String, "OrderId line 2", 30);
-        public static readonly PlcTagDefinition OrderLine2ModelId = CreateWord("data.order_line_2_model_id", "D5590", PlcTagDataType.String, "ModelId line 2", 30);
-        public static readonly PlcTagDefinition OrderLine2ItemCode = OrderLine2ModelId;
-        public static readonly PlcTagDefinition OrderLine2Quantity = CreateWord("data.order_line_2_quantity", "D5605", PlcTagDataType.Int16, "Số lượng hàng trong order line 2");
-        public static readonly PlcTagDefinition OrderLine2JigType = CreateWord("data.order_line_2_jig_type", "D5606", PlcTagDataType.Int16, "Loại jig kẹp line 2");
-        public static readonly PlcTagDefinition OrderLine2StartPosition = CreateWord("data.order_line_2_start_position", "D5607", PlcTagDataType.Int16, "Vị trí sản phẩm đầu tiên của order trong tray line 2");
-        public static readonly PlcTagDefinition OrderLine2TrayIndex = CreateWord("data.order_line_2_tray_index", "D5608", PlcTagDataType.Int16, "Thứ tự tray trong kệ line 2");
-        public static readonly PlcTagDefinition OrderLine2TrayType = CreateWord("data.order_line_2_tray_type", "D5609", PlcTagDataType.Int16, "Loại tray line 2");
-        public static readonly PlcTagDefinition OrderLine2Sequence = CreateWord("data.order_line_2_sequence", "D5610", PlcTagDataType.Int16, "Số thứ tự order trong kệ line 2");
-        // Cải tiến theo yêu cầu mr.Tùng ngày 27/04/2026: Ẩn và ngừng ghi các điểm check gốc robot
-        /*
-        public static readonly PlcTagDefinition OrderLine2CheckPoint1X = CreateWord("data.order_line_2_check_point_1_x", "D5617", PlcTagDataType.Float, "Tọa độ X góc check 1 line 2");
-        public static readonly PlcTagDefinition OrderLine2CheckPoint1Y = CreateWord("data.order_line_2_check_point_1_y", "D5619", PlcTagDataType.Float, "Tọa độ Y góc check 1 line 2");
-        public static readonly PlcTagDefinition OrderLine2CheckPoint1Z = CreateWord("data.order_line_2_check_point_1_z", "D5621", PlcTagDataType.Float, "Tọa độ Z góc check 1 line 2");
-        */
-        public static readonly PlcTagDefinition OrderLine2PartHoverHeight = CreateWord("data.order_line_2_part_hover_height", "D5623", PlcTagDataType.Float, "Độ cao trên Jig line 2");
-        public static readonly PlcTagDefinition OrderLine2JigCenterOffset = CreateWord("data.order_line_2_jig_center_offset", "D5628", PlcTagDataType.Float, "Ofset Tâm Jig line 2");
-        public static readonly PlcTagDefinition OrderLine2JigDepthOffset = CreateWord("data.order_line_2_jig_depth_offset", "D5630", PlcTagDataType.Float, "Ofset độ cao âm xuống Jig line 2");
-        public static readonly PlcTagDefinition OrderLine2PickedCount = CreateWord("data.order_line_2_picked_count", "D5632", PlcTagDataType.Int16, "Số thứ tự của con hàng đã gắp trong order line 2");
-        public static readonly PlcTagDefinition OrderLine2DiameterOp1 = CreateWord("data.order_line_2_diameter_op1", "D5633", PlcTagDataType.Float, "Đường kính Op1 line 2");
-        public static readonly PlcTagDefinition OrderLine2IsLoading = CreateBit("data.order_line_2_is_loading", "D5625.0", "Đang load dữ liệu order line 2");
-        public static readonly PlcTagDefinition OrderLine2ProductionResultAcknowledged = CreateBit("data.order_line_2_production_result_acknowledged", "D5625.1", "Đã ghi nhận kết quả sản xuất order line 2");
-        public static readonly PlcTagDefinition OrderLine2PausedByPc = CreateBit("data.order_line_2_paused_by_pc", "D5625.2", "Tạm dừng Line 2 - kệ 2");
-        public static readonly PlcTagDefinition OrderLine2ClearRequestedByPc = CreateBit("data.order_line_2_clear_requested_by_pc", "D5625.3", "Hủy Order Line 2 - kệ 2");
-        public static readonly PlcTagDefinition OrderLine2ShelfOrdersCompleted = CreateBit("data.order_line_2_shelf_orders_completed", "D5625.4", "Đã Hoàn thành Order trên kệ line 2");
-        public static readonly PlcTagDefinition CurrentOrderRunStartedLine2 = CreateBit("data.current_order_run_started_line2", "D5626.0", "Cờ báo chạy line 2");
-        public static readonly PlcTagDefinition CurrentOrderLoadCompletedLine2 = CreateBit("data.current_order_load_completed_line2", "D5626.1", "Cờ báo đã load xong dữ liệu order line 2");
-        public static readonly PlcTagDefinition CurrentOrderCompletedLine2 = CreateBit("data.current_order_completed_line2", "D5626.2", "Cờ báo chạy xong order hiện tại line 2");
-        public static readonly PlcTagDefinition OrderLine2CurrentPickIndex = CreateWord("data.order_line_2_current_pick_index", "D5627", PlcTagDataType.Int16, "Số thứ tự của con hàng đang gắp trong order line 2");
-        public static readonly PlcTagDefinition RanQuantityOrderLine2 = OrderLine2PickedCount;
+        // --- Control & Status Bits D5570.x (Image 1) ---
+        public static readonly PlcTagDefinition OrderDataLoadCommand = CreateBit("data.order_data_load_command", "D5570.0", "Load dữ liệu Order + Model");
+        public static readonly PlcTagDefinition ProductionResultAcknowledged = CreateBit("data.production_result_acknowledged", "D5570.1", "Đã ghi nhận kết quả sx order 1");
+        public static readonly PlcTagDefinition PausedByPc = CreateBit("data.paused_by_pc", "D5570.2", "Tạm Dừng hoạt động");
+        public static readonly PlcTagDefinition PauseInspectCommand = CreateBit("data.pause_inspect_command", "D5570.3", "Tạm Dừng kiểm tra");
+        public static readonly PlcTagDefinition CancelOrderCommand = CreateBit("data.cancel_order_command", "D5570.4", "Hủy Order");
+        public static readonly PlcTagDefinition ShelfOrdersCompleted = CreateBit("data.shelf_orders_completed", "D5570.5", "Đã Hoàn thành Order trên kệ");
+        public static readonly PlcTagDefinition ReloadModelParametersCommand = CreateBit("data.reload_model_parameters_command", "D5570.6", "Load dữ liệu Model lại vào các thông số Model");
 
-        // --- Control ---
-        public static readonly PlcTagDefinition Clock1s = CreateWord("data.clock_1s", "D5640", PlcTagDataType.Int16, "Clock 1s");
+        // --- Status Bits D5571.x (Image 1) ---
+        public static readonly PlcTagDefinition CurrentOrderLoadCompleted = CreateBit("data.current_order_load_completed", "D5571.0", "Cờ báo đã load xong dữ liệu Order");
+        public static readonly PlcTagDefinition CurrentOrderCompleted = CreateBit("data.current_order_completed", "D5571.1", "Cờ báo chạy xong order hiện tại");
+        public static readonly PlcTagDefinition CancelOrderCompletedStatus = CreateBit("data.cancel_order_completed_status", "D5571.2", "Đã Hoàn thành Hủy Order");
+        public static readonly PlcTagDefinition ModelLoadCompletedCommand = CreateBit("data.model_load_completed_command", "D5571.3", "Cờ báo đã load xong Model");
+
+        // --- Clock & AGV Flip Registers (Image 1) ---
+        public static readonly PlcTagDefinition Clock1s = CreateWord("data.clock_1s", "D5572", PlcTagDataType.Int16, "Clock 1s");
+        public static readonly PlcTagDefinition AgvRequestShelfFlip = CreateBit("data.agv_request_shelf_flip", "D5573.0", "AGV yêu cầu đảo kệ");
+        public static readonly PlcTagDefinition AgvShelfFlipCompleted = CreateBit("data.agv_shelf_flip_completed", "D5573.1", "AGV báo đã đảo xong kệ");
+        public static readonly PlcTagDefinition MachineReadyForShelfFlip = CreateBit("data.machine_ready_for_shelf_flip", "D5574.0", "Máy báo sẵn sàng cho đảo kệ");
+
+        // --- Aliases for backward compatibility ---
+        public static readonly PlcTagDefinition Shelf1ProductCount = OrderCountOnRotaryTable;
+        public static readonly PlcTagDefinition Shelf1OrderCount = OrderCountOnRotaryTable;
+        public static readonly PlcTagDefinition OrderLine1Code = OrderCode;
+        public static readonly PlcTagDefinition OrderLine1ModelId = ModelId;
+        public static readonly PlcTagDefinition OrderLine1Quantity = QuantityInOrder;
+        public static readonly PlcTagDefinition OrderLine1JigType = JigSupplyType;
+        public static readonly PlcTagDefinition OrderLine1StartPosition = CreateWord("data.order_line_1_start_position", "D5537", PlcTagDataType.Int16, "StartPosition");
+        public static readonly PlcTagDefinition OrderLine1TrayIndex = CreateWord("data.order_line_1_tray_index", "D5538", PlcTagDataType.Int16, "TrayIndex");
+        public static readonly PlcTagDefinition OrderLine1TrayType = CreateWord("data.order_line_1_tray_type", "D5539", PlcTagDataType.Int16, "TrayType");
+        public static readonly PlcTagDefinition OrderLine1Sequence = CreateWord("data.order_line_1_sequence", "D5537_seq", PlcTagDataType.Int16, "Sequence");
+        public static readonly PlcTagDefinition OrderLine1PartHoverHeight = OuterFinishedDiameter;
+        public static readonly PlcTagDefinition OrderLine1JigCenterOffset = PickDropZOffset;
+        public static readonly PlcTagDefinition OrderLine1JigDepthOffset = ChuckStepDepth;
+        public static readonly PlcTagDefinition OrderLine1DiameterOp1 = Op1TurnedThickness;
+        public static readonly PlcTagDefinition OrderLine1PickedCount = PickedCount;
+        public static readonly PlcTagDefinition OrderLine1CurrentPickIndex = CurrentPickIndex;
+        public static readonly PlcTagDefinition OrderLine1IsLoading = OrderDataLoadCommand;
+        public static readonly PlcTagDefinition OrderLine1ProductionResultAcknowledged = ProductionResultAcknowledged;
+        public static readonly PlcTagDefinition OrderLine1PausedByPc = PausedByPc;
+        public static readonly PlcTagDefinition OrderLine1ClearRequestedByPc = CancelOrderCommand;
+        public static readonly PlcTagDefinition OrderLine1ShelfOrdersCompleted = ShelfOrdersCompleted;
+        public static readonly PlcTagDefinition RanQuantityOrderLine1 = PickedCount;
+
+        public static readonly PlcTagDefinition Shelf2ProductCount = OrderCountOnRotaryTable;
+        public static readonly PlcTagDefinition Shelf2OrderCount = OrderCountOnRotaryTable;
+        public static readonly PlcTagDefinition OrderLine2Code = OrderCode;
+        public static readonly PlcTagDefinition OrderLine2ModelId = ModelId;
+        public static readonly PlcTagDefinition OrderLine2Quantity = QuantityInOrder;
+        public static readonly PlcTagDefinition OrderLine2JigType = JigSupplyType;
+        public static readonly PlcTagDefinition OrderLine2StartPosition = OrderLine1StartPosition;
+        public static readonly PlcTagDefinition OrderLine2TrayIndex = OrderLine1TrayIndex;
+        public static readonly PlcTagDefinition OrderLine2TrayType = OrderLine1TrayType;
+        public static readonly PlcTagDefinition OrderLine2Sequence = OrderLine1Sequence;
+        public static readonly PlcTagDefinition OrderLine2PartHoverHeight = OuterFinishedDiameter;
+        public static readonly PlcTagDefinition OrderLine2JigCenterOffset = PickDropZOffset;
+        public static readonly PlcTagDefinition OrderLine2JigDepthOffset = ChuckStepDepth;
+        public static readonly PlcTagDefinition OrderLine2DiameterOp1 = Op1TurnedThickness;
+        public static readonly PlcTagDefinition OrderLine2PickedCount = PickedCount;
+        public static readonly PlcTagDefinition OrderLine2CurrentPickIndex = CurrentPickIndex;
+        public static readonly PlcTagDefinition OrderLine2IsLoading = OrderDataLoadCommand;
+        public static readonly PlcTagDefinition OrderLine2ProductionResultAcknowledged = ProductionResultAcknowledged;
+        public static readonly PlcTagDefinition OrderLine2PausedByPc = PausedByPc;
+        public static readonly PlcTagDefinition OrderLine2ClearRequestedByPc = CancelOrderCommand;
+        public static readonly PlcTagDefinition OrderLine2ShelfOrdersCompleted = ShelfOrdersCompleted;
+        public static readonly PlcTagDefinition CurrentOrderLoadCompletedLine2 = CurrentOrderLoadCompleted;
+        public static readonly PlcTagDefinition CurrentOrderCompletedLine2 = CurrentOrderCompleted;
+        public static readonly PlcTagDefinition RanQuantityOrderLine2 = PickedCount;
     }
 
     public static class RobotTest
