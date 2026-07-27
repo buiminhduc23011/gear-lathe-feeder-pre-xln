@@ -102,7 +102,7 @@
                             Style="{StaticResource ManualRailButton}" />
                         <ToggleButton
                             Command="{Binding SelectAxisTabCommand}"
-                            Content="3 Trục"
+                            Content="Trục Motion"
                             IsChecked="{Binding IsAxisTabSelected, Mode=OneWay}"
                             Style="{StaticResource ManualRailButton}" />
                         <ToggleButton
@@ -123,7 +123,7 @@
                         <ItemsControl ItemsSource="{Binding OriginActions}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Columns="4" />
+                                    <UniformGrid Columns="3" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
@@ -199,16 +199,16 @@
                         </ItemsControl>
                     </StackPanel>
 
-                    <!--  ═══════════════════════════════════════════════════════ 3 TRỤC ═══  -->
+                    <!--  ═══════════════════════════════════════════════════════ TRỤC MOTION ═══  -->
                     <StackPanel Visibility="{Binding IsAxisTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TextBlock
                             Margin="0,0,0,16"
                             Style="{StaticResource SectionTitleText}"
-                            Text="3 Trục" />
+                            Text="Điều Khiển Trục Motion (Trục X, Z, Trục Cấp Phôi, Bàn Xoay)" />
                         <ItemsControl ItemsSource="{Binding Axes}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Columns="3" />
+                                    <UniformGrid Columns="4" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>

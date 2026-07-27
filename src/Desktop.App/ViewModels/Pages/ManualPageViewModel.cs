@@ -43,8 +43,8 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         AxisX = new ManualAxisState(
             "axis_x",
             "Trục X",
-            "X -",
-            "X +",
+            "Lùi (-)",
+            "Tiến (+)",
             PlcTagCatalog.Manual.MoveXBackward,
             PlcTagCatalog.Manual.MoveXForward,
             PlcTagCatalog.Manual.HomeX,
@@ -56,33 +56,15 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             PlcTagCatalog.Manual.IsHomedX,
             PlcTagCatalog.Alarms.XLimitNegative,
             PlcTagCatalog.Alarms.XLimitPositive,
-            PlcTagCatalog.Outputs.Y0_09AxisXOn);
-
-        AxisY = new ManualAxisState(
-            "axis_y",
-            "Trục Y",
-            "Y -",
-            "Y +",
-            PlcTagCatalog.Manual.MoveYLeft,
-            PlcTagCatalog.Manual.MoveYRight,
-            PlcTagCatalog.Manual.HomeY,
-            PlcTagCatalog.Manual.MoveYToPoint,
-            PlcTagCatalog.Manual.ManualSpeedY,
-            PlcTagCatalog.Manual.MovePointY,
-            PlcTagCatalog.Manual.CurrentPositionY,
-            PlcTagCatalog.Manual.IsHomingY,
-            PlcTagCatalog.Manual.IsHomedY,
-            PlcTagCatalog.Alarms.YLimitNegative,
-            PlcTagCatalog.Alarms.YLimitPositive,
-            PlcTagCatalog.Outputs.Y0_10AxisYOn);
+            PlcTagCatalog.Outputs.Y0_07);
 
         AxisZ = new ManualAxisState(
             "axis_z",
             "Trục Z",
-            "Z -",
-            "Z +",
-            PlcTagCatalog.Manual.MoveZDown,
-            PlcTagCatalog.Manual.MoveZUp,
+            "Trái (-)",
+            "Phải (+)",
+            PlcTagCatalog.Manual.MoveZLeft,
+            PlcTagCatalog.Manual.MoveZRight,
             PlcTagCatalog.Manual.HomeZ,
             PlcTagCatalog.Manual.MoveZToPoint,
             PlcTagCatalog.Manual.ManualSpeedZ,
@@ -92,76 +74,190 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             PlcTagCatalog.Manual.IsHomedZ,
             PlcTagCatalog.Alarms.ZLimitNegative,
             PlcTagCatalog.Alarms.ZLimitPositive,
-            PlcTagCatalog.Outputs.Y0_11AxisZOn);
+            PlcTagCatalog.Outputs.Y0_08);
 
-        Axes = [AxisX, AxisY, AxisZ];
+        AxisLifter = new ManualAxisState(
+            "axis_lifter",
+            "Trục Cấp Phôi",
+            "Xuống (-)",
+            "Lên (+)",
+            PlcTagCatalog.Manual.MoveLifterDown,
+            PlcTagCatalog.Manual.MoveLifterUp,
+            PlcTagCatalog.Manual.HomeLifter,
+            PlcTagCatalog.Manual.MoveLifterToPoint,
+            PlcTagCatalog.Manual.ManualSpeedLifter,
+            PlcTagCatalog.Manual.MovePointLifter,
+            PlcTagCatalog.Manual.CurrentPositionLifter,
+            PlcTagCatalog.Manual.IsHomingLifter,
+            PlcTagCatalog.Manual.IsHomedLifter,
+            PlcTagCatalog.Alarms.LifterHardLimitBottom,
+            PlcTagCatalog.Alarms.LifterHardLimitTop,
+            PlcTagCatalog.Outputs.Y2_03);
+
+        AxisRotary = new ManualAxisState(
+            "axis_rotary",
+            "Bàn Xoay",
+            "Nghịch (-)",
+            "Thuận (+)",
+            PlcTagCatalog.Manual.MoveRotaryReverse,
+            PlcTagCatalog.Manual.MoveRotaryForward,
+            PlcTagCatalog.Manual.HomeRotary,
+            PlcTagCatalog.Manual.MoveRotaryToPoint,
+            PlcTagCatalog.Manual.ManualSpeedRotary,
+            PlcTagCatalog.Manual.MovePointRotary,
+            PlcTagCatalog.Manual.CurrentPositionRotary,
+            PlcTagCatalog.Manual.IsHomingRotary,
+            PlcTagCatalog.Manual.IsHomedRotary,
+            PlcTagCatalog.Alarms.RotaryNotAtHome,
+            PlcTagCatalog.Alarms.RotaryPulseSlip,
+            PlcTagCatalog.Outputs.Y1_14);
+
+        AxisY = AxisZ;
+
+        Axes = [AxisX, AxisZ, AxisLifter, AxisRotary];
         foreach (var axis in Axes)
         {
             axis.PropertyChanged += OnAxisPropertyChanged;
         }
 
-        ToolClampCylinder = new ManualCylinderState(
-            "tool_clamp",
-            "Kẹp tay tool",
-            "Điều khiển đóng/mở tay kẹp tool và đọc phản hồi công tắc hành trình.",
-            "Kẹp vào",
-            "Mở ra",
+        ClampCartCylinder = new ManualCylinderState(
+            "clamp_cart",
+            "XL Kẹp Xe",
+            "Điều khiển kẹp/mở gá cho xe hàng.",
+            "Kẹp Xe",
+            "Mở Xe",
             "Đã kẹp",
             "Đã mở",
-            PlcTagCatalog.Manual.ToolClampIn,
-            PlcTagCatalog.Manual.ToolClampOut,
-            PlcTagCatalog.Manual.ToolClosedSignal,
-            PlcTagCatalog.Manual.ToolOpenedSignal);
+            PlcTagCatalog.Manual.ClampCart,
+            PlcTagCatalog.Manual.UnclampCart,
+            PlcTagCatalog.Manual.CartClampedSignal,
+            PlcTagCatalog.Manual.CartUnclampedSignal);
 
-        RotateCylinder = new ManualCylinderState(
-            "rotate",
-            "Xy lanh xoay",
-            "Điều khiển góc quay 0 và 90 độ cho tool.",
-            "Về 0°",
-            "Đến 90°",
-            "Đã ở 0°",
-            "Đã ở 90°",
-            PlcTagCatalog.Manual.ToolRotate0,
-            PlcTagCatalog.Manual.ToolRotate90,
-            PlcTagCatalog.Manual.RotatedTo0Signal,
-            PlcTagCatalog.Manual.RotatedTo90Signal);
+        LiftMotorCylinder = new ManualCylinderState(
+            "lift_motor",
+            "XL Nâng ĐC Bàn Xoay",
+            "Điều khiển nâng/hạ xilanh động cơ bàn xoay.",
+            "Nâng ĐC",
+            "Hạ ĐC",
+            "Đã nâng",
+            "Đã hạ",
+            PlcTagCatalog.Manual.LiftMotorUp,
+            PlcTagCatalog.Manual.LiftMotorDown,
+            PlcTagCatalog.Manual.LiftMotorUpSignal,
+            PlcTagCatalog.Manual.LiftMotorDownSignal);
 
-        ClampCart1Cylinder = new ManualCylinderState(
-            "cart_1",
-            "Kẹp xe hàng 1",
-            "Điều khiển kẹp/mở gá cho xe hàng 1.",
-            "Kẹp xe 1",
-            "Mở xe 1",
+        InputClampCylinder = new ManualCylinderState(
+            "input_clamp",
+            "XL Kẹp Phôi Đầu Vào",
+            "Điều khiển kẹp/mở phôi ở cụm đầu vào.",
+            "Kẹp Phôi",
+            "Mở Phôi",
             "Đã kẹp",
             "Đã mở",
-            PlcTagCatalog.Manual.ClampCart1,
-            PlcTagCatalog.Manual.UnclampCart1,
-            PlcTagCatalog.Manual.Cart1ClosedSignal,
-            PlcTagCatalog.Manual.Cart1OpenedSignal);
+            PlcTagCatalog.Manual.InputClampPart,
+            PlcTagCatalog.Manual.InputUnclampPart,
+            PlcTagCatalog.Manual.InputClampedSignal,
+            PlcTagCatalog.Manual.InputUnclampedSignal);
 
-        ClampCart2Cylinder = new ManualCylinderState(
-            "cart_2",
-            "Kẹp xe hàng 2",
-            "Điều khiển kẹp/mở gá cho xe hàng 2.",
-            "Kẹp xe 2",
-            "Mở xe 2",
+        InputFlipCylinder = new ManualCylinderState(
+            "input_flip",
+            "XL Lật Phôi Đầu Vào",
+            "Điều khiển xoay 0° và 90° lật phôi đầu vào.",
+            "Xoay 0°",
+            "Xoay 90°",
+            "Đã xoay 0°",
+            "Đã xoay 90°",
+            PlcTagCatalog.Manual.InputRotate0,
+            PlcTagCatalog.Manual.InputRotate90,
+            PlcTagCatalog.Manual.InputRotated0Signal,
+            PlcTagCatalog.Manual.InputRotated90Signal);
+
+        RodalArmCylinder = new ManualCylinderState(
+            "rodal_arm",
+            "Tay Cấp Phôi Rodal",
+            "Điều khiển xoay 0° và 180° cụm cấp phôi Rodal.",
+            "Xoay 0°",
+            "Xoay 180°",
+            "Đã xoay 0°",
+            "Đã xoay 180°",
+            PlcTagCatalog.Manual.RodalRotate0,
+            PlcTagCatalog.Manual.RodalRotate180,
+            PlcTagCatalog.Manual.RodalRotated0Signal,
+            PlcTagCatalog.Manual.RodalRotated180Signal);
+
+        Lathe2FlipCylinder = new ManualCylinderState(
+            "lathe2_flip",
+            "XL Lật Sau Máy Tiện 2",
+            "Điều khiển quay 0° và 90° lật phôi sau tiện 2.",
+            "Quay 0°",
+            "Quay 90°",
+            "Đã xoay 0°",
+            "Đã quay 90°",
+            PlcTagCatalog.Manual.Lathe2FlipRotate0,
+            PlcTagCatalog.Manual.Lathe2FlipRotate90,
+            PlcTagCatalog.Manual.Lathe2FlipRotated0Signal,
+            PlcTagCatalog.Manual.Lathe2FlipRotated90Signal);
+
+        Lathe2TransferCylinder = new ManualCylinderState(
+            "lathe2_transfer",
+            "XL Transfer Sau Tiện 2",
+            "Điều khiển đi ra và đi vào xilanh transfer sau tiện 2.",
+            "Đi Ra",
+            "Đi Vào",
+            "Đã ra",
+            "Đã vào",
+            PlcTagCatalog.Manual.Lathe2TransferOut,
+            PlcTagCatalog.Manual.Lathe2TransferIn,
+            PlcTagCatalog.Manual.Lathe2TransferOutSignal,
+            PlcTagCatalog.Manual.Lathe2TransferInSignal);
+
+        ProductOutCylinder = new ManualCylinderState(
+            "product_out",
+            "XL Out Phôi Thành Phẩm",
+            "Điều khiển đi ra và đi vào xilanh out thành phẩm.",
+            "Đi Ra",
+            "Đi Vào",
+            "Đã ra",
+            "Đã vào",
+            PlcTagCatalog.Manual.ProductOutExtend,
+            PlcTagCatalog.Manual.ProductOutRetract,
+            PlcTagCatalog.Manual.ProductOutExtendedSignal,
+            PlcTagCatalog.Manual.ProductOutRetractedSignal);
+
+        ProductClampCylinder = new ManualCylinderState(
+            "product_clamp",
+            "XL Kẹp Phôi Thành Phẩm",
+            "Điều khiển kẹp/mở phôi thành phẩm.",
+            "Kẹp Phôi",
+            "Mở Phôi",
             "Đã kẹp",
             "Đã mở",
-            PlcTagCatalog.Manual.ClampCart2,
-            PlcTagCatalog.Manual.UnclampCart2,
-            PlcTagCatalog.Manual.Cart2ClosedSignal,
-            PlcTagCatalog.Manual.Cart2OpenedSignal);
+            PlcTagCatalog.Manual.ProductClampPart,
+            PlcTagCatalog.Manual.ProductUnclampPart,
+            PlcTagCatalog.Manual.ProductClampedSignal,
+            PlcTagCatalog.Manual.ProductUnclampedSignal);
 
-        Cylinders = [ToolClampCylinder, RotateCylinder, ClampCart1Cylinder, ClampCart2Cylinder];
+        Cylinders =
+        [
+            ClampCartCylinder,
+            LiftMotorCylinder,
+            InputClampCylinder,
+            InputFlipCylinder,
+            RodalArmCylinder,
+            Lathe2FlipCylinder,
+            Lathe2TransferCylinder,
+            ProductOutCylinder,
+            ProductClampCylinder,
+        ];
 
         OriginActions =
         [
-            new ManualHomeActionState("Home All", "Về gốc toàn bộ 3 trục và cơ cấu xy lanh.", PlcTagCatalog.Manual.HomeAll.Name),
-            new ManualHomeActionState("Home X", "Trục X về vị trí gốc.", PlcTagCatalog.Manual.HomeX.Name),
-            new ManualHomeActionState("Home Y", "Trục Y về vị trí gốc.", PlcTagCatalog.Manual.HomeY.Name),
-            new ManualHomeActionState("Home Z", "Trục Z về vị trí gốc.", PlcTagCatalog.Manual.HomeZ.Name),
-            new ManualHomeActionState("Home Xy Lanh Xoay", "Về gốc cơ cấu xoay 0/90.", PlcTagCatalog.Manual.HomeRotateCylinder.Name),
-            new ManualHomeActionState("Home Tay Tool", "Về gốc cơ cấu kẹp tool.", PlcTagCatalog.Manual.HomeToolClampCylinder.Name),
+            new ManualHomeActionState("Home Trục X", "Trục X về vị trí gốc.", PlcTagCatalog.Manual.HomeX.Name),
+            new ManualHomeActionState("Home Trục Z", "Trục Z về vị trí gốc.", PlcTagCatalog.Manual.HomeZ.Name),
+            new ManualHomeActionState("Home Trục Cấp Phôi", "Trục Cấp Phôi về vị trí gốc.", PlcTagCatalog.Manual.HomeLifter.Name),
+            new ManualHomeActionState("Home Bàn Xoay", "Bàn Xoay về vị trí gốc.", PlcTagCatalog.Manual.HomeRotary.Name),
+            new ManualHomeActionState("Home Tay Rodal", "Tay Rodal về vị trí 0°.", PlcTagCatalog.Manual.RodalRotate0.Name),
+            new ManualHomeActionState("Home XL Lật Đầu Vào", "Xilanh lật phôi về vị trí 0°.", PlcTagCatalog.Manual.InputRotate0.Name),
         ];
         _originActionsByTagName = OriginActions.ToDictionary(item => item.CommandTagName, StringComparer.OrdinalIgnoreCase);
 
@@ -195,13 +291,35 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     public ManualAxisState AxisZ { get; }
 
-    public ManualCylinderState ToolClampCylinder { get; }
+    public ManualAxisState AxisLifter { get; }
 
-    public ManualCylinderState RotateCylinder { get; }
+    public ManualAxisState AxisRotary { get; }
 
-    public ManualCylinderState ClampCart1Cylinder { get; }
+    public ManualCylinderState ClampCartCylinder { get; }
 
-    public ManualCylinderState ClampCart2Cylinder { get; }
+    public ManualCylinderState LiftMotorCylinder { get; }
+
+    public ManualCylinderState InputClampCylinder { get; }
+
+    public ManualCylinderState InputFlipCylinder { get; }
+
+    public ManualCylinderState RodalArmCylinder { get; }
+
+    public ManualCylinderState Lathe2FlipCylinder { get; }
+
+    public ManualCylinderState Lathe2TransferCylinder { get; }
+
+    public ManualCylinderState ProductOutCylinder { get; }
+
+    public ManualCylinderState ProductClampCylinder { get; }
+
+    public ManualCylinderState ToolClampCylinder => InputClampCylinder;
+
+    public ManualCylinderState RotateCylinder => InputFlipCylinder;
+
+    public ManualCylinderState ClampCart1Cylinder => ClampCartCylinder;
+
+    public ManualCylinderState ClampCart2Cylinder => ClampCartCylinder;
 
     public IRelayCommand SelectOriginTabCommand { get; }
 
@@ -298,42 +416,6 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         RefreshCommandStates();
     }
 
-
-
-    public async Task InitializeAsync()
-    {
-        if (_isDisposed || _isInitialized)
-        {
-            return;
-        }
-
-        _isInitialized = true;
-        _isInitializing = true;
-
-        try
-        {
-            await LoadAxisLimitsAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            await _notificationDialog.ShowErrorAsync("Loi", ex.Message);
-        }
-
-        await InvokeOnUiThreadAsync(
-            () =>
-            {
-                try
-                {
-                    SyncStatesFromCache(updateTimestamp: _plcService.IsConnected);
-                    UpdateConnectionState(_plcService.IsConnected);
-                }
-                finally
-                {
-                    _isInitializing = false;
-                }
-            });
-    }
-
     public void Dispose()
     {
         if (_isDisposed)
@@ -344,56 +426,81 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         _isDisposed = true;
         _plcService.ConnectionChanged -= OnConnectionChanged;
         _plcService.DataUpdated -= OnDataUpdated;
-        foreach (var axis in Axes)
-        {
-            axis.PropertyChanged -= OnAxisPropertyChanged;
-        }
-
-        if (!string.IsNullOrWhiteSpace(_activeJogTagName))
-        {
-            _ = StopJogAsync(_activeJogTagName);
-        }
+        EnsureAllJogTagsReleased();
     }
 
-    private async Task LoadAxisLimitsAsync()
+    public Task InitializeAsync()
     {
-        var fields = await _plcParameterSettingsService.LoadGroupAsync(PlcParameterGroups.DataMachine).ConfigureAwait(false);
-        var fieldLookup = fields.ToDictionary(field => field.TagName, StringComparer.OrdinalIgnoreCase);
+        if (_isInitialized || _isInitializing)
+        {
+            return Task.CompletedTask;
+        }
 
-        AxisX.ApplyLimitProfile(CreateAxisLimitProfile(
-            fieldLookup,
-            PlcTagCatalog.DataMachine.AxisXSpeedLimit.Name,
-            PlcTagCatalog.DataMachine.AxisXNegativeLimit.Name,
-            PlcTagCatalog.DataMachine.AxisXPositiveLimit.Name));
-        AxisY.ApplyLimitProfile(CreateAxisLimitProfile(
-            fieldLookup,
-            PlcTagCatalog.DataMachine.AxisYSpeedLimit.Name,
-            PlcTagCatalog.DataMachine.AxisYNegativeLimit.Name,
-            PlcTagCatalog.DataMachine.AxisYPositiveLimit.Name));
-        AxisZ.ApplyLimitProfile(CreateAxisLimitProfile(
-            fieldLookup,
-            PlcTagCatalog.DataMachine.AxisZSpeedLimit.Name,
-            PlcTagCatalog.DataMachine.AxisZNegativeLimit.Name,
-            PlcTagCatalog.DataMachine.AxisZPositiveLimit.Name));
-    }
+        _isInitializing = true;
 
-    private void OnConnectionChanged(object? sender, bool connected)
-    {
-        PostToUiThread(
-            () =>
+        try
+        {
+            UpdateConnectionState(_plcService.IsConnected);
+
+            foreach (var axis in Axes)
             {
-                UpdateConnectionState(connected);
-                SyncStatesFromCache(updateTimestamp: connected);
-            });
+                axis.ManualSpeedInput = FormatSingle(ReadSingle(axis.ManualSpeedTag.Name));
+                axis.MovePointInput = FormatSingle(ReadSingle(axis.MovePointTag.Name));
+            }
+
+            SyncStatesFromCache(updateTimestamp: true);
+            _isInitialized = true;
+        }
+        finally
+        {
+            _isInitializing = false;
+        }
+
+        return Task.CompletedTask;
     }
 
-    private void OnDataUpdated(object? sender, PlcDataChangedEventArgs e)
+    private static void PostToUiThread(Action action)
     {
-        if (_isDisposed || _isInitializing)
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher is null || dispatcher.CheckAccess())
         {
+            action();
             return;
         }
 
+        dispatcher.BeginInvoke(DispatcherPriority.Normal, action);
+    }
+
+    private static async Task InvokeOnUiThreadAsync(Action action)
+    {
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher is null || dispatcher.CheckAccess())
+        {
+            action();
+            return;
+        }
+
+        await dispatcher.InvokeAsync(action);
+    }
+
+    private void SetSelectedTab(ManualTabType tabType)
+    {
+        IsOriginTabSelected = tabType == ManualTabType.Origin;
+        IsAxisTabSelected = tabType == ManualTabType.Axis;
+        IsCylinderTabSelected = tabType == ManualTabType.Cylinder;
+    }
+
+    private void OnConnectionChanged(object? sender, bool isConnected)
+    {
+        PostToUiThread(() =>
+        {
+            UpdateConnectionState(isConnected);
+            SyncStatesFromCache(updateTimestamp: true);
+        });
+    }
+
+    private void OnDataUpdated(object? sender, PlcDataChangedEventArgs eventArgs)
+    {
         lock (_queueLock)
         {
             if (_isSyncQueued)
@@ -456,11 +563,6 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         }
     }
 
-    /// <summary>
-    /// Safety watchdog: mỗi chu kỳ sync, duyệt tất cả jog tag.
-    /// Nếu tag nào đang true trong PLC mà không phải nút đang được ấn → ghi false.
-    /// Giải quyết tình trạng bị miss Release event hoặc dính nút.
-    /// </summary>
     private void EnsureAllJogTagsReleased()
     {
         if (!IsConnected)
@@ -487,31 +589,25 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             return;
         }
 
-        // Tag đang true trong PLC nhưng không ai ấn → force release
         _ = _plcService.WriteAsync(tagName, false);
     }
 
     private void SyncOriginActions()
     {
-        UpdateOriginAction(
-            PlcTagCatalog.Manual.HomeAll.Name,
-            IsAnyOriginBusy(),
-            AreAllOriginsDone(),
-            ReadBool(PlcTagCatalog.Manual.HomeAll.Name));
-
         UpdateOriginAction(PlcTagCatalog.Manual.HomeX.Name, AxisX.IsHoming || AxisX.IsHomeCommandActive, AxisX.IsHomed, AxisX.IsHomeCommandActive);
-        UpdateOriginAction(PlcTagCatalog.Manual.HomeY.Name, AxisY.IsHoming || AxisY.IsHomeCommandActive, AxisY.IsHomed, AxisY.IsHomeCommandActive);
         UpdateOriginAction(PlcTagCatalog.Manual.HomeZ.Name, AxisZ.IsHoming || AxisZ.IsHomeCommandActive, AxisZ.IsHomed, AxisZ.IsHomeCommandActive);
+        UpdateOriginAction(PlcTagCatalog.Manual.HomeLifter.Name, AxisLifter.IsHoming || AxisLifter.IsHomeCommandActive, AxisLifter.IsHomed, AxisLifter.IsHomeCommandActive);
+        UpdateOriginAction(PlcTagCatalog.Manual.HomeRotary.Name, AxisRotary.IsHoming || AxisRotary.IsHomeCommandActive, AxisRotary.IsHomed, AxisRotary.IsHomeCommandActive);
         UpdateOriginAction(
-            PlcTagCatalog.Manual.HomeRotateCylinder.Name,
-            ReadBool(PlcTagCatalog.Manual.HomeRotateCylinder.Name),
-            ReadBool(PlcTagCatalog.Manual.HomeRotateCylinderDone.Name),
-            ReadBool(PlcTagCatalog.Manual.HomeRotateCylinder.Name));
+            PlcTagCatalog.Manual.RodalRotate0.Name,
+            ReadBool(PlcTagCatalog.Manual.RodalRotate0.Name),
+            ReadBool(PlcTagCatalog.Manual.RodalRotated0Signal.Name),
+            ReadBool(PlcTagCatalog.Manual.RodalRotate0.Name));
         UpdateOriginAction(
-            PlcTagCatalog.Manual.HomeToolClampCylinder.Name,
-            ReadBool(PlcTagCatalog.Manual.HomeToolClampCylinder.Name),
-            ReadBool(PlcTagCatalog.Manual.HomeToolClampDone.Name),
-            ReadBool(PlcTagCatalog.Manual.HomeToolClampCylinder.Name));
+            PlcTagCatalog.Manual.InputRotate0.Name,
+            ReadBool(PlcTagCatalog.Manual.InputRotate0.Name),
+            ReadBool(PlcTagCatalog.Manual.InputRotated0Signal.Name),
+            ReadBool(PlcTagCatalog.Manual.InputRotate0.Name));
     }
 
     private void SyncSummaryStatus()
@@ -584,7 +680,6 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
         try
         {
-            // Cylinder mutual exclusion: clear the opposite command before activating.
             if (TryResolveCylinderCommand(tagName!, out var cylinder, out var isPrimary))
             {
                 var oppositeTag = isPrimary
@@ -599,133 +694,98 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         }
         catch (Exception exception)
         {
-            await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể ghi lệnh {ResolveCommandName(tagName!)}: {exception.Message}");
+            await ShowErrorMessageAsync($"Không thể gửi lệnh {tagName}", exception).ConfigureAwait(false);
         }
     }
 
     private bool CanExecuteOneShot(string? tagName)
     {
-        if (string.IsNullOrWhiteSpace(tagName) || !CanIssueCommands)
-        {
-            return false;
-        }
-
-        if (_originActionsByTagName.TryGetValue(tagName, out var originAction))
-        {
-            return !originAction.IsCommandActive && !originAction.IsActive;
-        }
-
-        if (TryResolveCylinderCommand(tagName, out var cylinder, out var isPrimaryAction))
-        {
-            return isPrimaryAction
-                ? !cylinder.IsPrimaryCommandActive
-                : !cylinder.IsSecondaryCommandActive;
-        }
-
-        return false;
+        return CanIssueCommands && !string.IsNullOrWhiteSpace(tagName);
     }
 
     private async Task ApplyAxisSpeedAsync(ManualAxisState? axis)
     {
-        if (axis is null || !CanIssueCommands)
+        if (!CanApplyAxisSpeed(axis))
         {
             return;
         }
 
-        if (!axis.TryGetValidatedManualSpeed(out var speedValue, out _))
+        if (!float.TryParse(axis!.ManualSpeedInput, out var parsedValue) || parsedValue < 0)
         {
-            await _notificationDialog.ShowErrorAsync("Lỗi", $"Giá trị tốc độ của {axis.DisplayName} không hợp lệ.");
+            axis.ManualSpeedValidationMessage = "Tốc độ phải là số lớn hơn hoặc bằng 0.";
             return;
         }
+
+        axis.ManualSpeedValidationMessage = string.Empty;
 
         try
         {
-            await _plcService.WriteAsync(axis.ManualSpeedTag.Name, speedValue).ConfigureAwait(false);
-            await InvokeOnUiThreadAsync(() =>
-            {
-                axis.MarkManualSpeedApplied(speedValue);
-                SyncStatesFromCache(updateTimestamp: true);
-            });
+            await _plcService.WriteAsync(axis.ManualSpeedTag.Name, parsedValue).ConfigureAwait(false);
+            await InvokeOnUiThreadAsync(() => SyncStatesFromCache(updateTimestamp: true));
         }
         catch (Exception exception)
         {
-            await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể ghi tốc độ manual cho {axis.DisplayName}: {exception.Message}");
+            await ShowErrorMessageAsync($"Không thể cập nhật tốc độ {axis.DisplayName}", exception).ConfigureAwait(false);
         }
-    }
-
-    private bool CanApplyAxisSpeed(ManualAxisState? axis)
-    {
-        return axis is not null
-            && CanIssueCommands
-            && !axis.HasManualSpeedValidationMessage;
     }
 
     private async Task WriteMovePointValueAsync(ManualAxisState? axis)
     {
-        if (axis is null || !CanApplyAxisSpeed(axis))
+        if (!CanApplyAxisSpeed(axis))
         {
             return;
         }
 
-        if (!axis.TryGetValidatedMovePoint(out var movePointValue, out _))
+        if (!float.TryParse(axis!.MovePointInput, out var parsedValue))
         {
+            axis.MovePointValidationMessage = "Vị trí chạy điểm không hợp lệ.";
             return;
         }
+
+        axis.MovePointValidationMessage = string.Empty;
 
         try
         {
-            await _plcService.WriteAsync(axis.MovePointTag.Name, movePointValue).ConfigureAwait(false);
-            await InvokeOnUiThreadAsync(() =>
-            {
-                axis.MarkMovePointApplied(movePointValue);
-                SyncStatesFromCache(updateTimestamp: true);
-            });
+            await _plcService.WriteAsync(axis.MovePointTag.Name, parsedValue).ConfigureAwait(false);
+            await InvokeOnUiThreadAsync(() => SyncStatesFromCache(updateTimestamp: true));
         }
         catch (Exception exception)
         {
-            await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể ghi điểm chạy cho {axis.DisplayName}: {exception.Message}");
+            await ShowErrorMessageAsync($"Không thể cập nhật vị trí chạy điểm {axis.DisplayName}", exception).ConfigureAwait(false);
         }
     }
 
     private async Task MoveAxisToPointAsync(ManualAxisState? axis)
     {
-        if (axis is null || !CanMoveAxisToPoint(axis))
+        if (!CanMoveAxisToPoint(axis))
         {
-            return;
-        }
-
-        if (!axis.TryGetValidatedMovePoint(out var movePointValue, out var errorMessage))
-        {
-            await _notificationDialog.ShowErrorAsync("Lỗi", $"Giá trị điểm chạy của {axis.DisplayName} không hợp lệ.");
             return;
         }
 
         try
         {
-            await _plcService.WriteAsync(axis.MovePointTag.Name, movePointValue).ConfigureAwait(false);
-            await _plcService.WriteAsync(axis.MoveToPointTag.Name, true).ConfigureAwait(false);
+            if (float.TryParse(axis!.MovePointInput, out var parsedValue))
+            {
+                await _plcService.WriteAsync(axis.MovePointTag.Name, parsedValue).ConfigureAwait(false);
+            }
 
-            await InvokeOnUiThreadAsync(
-                () =>
-                {
-                    axis.MarkMovePointApplied(movePointValue);
-                    SyncStatesFromCache(updateTimestamp: true);
-                });
+            await _plcService.WriteAsync(axis.MoveToPointTag.Name, true).ConfigureAwait(false);
+            await InvokeOnUiThreadAsync(() => SyncStatesFromCache(updateTimestamp: true));
         }
         catch (Exception exception)
         {
-            await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể chạy tới điểm cho {axis.DisplayName}: {exception.Message}");
+            await ShowErrorMessageAsync($"Không thể chạy {axis.DisplayName} tới điểm", exception).ConfigureAwait(false);
         }
+    }
+
+    private bool CanApplyAxisSpeed(ManualAxisState? axis)
+    {
+        return CanIssueCommands && axis is not null;
     }
 
     private bool CanMoveAxisToPoint(ManualAxisState? axis)
     {
-        return axis is not null
-            && CanIssueCommands
-            && !axis.IsMoveToPointCommandActive
-            && !axis.IsHomeCommandActive
-            && !axis.IsHoming
-            && !axis.HasMovePointValidationMessage;
+        return CanIssueCommands && axis is not null;
     }
 
     private async Task StartJogAsync(string? tagName)
@@ -735,40 +795,23 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             return;
         }
 
-        // Set active tag BEFORE writing to PLC — prevents the watchdog
-        // (EnsureAllJogTagsReleased) from clearing it during the write-to-read gap.
         _activeJogTagName = tagName;
 
         try
         {
             await _plcService.WriteAsync(tagName!, true).ConfigureAwait(false);
-
-            await InvokeOnUiThreadAsync(
-                () => SyncStatesFromCache(updateTimestamp: true));
+            await InvokeOnUiThreadAsync(() => SyncStatesFromCache(updateTimestamp: true));
         }
         catch (Exception exception)
         {
             _activeJogTagName = null;
-            await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể jog {ResolveCommandName(tagName!)}: {exception.Message}");
+            await ShowErrorMessageAsync($"Không thể kích hoạt Jog {tagName}", exception).ConfigureAwait(false);
         }
     }
 
     private bool CanStartJog(string? tagName)
     {
-        if (string.IsNullOrWhiteSpace(tagName) || !CanIssueCommands || !string.IsNullOrWhiteSpace(_activeJogTagName))
-        {
-            return false;
-        }
-
-        var axis = ResolveAxisByJogTag(tagName!);
-        if (axis is null)
-        {
-            return false;
-        }
-
-        return string.Equals(axis.NegativeJogTag.Name, tagName, StringComparison.OrdinalIgnoreCase)
-            ? axis.CanJogNegative
-            : axis.CanJogPositive;
+        return CanIssueCommands && !string.IsNullOrWhiteSpace(tagName);
     }
 
     private async Task StopJogAsync(string? tagName)
@@ -780,103 +823,100 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
         try
         {
-            if (IsConnected)
-            {
-                await _plcService.WriteAsync(tagName, false).ConfigureAwait(false);
-            }
+            await _plcService.WriteAsync(tagName, false).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
-            await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể dừng jog {ResolveCommandName(tagName)}: {exception.Message}");
+            await ShowErrorMessageAsync($"Không thể nhả lệnh Jog {tagName}", exception).ConfigureAwait(false);
         }
         finally
         {
-            await InvokeOnUiThreadAsync(
-                () =>
-                {
-                    if (string.Equals(_activeJogTagName, tagName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        _activeJogTagName = null;
-                    }
+            if (string.Equals(_activeJogTagName, tagName, StringComparison.OrdinalIgnoreCase))
+            {
+                _activeJogTagName = null;
+            }
 
-                    SyncStatesFromCache(updateTimestamp: true);
-                    RefreshCommandStates();
-                });
+            await InvokeOnUiThreadAsync(() => SyncStatesFromCache(updateTimestamp: true));
         }
     }
 
     private bool CanStopJog(string? tagName)
     {
-        return !string.IsNullOrWhiteSpace(tagName)
-            && string.Equals(_activeJogTagName, tagName, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private void UpdateConnectionState(bool connected)
-    {
-        IsConnected = connected;
-        ConnectionText = connected ? "PLC online" : "PLC offline";
-
-        if (!connected)
-        {
-            LastUpdatedText = "Waiting for PLC data";
-        }
-    }
-
-    private void SetSelectedTab(ManualTabType tab)
-    {
-        IsOriginTabSelected = tab == ManualTabType.Origin;
-        IsAxisTabSelected = tab == ManualTabType.Axis;
-        IsCylinderTabSelected = tab == ManualTabType.Cylinder;
-    }
-
-    private bool AreAllOriginsDone()
-    {
-        return AxisX.IsHomed
-            && AxisY.IsHomed
-            && AxisZ.IsHomed
-            && ReadBool(PlcTagCatalog.Manual.HomeRotateCylinderDone.Name)
-            && ReadBool(PlcTagCatalog.Manual.HomeToolClampDone.Name);
+        return !string.IsNullOrWhiteSpace(tagName);
     }
 
     private bool IsAnyOriginBusy()
     {
-        return AxisX.IsHoming
-            || AxisY.IsHoming
-            || AxisZ.IsHoming
-            || ReadBool(PlcTagCatalog.Manual.HomeAll.Name)
-            || ReadBool(PlcTagCatalog.Manual.HomeRotateCylinder.Name)
-            || ReadBool(PlcTagCatalog.Manual.HomeToolClampCylinder.Name);
+        return OriginActions.Any(action => action.IsActive);
     }
 
-    private ManualAxisState? ResolveAxisByJogTag(string tagName)
+    private bool AreAllOriginsDone()
     {
-        return Axes.FirstOrDefault(
-            axis => string.Equals(axis.NegativeJogTag.Name, tagName, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(axis.PositiveJogTag.Name, tagName, StringComparison.OrdinalIgnoreCase));
+        return OriginActions.All(action => action.IsDone);
     }
 
-    private bool TryResolveCylinderCommand(string tagName, out ManualCylinderState cylinder, out bool isPrimaryAction)
+    private bool TryResolveCylinderCommand(string tagName, out ManualCylinderState cylinder, out bool isPrimary)
     {
-        foreach (var item in Cylinders)
+        foreach (var candidate in Cylinders)
         {
-            if (string.Equals(item.PrimaryCommandTag.Name, tagName, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(candidate.PrimaryCommandTag.Name, tagName, StringComparison.OrdinalIgnoreCase))
             {
-                cylinder = item;
-                isPrimaryAction = true;
+                cylinder = candidate;
+                isPrimary = true;
                 return true;
             }
 
-            if (string.Equals(item.SecondaryCommandTag.Name, tagName, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(candidate.SecondaryCommandTag.Name, tagName, StringComparison.OrdinalIgnoreCase))
             {
-                cylinder = item;
-                isPrimaryAction = false;
+                cylinder = candidate;
+                isPrimary = false;
                 return true;
             }
         }
 
         cylinder = null!;
-        isPrimaryAction = false;
+        isPrimary = false;
         return false;
+    }
+
+    private void UpdateConnectionState(bool isConnected)
+    {
+        IsConnected = isConnected;
+        ConnectionText = isConnected ? "PLC connected" : "PLC disconnected";
+        RefreshCommandStates();
+    }
+
+    private void OnAxisPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs eventArgs)
+    {
+        if (sender is not ManualAxisState axis)
+        {
+            return;
+        }
+
+        if (eventArgs.PropertyName is nameof(ManualAxisState.ManualSpeedInput) or nameof(ManualAxisState.MovePointInput))
+        {
+            RefreshCommandStates();
+        }
+    }
+
+    private void RefreshCommandStates()
+    {
+        RunOneShotCommand.NotifyCanExecuteChanged();
+        ApplyAxisSpeedCommand.NotifyCanExecuteChanged();
+        WriteMovePointValueCommand.NotifyCanExecuteChanged();
+        MoveAxisToPointCommand.NotifyCanExecuteChanged();
+        StartJogCommand.NotifyCanExecuteChanged();
+        StopJogCommand.NotifyCanExecuteChanged();
+    }
+
+    private async Task ShowErrorMessageAsync(string titleText, Exception exception)
+    {
+        await InvokeOnUiThreadAsync(async () =>
+        {
+            await _notificationDialog.ShowErrorAsync(
+                titleText,
+                $"{exception.Message}\n\nKiểm tra lại kết nối PLC và trạng thái liên động an toàn.").ConfigureAwait(false);
+        });
     }
 
     private bool ReadBool(string tagName)
@@ -898,76 +938,15 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         };
     }
 
-    private string ResolveCommandName(string tagName)
+    private static string FormatSingle(float value)
     {
-        if (PlcTagCatalog.TryGet(tagName, out var definition))
-        {
-            return definition.Description;
-        }
-
-        return tagName;
+        return value.ToString("0.##");
     }
 
-
-
-    private void RefreshCommandStates()
+    private enum ManualTabType
     {
-        RunOneShotCommand.NotifyCanExecuteChanged();
-        ApplyAxisSpeedCommand.NotifyCanExecuteChanged();
-        WriteMovePointValueCommand.NotifyCanExecuteChanged();
-        MoveAxisToPointCommand.NotifyCanExecuteChanged();
-        StartJogCommand.NotifyCanExecuteChanged();
-        StopJogCommand.NotifyCanExecuteChanged();
-    }
-
-    private void OnAxisPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (sender is ManualAxisState)
-        {
-            RefreshCommandStates();
-        }
-    }
-
-    private static AxisLimitProfile CreateAxisLimitProfile(
-        IReadOnlyDictionary<string, EditablePlcParameterField> fieldLookup,
-        string speedTagName,
-        string negativeTagName,
-        string positiveTagName)
-    {
-        return new AxisLimitProfile(
-            ReadLimit(fieldLookup, speedTagName),
-            ReadLimit(fieldLookup, negativeTagName),
-            ReadLimit(fieldLookup, positiveTagName));
-    }
-
-    private static float? ReadLimit(IReadOnlyDictionary<string, EditablePlcParameterField> fieldLookup, string tagName)
-    {
-        return fieldLookup.TryGetValue(tagName, out var field) && ManualNumeric.TryParse(field.ValueText, out var value)
-            ? value
-            : null;
-    }
-
-    private static void PostToUiThread(Action action)
-    {
-        var dispatcher = Application.Current?.Dispatcher;
-        if (dispatcher is not null && !dispatcher.CheckAccess())
-        {
-            _ = dispatcher.BeginInvoke(action, DispatcherPriority.DataBind);
-            return;
-        }
-
-        action();
-    }
-
-    private static Task InvokeOnUiThreadAsync(Action action)
-    {
-        var dispatcher = Application.Current?.Dispatcher;
-        if (dispatcher is null || dispatcher.CheckAccess())
-        {
-            action();
-            return Task.CompletedTask;
-        }
-
-        return dispatcher.InvokeAsync(action, DispatcherPriority.DataBind).Task;
+        Origin,
+        Axis,
+        Cylinder,
     }
 }
