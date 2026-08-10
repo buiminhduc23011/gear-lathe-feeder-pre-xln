@@ -914,7 +914,7 @@ public sealed class ModelProfileService : IModelProfileService
         ("pickDropZOffset", "Ofset tọa độ Z gắp thả hàng"),
         ("chuckStepDepth", "Chiều sâu bậc mâm cặp"),
         ("innerFinishedDiameter", "Đường kính trong phôi thành phẩm"),
-        ("innerDiameterToGDiameterDistance", "Khoảng cách đường kính trong đến đường kính G"),
+        ("innerDiameterToGDiameterDistance", "KC đường kính trong đến G"),
         ("magnetCount", "Số nam châm sử dụng"),
         ("jigSupplyType", "Loại Jig cấp hàng"),
     ];

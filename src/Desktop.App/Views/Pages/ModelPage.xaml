@@ -298,8 +298,6 @@
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
 
                                         <StackPanel Grid.Column="0" Grid.ColumnSpan="5">
@@ -343,18 +341,6 @@
                                                 SelectedValuePath="Value"
                                                 Style="{StaticResource FilterToolbarComboBox}" />
                                         </StackPanel>
-                                        <StackPanel Grid.Row="1" Grid.Column="6" Margin="0,10,0,0">
-                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Tray sử dụng" />
-                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding TrayUsageInput, UpdateSourceTrigger=PropertyChanged}" />
-                                        </StackPanel>
-                                        <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,10,0,0">
-                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Đường kính phôi đầu vào" />
-                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding InputBlankDiameterInput, UpdateSourceTrigger=PropertyChanged}" />
-                                        </StackPanel>
-                                        <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,10,0,0">
-                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Chiều sâu bạc mâm cặp OP2" />
-                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding Op2ChuckSleeveDepthInput, UpdateSourceTrigger=PropertyChanged}" />
-                                        </StackPanel>
                                         </Grid>
                                         <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding RobotFields}">
                                                 <ItemsControl.ItemsPanel>
@@ -364,7 +350,14 @@
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Border Margin="0,0,8,8" Padding="10,8" Background="{DynamicResource Brush.Surface.Subpanel}" BorderBrush="{DynamicResource Brush.Border.Subtle}" BorderThickness="1" CornerRadius="8">
+                                                        <Border
+                                                            Width="262"
+                                                            Margin="0,0,8,8"
+                                                            Padding="10,8"
+                                                            Background="{DynamicResource Brush.Surface.Subpanel}"
+                                                            BorderBrush="{DynamicResource Brush.Border.Subtle}"
+                                                            BorderThickness="1"
+                                                            CornerRadius="8">
                                                             <StackPanel>
                                                                 <TextBlock FontSize="12" Foreground="{DynamicResource Brush.Text.Primary}" Text="{Binding Label}" TextTrimming="CharacterEllipsis" />
                                                                 <ComboBox Margin="0,6,0,0" DisplayMemberPath="Label" ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption, Mode=TwoWay}" Visibility="{Binding IsSelectField, Converter={StaticResource BoolToVisibilityConverter}}" Style="{StaticResource FilterToolbarComboBox}" />

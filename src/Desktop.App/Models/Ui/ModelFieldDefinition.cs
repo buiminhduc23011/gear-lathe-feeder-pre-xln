@@ -41,6 +41,7 @@ public static class ModelFieldCatalog
 {
     public static readonly ModelFieldDefinition[] RobotFields =
     [
+        new("inputBlankDiameter",                "Đường kính phôi đầu vào"),
         new("inputBlankThickness",               "Độ dày Phôi đầu vào"),
         new("outerFinishedDiameter",            "Đường kính ngoài phôi thành phẩm"),
         new("op1TurnedThickness",                "Độ dày phôi sau tiện OP1"),
@@ -48,9 +49,10 @@ public static class ModelFieldCatalog
         new("pickDropZOffset",                   "Ofset tọa độ Z gắp thả hàng"),
         new("chuckStepDepth",                    "Chiều sâu bậc mâm cặp"),
         new("innerFinishedDiameter",             "Đường kính trong phôi thành phẩm"),
-        new("innerDiameterToGDiameterDistance",  "Khoảng cách đường kính trong đến đường kính G"),
+        new("innerDiameterToGDiameterDistance",  "KC đường kính trong đến G"),
         new("magnetCount",                       "Số nam châm sử dụng", "int"),
         new("jigSupplyType",                     "Loại Jig cấp hàng", "int", JigSupplyTypeOptions.Items),
+        new("op2ChuckSleeveDepth",                "Chiều sâu bạc mâm cặp OP2"),
     ];
 }
 

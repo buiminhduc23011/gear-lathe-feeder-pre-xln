@@ -1102,6 +1102,18 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         try
         {
             PopulateFieldCollection(RobotFields, model.RobotData);
+            InputBlankDiameterInput = model.InputBlankDiameter?.ToString("G29", System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
+            var inputDiameterField = RobotFields.FirstOrDefault(field => field.Key == "inputBlankDiameter");
+            if (inputDiameterField is not null)
+            {
+                inputDiameterField.ValueText = InputBlankDiameterInput;
+            }
+            Op2ChuckSleeveDepthInput = model.Op2ChuckSleeveDepth?.ToString("G29", System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
+            var op2Field = RobotFields.FirstOrDefault(field => field.Key == "op2ChuckSleeveDepth");
+            if (op2Field is not null)
+            {
+                op2Field.ValueText = Op2ChuckSleeveDepthInput;
+            }
         }
         finally
         {
@@ -1150,6 +1162,7 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
 
         foreach (var field in fields)
         {
+            if (field.Key is "inputBlankDiameter" or "op2ChuckSleeveDepth") continue;
             if (string.IsNullOrWhiteSpace(field.ValueText)) continue;
 
             if (double.TryParse(field.ValueText, System.Globalization.NumberStyles.Float,
@@ -1254,6 +1267,14 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         }
 
         ValidateRobotField(field);
+        if (field.Key == "inputBlankDiameter" && !string.Equals(InputBlankDiameterInput, field.ValueText, StringComparison.Ordinal))
+        {
+            InputBlankDiameterInput = field.ValueText;
+        }
+        else if (field.Key == "op2ChuckSleeveDepth" && !string.Equals(Op2ChuckSleeveDepthInput, field.ValueText, StringComparison.Ordinal))
+        {
+            Op2ChuckSleeveDepthInput = field.ValueText;
+        }
         if (_isApplyingFieldValues) return;
         IsDirty = true;
     }

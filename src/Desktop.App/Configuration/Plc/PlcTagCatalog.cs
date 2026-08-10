@@ -261,7 +261,7 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition PickDropZOffset = CreateWord("data.pick_drop_z_offset", "D5548", PlcTagDataType.Float, "Ofset tọa độ Z gắp thả hàng");
         public static readonly PlcTagDefinition ChuckStepDepth = CreateWord("data.chuck_step_depth", "D5550", PlcTagDataType.Float, "Chiều sâu bậc mâm cặp");
         public static readonly PlcTagDefinition InnerFinishedDiameter = CreateWord("data.inner_finished_diameter", "D5552", PlcTagDataType.Float, "Đường kính trong phôi thành phẩm");
-        public static readonly PlcTagDefinition InnerDiameterToGDiameterDistance = CreateWord("data.inner_diameter_to_g_distance", "D5554", PlcTagDataType.Float, "Khoảng cách đường kính trong đến đường kính G");
+        public static readonly PlcTagDefinition InnerDiameterToGDiameterDistance = CreateWord("data.inner_diameter_to_g_distance", "D5554", PlcTagDataType.Float, "KC đường kính trong đến G");
         public static readonly PlcTagDefinition MagnetCount = CreateWord("data.magnet_count", "D5556", PlcTagDataType.Int16, "Số nam châm sử dụng");
         public static readonly PlcTagDefinition InputBlankDiameter = CreateWord("data.input_blank_diameter", "D5560", PlcTagDataType.Float, "Đường kính phôi đầu vào");
         public static readonly PlcTagDefinition Op2ChuckSleeveDepth = CreateWord("data.op2_chuck_sleeve_depth", "D5562", PlcTagDataType.Float, "Chiều sâu bạc mâm cặp OP2 (D5562+D5563)");

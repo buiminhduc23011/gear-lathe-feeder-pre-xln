@@ -51,7 +51,7 @@ const ROBOT_FIELDS = [
   { key: "pickDropZOffset", label: "Ofset tọa độ Z gắp thả hàng", type: "real" },
   { key: "chuckStepDepth", label: "Chiều sâu bậc mâm cặp", type: "real" },
   { key: "innerFinishedDiameter", label: "Đường kính trong phôi thành phẩm", type: "real" },
-  { key: "innerDiameterToGDiameterDistance", label: "Khoảng cách đường kính trong đến đường kính G", type: "real" },
+  { key: "innerDiameterToGDiameterDistance", label: "KC đường kính trong đến G", type: "real" },
   { key: "magnetCount", label: "Số nam châm sử dụng", type: "int" },
   {
     key: "jigSupplyType",
@@ -119,29 +119,32 @@ function buildFieldData(fields, values = {}) {
   return data;
 }
 
-function FieldFormItems({ fields, namePrefix }) {
+function ModelFormField({ field, name }) {
   return (
-    <div className="model-profile-fields-grid model-profile-robot-grid">
-      {fields.map((field) => (
-        <Form.Item label={field.label} name={[namePrefix, field.key]} key={field.key}>
-          {field.type === "select" ? (
-            <Select size="small" options={field.options} />
-          ) : (
-            <InputNumber
-              size="small"
-              style={{ width: "100%" }}
-              precision={field.type === "real" ? 3 : 0}
-              step={field.type === "real" ? 0.001 : 1}
-            />
-          )}
-        </Form.Item>
-      ))}
-    </div>
+    <Form.Item label={field.label} name={name}>
+      {field.type === "select" ? (
+        <Select size="small" options={field.options} />
+      ) : field.type === "text" ? (
+        <Input size="small" />
+      ) : (
+        <InputNumber
+          size="small"
+          style={{ width: "100%" }}
+          precision={field.type === "real" ? 3 : 0}
+          step={field.type === "real" ? 0.001 : 1}
+        />
+      )}
+    </Form.Item>
   );
 }
 
 function MetadataFormItems() {
-  const visibleFields = MODEL_METADATA_FIELDS.filter((field) => !HIDDEN_MODEL_METADATA_KEYS.includes(field.key));
+  const op2ChuckSleeveDepthField = MODEL_METADATA_FIELDS.find((field) => field.key === "op2ChuckSleeveDepth");
+  const visibleFields = MODEL_METADATA_FIELDS.filter(
+    (field) => !HIDDEN_MODEL_METADATA_KEYS.includes(field.key) && field.key !== "op2ChuckSleeveDepth"
+  );
+  const topFields = visibleFields.filter((field) => field.key !== "inputBlankDiameter");
+  const inputBlankDiameterField = visibleFields.find((field) => field.key === "inputBlankDiameter");
 
   return (
     <>
@@ -151,22 +154,19 @@ function MetadataFormItems() {
         </Form.Item>
       ))}
       <div className="model-profile-fields-grid model-profile-metadata-grid">
-        {visibleFields.map((field) => (
-          <Form.Item label={field.label} name={field.key} key={field.key}>
-            {field.type === "select" ? (
-              <Select size="small" options={field.options} />
-            ) : field.type === "text" ? (
-              <Input size="small" />
-            ) : (
-              <InputNumber
-                size="small"
-                style={{ width: "100%" }}
-                precision={field.type === "real" ? 3 : 0}
-                step={field.type === "real" ? 0.001 : 1}
-              />
-            )}
-          </Form.Item>
+        {topFields.map((field) => (
+          <ModelFormField field={field} name={field.key} key={field.key} />
         ))}
+        <div className="model-profile-fields-break" aria-hidden="true" />
+        {inputBlankDiameterField ? (
+          <ModelFormField field={inputBlankDiameterField} name="inputBlankDiameter" key="inputBlankDiameter" />
+        ) : null}
+        {ROBOT_FIELDS.map((field) => (
+          <ModelFormField field={field} name={["robotData", field.key]} key={field.key} />
+        ))}
+        {op2ChuckSleeveDepthField ? (
+          <ModelFormField field={op2ChuckSleeveDepthField} name="op2ChuckSleeveDepth" key="op2ChuckSleeveDepth" />
+        ) : null}
       </div>
     </>
   );
@@ -871,7 +871,6 @@ function ModelProfiles() {
               </Form.Item>
 
               <MetadataFormItems />
-              <FieldFormItems fields={ROBOT_FIELDS} namePrefix="robotData" />
             </Form>
           </AppModal>
 
