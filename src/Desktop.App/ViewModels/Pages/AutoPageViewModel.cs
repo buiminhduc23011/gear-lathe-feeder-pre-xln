@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Desktop.App.Configuration.Plc;
 using Desktop.App.Data.Repositories;
 using Desktop.App.Models.Agv;
+using Desktop.App.Models.Runtime;
 using Desktop.App.Models.Tray;
 using Desktop.App.Models.Ui;
 using Desktop.App.Services.Abstractions;
@@ -65,6 +66,8 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
     // --- RUN / STOP toggle ---
     [ObservableProperty] private bool isRunning = true;
 
+    [ObservableProperty] private string magnetDistanceText = "0";
+
     public AutoPageViewModel(
         AgvBackgroundService agvService,
         IPlcService plcService,
@@ -81,6 +84,7 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
         _shelfOrderCacheRepository = shelfOrderCacheRepository;
         AgvService.StateChanged += OnAgvStateChanged;
         AgvService.RuntimeError += OnAgvRuntimeError;
+        _plcService.DataUpdated += OnPlcDataUpdated;
     }
 
     [RelayCommand]
@@ -124,6 +128,7 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
         try
         {
             SyncRunStopFromPlc();
+            SyncMagnetDistanceFromPlc();
             await LoadTrayTypeConfigsAsync();
             await LoadActiveDeclarationsFromServerAsync();
             // Do not resync current orders to PLC on startup (load to UI only)
@@ -152,6 +157,35 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.PausedByPc.Name, !isRunning);
     }
 
+    private void OnPlcDataUpdated(object? sender, PlcDataChangedEventArgs e)
+    {
+        if (e.Snapshot.TryGetValue(PlcTagCatalog.DataAutos.MagnetDistance.Name, out var value))
+        {
+            var distance = value switch
+            {
+                float single => single,
+                double number => (float)number,
+                int integer => integer,
+                _ => 0f,
+            };
+
+            System.Windows.Application.Current?.Dispatcher?.BeginInvoke(() => MagnetDistanceText = distance.ToString("0.##"));
+        }
+    }
+
+    private void SyncMagnetDistanceFromPlc()
+    {
+        var value = _plcService.GetValue<object?>(PlcTagCatalog.DataAutos.MagnetDistance.Name, null);
+        var distance = value switch
+        {
+            float single => single,
+            double number => (float)number,
+            int integer => integer,
+            _ => 0f,
+        };
+        MagnetDistanceText = distance.ToString("0.##");
+    }
+
     private void OnAgvStateChanged(object? sender, EventArgs e)
     {
         System.Windows.Application.Current?.Dispatcher?.BeginInvoke(RebuildAllTraySlots);
@@ -161,6 +195,7 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
     {
         AgvService.StateChanged -= OnAgvStateChanged;
         AgvService.RuntimeError -= OnAgvRuntimeError;
+        _plcService.DataUpdated -= OnPlcDataUpdated;
     }
 
     private void OnAgvRuntimeError(object? sender, AgvRuntimeErrorEventArgs e)

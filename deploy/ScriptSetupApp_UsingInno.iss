@@ -11,7 +11,7 @@
   #error "dotnet publish failed with exit code " + Str(BuildExitCode)
 #endif
 
-#define MyAppSourceDir "..\src\Desktop.App\bin\Release\net10.0-windows"
+#define MyAppSourceDir "..\src\Desktop.App\bin\Release\net10.0-windows\publish"
 #define MyAppExePath MyAppSourceDir + "\" + MyAppExeName
 #ifndef MyAppVersion
   #define MyAppVersion GetVersionNumbersString(MyAppExePath)
