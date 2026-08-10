@@ -309,6 +309,33 @@
                             Text="Trống" />
                     </StackPanel>
 
+                    <Border
+                        Grid.Row="0"
+                        HorizontalAlignment="Left"
+                        Visibility="Collapsed"
+                        Margin="0,0,0,6"
+                        Padding="12,8"
+                        Background="{DynamicResource Brush.Surface.Subpanel}"
+                        BorderBrush="{DynamicResource Brush.Border.Default}"
+                        BorderThickness="1"
+                        CornerRadius="6">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="12"
+                                FontWeight="SemiBold"
+                                Foreground="{DynamicResource Brush.Text.Secondary}"
+                                Text="KHOẢNG CÁCH 2 NAM CHÂM" />
+                            <TextBlock
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="{DynamicResource Brush.Action.Primary}"
+                                Text="{Binding MagnetDistanceText}" />
+                        </StackPanel>
+                    </Border>
+
                     <!--  Single KỆ  -->
                     <Grid Grid.Row="1">
                         <!--  ============ KỆ 1 ============  -->
@@ -542,7 +569,7 @@
 
                                 <!--  Row 4: Actions  -->
                                 <Border Grid.Row="4" Margin="0,6,0,0" Padding="6" Background="#F8FAFC" CornerRadius="8">
-                                    <DockPanel>
+                                    <DockPanel LastChildFill="False">
                                         <!--  Toggle: Gọi AGV BẬT/TẮT  -->
                                         <ToggleButton
                                             DockPanel.Dock="Left"
@@ -620,6 +647,31 @@
                                                 Content="XÓA KỆ"
                                                 Style="{StaticResource GhostActionBtn}" />
                                         </StackPanel>
+
+                                        <Border
+                                            DockPanel.Dock="Right"
+                                            Margin="12,0,0,0"
+                                            Padding="12,6"
+                                            Background="{DynamicResource Brush.Surface.Subpanel}"
+                                            BorderBrush="{DynamicResource Brush.Border.Default}"
+                                            BorderThickness="1"
+                                            CornerRadius="6">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="{DynamicResource Brush.Text.Secondary}"
+                                                    Text="KHOẢNG CÁCH 2 NAM CHÂM" />
+                                                <TextBlock
+                                                    Margin="12,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="18"
+                                                    FontWeight="Bold"
+                                                    Foreground="{DynamicResource Brush.Action.Primary}"
+                                                    Text="{Binding MagnetDistanceText}" />
+                                            </StackPanel>
+                                        </Border>
                                     </DockPanel>
                                 </Border>
                             </Grid>
