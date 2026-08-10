@@ -518,7 +518,7 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition IsRunningToPointY = IsRunningToPointZ;
     }
 
-      public static class Alarms
+    public static class Alarms
     {
         public static readonly PlcTagDefinition AlarmCode1 = CreateWord("alarm.code_1", "D5140", PlcTagDataType.Int16, "Mã cảnh báo 1");
         public static readonly PlcTagDefinition AlarmCode2 = CreateWord("alarm.code_2", "D5141", PlcTagDataType.Int16, "Mã cảnh báo 2");
@@ -604,6 +604,16 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition YOverMoment = XOverMoment;
     }
 
+    public static class PlcMessages
+    {
+        public static readonly PlcTagDefinition MagnetBeforeZHome = CreateBit("message.magnet_before_z_home", "D5119.0", "Vui lòng tắt nam châm trước khi về gốc Z");
+        public static readonly PlcTagDefinition ZHomeBeforeXHome = CreateBit("message.z_home_before_x_home", "D5119.1", "Vui lòng về gốc Z trước khi về gốc X");
+        public static readonly PlcTagDefinition ReleaseToolMagnetBeforeZMove = CreateBit("message.release_tool_magnet_before_z_move", "D5119.2", "Vui lòng không kẹp nam châm khi di chuyển trục Z");
+        public static readonly PlcTagDefinition ToolHomeBeforeXHome = CreateBit("message.tool_home_before_x_home", "D5119.3", "Vui lòng xoay tay tool về gốc 0 trước khi về gốc X");
+        public static readonly PlcTagDefinition CheckInputCylinderBeforeXMove = CreateBit("message.check_input_cylinder_before_x_move", "D5119.4", "Vui lòng xoay kiểm tra xilanh xoay trước khi di chuyển trục X");
+        public static readonly PlcTagDefinition ZSafePositionBeforeMagnetCylinderMove = CreateBit("message.z_safe_position_before_magnet_cylinder_move", "D5119.5", "Vui lòng di chuyển trục Z đến vị trí an toàn trước khi sử dụng Xilanh xoay");
+    }
+
 
 
     public static IReadOnlyList<PlcTagDefinition> All { get; } = CollectAllTags(
@@ -614,7 +624,8 @@ public static class PlcTagCatalog
         typeof(DataTrayCart),
         typeof(DataMachine),
         typeof(Manual),
-        typeof(Alarms));
+        typeof(Alarms),
+        typeof(PlcMessages));
 
     public static IReadOnlyDictionary<string, PlcTagDefinition> ByName { get; } =
         All.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
@@ -625,7 +636,8 @@ public static class PlcTagCatalog
         typeof(DataAutos),
         typeof(DataTrayCart),
         typeof(DataMachine),
-        typeof(Manual));
+        typeof(Manual),
+        typeof(PlcMessages));
 
     public static bool TryGet(string tagName, out PlcTagDefinition definition)
     {
