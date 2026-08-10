@@ -452,8 +452,24 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition ProductClampedSignal = CreateBit("manual.product_clamped_signal", "M2082", "Đã Kẹp");
         public static readonly PlcTagDefinition ProductUnclampedSignal = CreateBit("manual.product_unclamped_signal", "M2083", "Đã mở kẹp");
 
+        // --- Xilanh trước nam châm cụm Output ---
+        public static readonly PlcTagDefinition OutputMagnetCylinderIn = CreateBit("manual.output_magnet_cylinder_in", "M2034", "Đi vào xilanh trước nam châm cụm Output");
+        public static readonly PlcTagDefinition OutputMagnetCylinderOut = CreateBit("manual.output_magnet_cylinder_out", "M2035", "Đi ra xilanh trước nam châm cụm Output");
+        public static readonly PlcTagDefinition OutputMagnetCylinderInSignal = CreateBit("manual.output_magnet_cylinder_in_signal", "M2084", "Xilanh trước nam châm cụm Output đã vào");
+        public static readonly PlcTagDefinition OutputMagnetCylinderOutSignal = CreateBit("manual.output_magnet_cylinder_out_signal", "M2085", "Xilanh trước nam châm cụm Output đã ra");
+
         // --- Tắt Còi ---
         public static readonly PlcTagDefinition BuzzerOff = CreateBit("manual.buzzer_off", "M2090", "Tắt Còi");
+
+        // --- Nam châm và xì khí ---
+        public static readonly PlcTagDefinition ToolArmMagnet1 = CreateBit("manual.tool_arm_magnet_1", "M2091", "Nam châm 1 tay Tool");
+        public static readonly PlcTagDefinition ToolArmMagnet2 = CreateBit("manual.tool_arm_magnet_2", "M2092", "Nam châm 2 tay Tool");
+        public static readonly PlcTagDefinition ToolArmMagnet3 = CreateBit("manual.tool_arm_magnet_3", "M2093", "Nam châm 3 tay Tool");
+        public static readonly PlcTagDefinition ToolArmMagnet4 = CreateBit("manual.tool_arm_magnet_4", "M2094", "Nam châm 4 tay Tool");
+        public static readonly PlcTagDefinition OutputMagnet1 = CreateBit("manual.output_magnet_1", "M2095", "Nam châm 1 cụm Output");
+        public static readonly PlcTagDefinition OutputMagnet2 = CreateBit("manual.output_magnet_2", "M2096", "Nam châm 2 cụm Output");
+        public static readonly PlcTagDefinition ToolArmAir1 = CreateBit("manual.tool_arm_air_1", "M2097", "Xì khí 1 tay Tool 1");
+        public static readonly PlcTagDefinition ToolArmAir2 = CreateBit("manual.tool_arm_air_2", "M2098", "Xì khí 2 tay Tool 1");
 
         // --- Backward Compatibility Aliases ---
         public static readonly PlcTagDefinition MoveYLeft = MoveZLeft;

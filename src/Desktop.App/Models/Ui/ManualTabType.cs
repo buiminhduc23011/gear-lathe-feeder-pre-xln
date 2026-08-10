@@ -5,4 +5,5 @@ public enum ManualTabType
     Origin,
     Axis,
     Cylinder,
+    Magnet,
 }

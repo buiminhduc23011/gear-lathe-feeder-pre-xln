@@ -110,6 +110,11 @@
                             Content="Xy Lanh"
                             IsChecked="{Binding IsCylinderTabSelected, Mode=OneWay}"
                             Style="{StaticResource ManualRailButton}" />
+                        <ToggleButton
+                            Command="{Binding SelectMagnetTabCommand}"
+                            Content="Nam Châm / Xì Khí"
+                            IsChecked="{Binding IsMagnetTabSelected, Mode=OneWay}"
+                            Style="{StaticResource ManualRailButton}" />
                     </StackPanel>
                 </Border>
 
@@ -548,6 +553,63 @@
                                                     Style="{StaticResource ButtonSecondary}" />
                                             </UniformGrid>
 
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding IsMagnetTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock
+                            Margin="0,0,0,16"
+                            Style="{StaticResource SectionTitleText}"
+                            Text="Nam Châm / Xì Khí" />
+                        <ItemsControl ItemsSource="{Binding BinaryOutputs}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Width="380"
+                                        Margin="0,0,16,16"
+                                        Style="{StaticResource SectionCard}">
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource SectionTitleText}" Text="{Binding Title}" />
+                                            <TextBlock
+                                                Margin="0,6,0,0"
+                                                Style="{StaticResource SectionSubtitleText}"
+                                                Text="{Binding Subtitle}" />
+                                            <StackPanel Margin="0,14,0,0" Orientation="Horizontal">
+                                                <Ellipse>
+                                                    <Ellipse.Style>
+                                                        <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                                    <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Ellipse.Style>
+                                                </Ellipse>
+                                                <TextBlock Style="{StaticResource StatusDotLabel}" Text="{Binding StatusText}" />
+                                            </StackPanel>
+                                            <UniformGrid Margin="0,16,0,0" Columns="2">
+                                                <Button
+                                                    Margin="0,0,10,0"
+                                                    Command="{Binding DataContext.ActivateBinaryOutputCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding CommandTagName}"
+                                                    Content="Hút / Bật"
+                                                    Style="{StaticResource ButtonPrimary}" />
+                                                <Button
+                                                    Command="{Binding DataContext.DeactivateBinaryOutputCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding CommandTagName}"
+                                                    Content="Nhả / Tắt"
+                                                    Style="{StaticResource ButtonSecondary}" />
+                                            </UniformGrid>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>

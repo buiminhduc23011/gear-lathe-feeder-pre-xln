@@ -237,6 +237,19 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             PlcTagCatalog.Manual.ProductClampedSignal,
             PlcTagCatalog.Manual.ProductUnclampedSignal);
 
+        OutputMagnetCylinder = new ManualCylinderState(
+            "output_magnet_cylinder",
+            "XL Trước Nam Châm Cụm Output",
+            "Điều khiển xilanh trước nam châm cụm Output đi vào/đi ra.",
+            "Đi Vào",
+            "Đi Ra",
+            "Đã vào",
+            "Đã ra",
+            PlcTagCatalog.Manual.OutputMagnetCylinderIn,
+            PlcTagCatalog.Manual.OutputMagnetCylinderOut,
+            PlcTagCatalog.Manual.OutputMagnetCylinderInSignal,
+            PlcTagCatalog.Manual.OutputMagnetCylinderOutSignal);
+
         Cylinders =
         [
             ClampCartCylinder,
@@ -248,6 +261,19 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             Lathe2TransferCylinder,
             ProductOutCylinder,
             ProductClampCylinder,
+            OutputMagnetCylinder,
+        ];
+
+        BinaryOutputs =
+        [
+            new ManualBinaryOutputState("Nam Châm 1 Tay Tool", "Hút/nhả nam châm số 1 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet1),
+            new ManualBinaryOutputState("Nam Châm 2 Tay Tool", "Hút/nhả nam châm số 2 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet2),
+            new ManualBinaryOutputState("Nam Châm 3 Tay Tool", "Hút/nhả nam châm số 3 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet3),
+            new ManualBinaryOutputState("Nam Châm 4 Tay Tool", "Hút/nhả nam châm số 4 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet4),
+            new ManualBinaryOutputState("Nam Châm 1 Cụm Output", "Hút/nhả nam châm số 1 tại cụm Output.", PlcTagCatalog.Manual.OutputMagnet1),
+            new ManualBinaryOutputState("Nam Châm 2 Cụm Output", "Hút/nhả nam châm số 2 tại cụm Output.", PlcTagCatalog.Manual.OutputMagnet2),
+            new ManualBinaryOutputState("Xì Khí 1 Tay Tool 1", "Bật/tắt xì khí số 1 trên tay Tool 1.", PlcTagCatalog.Manual.ToolArmAir1),
+            new ManualBinaryOutputState("Xì Khí 2 Tay Tool 1", "Bật/tắt xì khí số 2 trên tay Tool 1.", PlcTagCatalog.Manual.ToolArmAir2),
         ];
 
         OriginActions =
@@ -264,7 +290,10 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         SelectOriginTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.Origin));
         SelectAxisTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.Axis));
         SelectCylinderTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.Cylinder));
+        SelectMagnetTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.Magnet));
         RunOneShotCommand = new AsyncRelayCommand<string?>(ExecuteOneShotAsync, CanExecuteOneShot);
+        ActivateBinaryOutputCommand = new AsyncRelayCommand<string?>(ActivateBinaryOutputAsync, CanExecuteOneShot);
+        DeactivateBinaryOutputCommand = new AsyncRelayCommand<string?>(DeactivateBinaryOutputAsync, CanExecuteOneShot);
         ApplyAxisSpeedCommand = new AsyncRelayCommand<ManualAxisState?>(ApplyAxisSpeedAsync, CanApplyAxisSpeed);
         WriteMovePointValueCommand = new AsyncRelayCommand<ManualAxisState?>(WriteMovePointValueAsync, CanApplyAxisSpeed);
         MoveAxisToPointCommand = new AsyncRelayCommand<ManualAxisState?>(MoveAxisToPointAsync, CanMoveAxisToPoint);
@@ -282,6 +311,8 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
     public IReadOnlyList<ManualAxisState> Axes { get; }
 
     public IReadOnlyList<ManualCylinderState> Cylinders { get; }
+
+    public IReadOnlyList<ManualBinaryOutputState> BinaryOutputs { get; }
 
     public IReadOnlyList<ManualHomeActionState> OriginActions { get; }
 
@@ -313,6 +344,8 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     public ManualCylinderState ProductClampCylinder { get; }
 
+    public ManualCylinderState OutputMagnetCylinder { get; }
+
     public ManualCylinderState ToolClampCylinder => InputClampCylinder;
 
     public ManualCylinderState RotateCylinder => InputFlipCylinder;
@@ -327,7 +360,13 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     public IRelayCommand SelectCylinderTabCommand { get; }
 
+    public IRelayCommand SelectMagnetTabCommand { get; }
+
     public IAsyncRelayCommand<string?> RunOneShotCommand { get; }
+
+    public IAsyncRelayCommand<string?> ActivateBinaryOutputCommand { get; }
+
+    public IAsyncRelayCommand<string?> DeactivateBinaryOutputCommand { get; }
 
     public IAsyncRelayCommand<ManualAxisState?> ApplyAxisSpeedCommand { get; }
 
@@ -353,6 +392,9 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private bool isCylinderTabSelected;
+
+    [ObservableProperty]
+    private bool isMagnetTabSelected;
 
     [ObservableProperty]
     private bool isConnected;
@@ -488,6 +530,7 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         IsOriginTabSelected = tabType == ManualTabType.Origin;
         IsAxisTabSelected = tabType == ManualTabType.Axis;
         IsCylinderTabSelected = tabType == ManualTabType.Cylinder;
+        IsMagnetTabSelected = tabType == ManualTabType.Magnet;
     }
 
     private void OnConnectionChanged(object? sender, bool isConnected)
@@ -552,6 +595,11 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
                 ReadBool(cylinder.SecondaryCommandTag.Name),
                 ReadBool(cylinder.PrimaryFeedbackTag.Name),
                 ReadBool(cylinder.SecondaryFeedbackTag.Name));
+        }
+
+        foreach (var output in BinaryOutputs)
+        {
+            output.IsActive = ReadBool(output.CommandTag.Name);
         }
 
         SyncOriginActions();
@@ -701,6 +749,34 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
     private bool CanExecuteOneShot(string? tagName)
     {
         return CanIssueCommands && !string.IsNullOrWhiteSpace(tagName);
+    }
+
+    private Task ActivateBinaryOutputAsync(string? tagName)
+    {
+        return WriteBinaryOutputAsync(tagName, true);
+    }
+
+    private Task DeactivateBinaryOutputAsync(string? tagName)
+    {
+        return WriteBinaryOutputAsync(tagName, false);
+    }
+
+    private async Task WriteBinaryOutputAsync(string? tagName, bool value)
+    {
+        if (!CanExecuteOneShot(tagName))
+        {
+            return;
+        }
+
+        try
+        {
+            await _plcService.WriteAsync(tagName!, value).ConfigureAwait(false);
+            await InvokeOnUiThreadAsync(() => SyncStatesFromCache(updateTimestamp: true));
+        }
+        catch (Exception exception)
+        {
+            await ShowErrorMessageAsync($"Không thể {(value ? "hút/bật" : "nhả/tắt")} {tagName}", exception).ConfigureAwait(false);
+        }
     }
 
     private async Task ApplyAxisSpeedAsync(ManualAxisState? axis)
@@ -902,6 +978,8 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
     private void RefreshCommandStates()
     {
         RunOneShotCommand.NotifyCanExecuteChanged();
+        ActivateBinaryOutputCommand.NotifyCanExecuteChanged();
+        DeactivateBinaryOutputCommand.NotifyCanExecuteChanged();
         ApplyAxisSpeedCommand.NotifyCanExecuteChanged();
         WriteMovePointValueCommand.NotifyCanExecuteChanged();
         MoveAxisToPointCommand.NotifyCanExecuteChanged();
@@ -948,5 +1026,6 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         Origin,
         Axis,
         Cylinder,
+        Magnet,
     }
 }
