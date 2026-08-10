@@ -52,7 +52,7 @@ internal sealed class RobotCurrentOrderParameterWriter
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.QuantityInOrder.Name, currentOrder.Quantity);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.JigSupplyType.Name, profileLineData.JigType);
 
-        // Model parameter registers D5540 - D5556
+        // Model parameter registers D5540 - D5556 and D5560 - D5563
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.OuterFinishedDiameter.Name, profileLineData.OuterFinishedDiameter);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InputBlankThickness.Name, profileLineData.InputBlankThickness);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.Op1TurnedThickness.Name, profileLineData.Op1TurnedThickness);
@@ -62,6 +62,8 @@ internal sealed class RobotCurrentOrderParameterWriter
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InnerFinishedDiameter.Name, profileLineData.InnerFinishedDiameter);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InnerDiameterToGDiameterDistance.Name, profileLineData.InnerDiameterToGDiameterDistance);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.MagnetCount.Name, profileLineData.MagnetCount);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InputBlankDiameter.Name, profileLineData.InputBlankDiameter);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.Op2ChuckSleeveDepth.Name, profileLineData.Op2ChuckSleeveDepth);
 
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.CurrentPickIndex.Name, 1);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.OrderDataLoadCommand.Name, true);
@@ -87,6 +89,8 @@ internal sealed class RobotCurrentOrderParameterWriter
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InnerFinishedDiameter.Name, 0f);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InnerDiameterToGDiameterDistance.Name, 0f);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.MagnetCount.Name, 0);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InputBlankDiameter.Name, 0f);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.Op2ChuckSleeveDepth.Name, 0f);
 
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.CurrentPickIndex.Name, 0);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.OrderDataLoadCommand.Name, false);
@@ -117,7 +121,9 @@ internal sealed class RobotCurrentOrderParameterWriter
         return order.PartHoverHeight.HasValue
                || order.JigCenterOffset.HasValue
                || order.JigDepthOffset.HasValue
-               || order.DiameterOp1.HasValue;
+               || order.DiameterOp1.HasValue
+               || order.InputBlankDiameter.HasValue
+               || order.Op2ChuckSleeveDepth.HasValue;
     }
 
     private static RobotProfileLineData BuildProfileLineDataFromSnapshot(AgvOrderData order)
@@ -128,7 +134,9 @@ internal sealed class RobotCurrentOrderParameterWriter
             PartHoverHeight = order.PartHoverHeight ?? 0f,
             JigCenterOffset = order.JigCenterOffset ?? 0f,
             JigDepthOffset = order.JigDepthOffset ?? 0f,
-            DiameterOp1 = order.DiameterOp1 ?? 0f
+            DiameterOp1 = order.DiameterOp1 ?? 0f,
+            InputBlankDiameter = order.InputBlankDiameter ?? 0f,
+            Op2ChuckSleeveDepth = order.Op2ChuckSleeveDepth ?? 0f
         };
     }
 

@@ -53,8 +53,11 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
     [ObservableProperty] private string _outerShaftDiameterInput = string.Empty;
     [ObservableProperty] private string _diameterOp1Input = string.Empty;
     [ObservableProperty] private string _diameterOp2Input = string.Empty;
+    [ObservableProperty] private string _inputBlankDiameterInput = string.Empty;
+    [ObservableProperty] private string _op2ChuckSleeveDepthInput = string.Empty;
     [ObservableProperty] private string _trayUsageInput = string.Empty;
     [ObservableProperty] private int? _trayTypeInput;
+    [ObservableProperty] private int? _orderInputInput = 1;
     [ObservableProperty] private bool _isDirty;
     [ObservableProperty] private bool _isCreatingNew;
     [ObservableProperty] private bool _isLoading;
@@ -64,6 +67,12 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         new(null, "Chưa chọn"),
         new(0, "Nhỏ"),
         new(1, "To")
+    ];
+
+    public IReadOnlyList<SelectOption> OrderInputOptions { get; } =
+    [
+        new(0, "Không nhập"),
+        new(1, "Nhập")
     ];
 
     // Fields
@@ -516,6 +525,18 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
             return;
         }
 
+        if (!TryReadOptionalFloat(InputBlankDiameterInput, out var inputBlankDiameter))
+        {
+            await _notificationDialog.ShowErrorAsync("Loi", "Duong kinh phoi dau vao phai la so.");
+            return;
+        }
+
+        if (!TryReadOptionalFloat(Op2ChuckSleeveDepthInput, out var op2ChuckSleeveDepth))
+        {
+            await _notificationDialog.ShowErrorAsync("Loi", "Chieu sau bac mam cap OP2 phai la so.");
+            return;
+        }
+
         if (!TryReadOptionalInt(TrayUsageInput, out var trayUsage))
         {
             await _notificationDialog.ShowErrorAsync("Loi", "TRAY su dung phai la so nguyen.");
@@ -536,8 +557,11 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
                 OuterShaftDiameter = outerShaftDiameter,
                 DiameterOp1 = diameterOp1,
                 DiameterOp2 = diameterOp2,
+                InputBlankDiameter = inputBlankDiameter,
+                Op2ChuckSleeveDepth = op2ChuckSleeveDepth,
                 TrayUsage = trayUsage,
                 TrayType = TrayTypeInput,
+                OrderInput = OrderInputInput,
                 RobotData = CollectFieldData(RobotFields),
                 Line1Data = [],
                 Line2Data = []
@@ -929,9 +953,15 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
 
     partial void OnDiameterOp2InputChanged(string value) => MarkMetadataDirty();
 
+    partial void OnInputBlankDiameterInputChanged(string value) => MarkMetadataDirty();
+
+    partial void OnOp2ChuckSleeveDepthInputChanged(string value) => MarkMetadataDirty();
+
     partial void OnTrayUsageInputChanged(string value) => MarkMetadataDirty();
 
     partial void OnTrayTypeInputChanged(int? value) => MarkMetadataDirty();
+
+    partial void OnOrderInputInputChanged(int? value) => MarkMetadataDirty();
 
     // ══ Helpers ══
 
@@ -1018,8 +1048,11 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
             OuterShaftDiameterInput = model.OuterShaftDiameter?.ToString("G29", System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
             DiameterOp1Input = model.DiameterOp1?.ToString("G29", System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
             DiameterOp2Input = model.DiameterOp2?.ToString("G29", System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
+            InputBlankDiameterInput = model.InputBlankDiameter?.ToString("G29", System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
+            Op2ChuckSleeveDepthInput = model.Op2ChuckSleeveDepth?.ToString("G29", System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
             TrayUsageInput = model.TrayUsage?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
             TrayTypeInput = model.TrayType;
+            OrderInputInput = model.OrderInput ?? 1;
         }
         finally
         {
@@ -1040,8 +1073,11 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
             OuterShaftDiameterInput = string.Empty;
             DiameterOp1Input = string.Empty;
             DiameterOp2Input = string.Empty;
+            InputBlankDiameterInput = string.Empty;
+            Op2ChuckSleeveDepthInput = string.Empty;
             TrayUsageInput = string.Empty;
             TrayTypeInput = null;
+            OrderInputInput = 1;
         }
         finally
         {

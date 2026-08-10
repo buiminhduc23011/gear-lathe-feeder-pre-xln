@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
-  Col,
   Descriptions,
   Form,
   Input,
   InputNumber,
   Modal,
   Popconfirm,
-  Row,
   Select,
   Space,
   Switch,
@@ -46,8 +44,8 @@ const JIG_SUPPLY_TYPE_OPTIONS = [
 ];
 
 const ROBOT_FIELDS = [
-  { key: "outerFinishedDiameter", label: "Đường kính ngoài phôi thành phẩm", type: "real" },
   { key: "inputBlankThickness", label: "Độ dày Phôi đầu vào", type: "real" },
+  { key: "outerFinishedDiameter", label: "Đường kính ngoài phôi thành phẩm", type: "real" },
   { key: "op1TurnedThickness", label: "Độ dày phôi sau tiện OP1", type: "real" },
   { key: "finishedThickness", label: "Độ dày Phôi thành phẩm", type: "real" },
   { key: "pickDropZOffset", label: "Ofset tọa độ Z gắp thả hàng", type: "real" },
@@ -65,23 +63,11 @@ const ROBOT_FIELDS = [
 
 
 
-const MODEL_METADATA_FIELDS = [
+export const MODEL_METADATA_FIELDS = [
   { key: "itemType", label: "Loại hàng", type: "text" },
   { key: "machiningProgram", label: "Chương trình gia công", type: "int" },
   { key: "spare1", label: "Spare 1", type: "text" },
   { key: "spare2", label: "Spare 2", type: "text" },
-  { key: "outerShaftDiameter", label: "Đường kính ngoài trục", type: "real" },
-  { key: "diameterOp1", label: "Đường kính Op1", type: "real" },
-  { key: "diameterOp2", label: "Đường kính Op2", type: "real" },
-  {
-    key: "trayType",
-    label: "Loại tray",
-    type: "select",
-    options: [
-      { value: 0, label: "Nhỏ" },
-      { value: 1, label: "To" }
-    ]
-  },
   {
     key: "orderInput",
     label: "Nhập order",
@@ -90,10 +76,14 @@ const MODEL_METADATA_FIELDS = [
       { value: 0, label: "Không nhập" },
       { value: 1, label: "Nhập" }
     ]
-  }
+  },
+  { key: "inputBlankDiameter", label: "Đường kính phôi đầu vào", type: "real" },
+  { key: "op2ChuckSleeveDepth", label: "Chiều sâu bạc mâm cặp OP2", type: "real" }
 ];
 
 const EXCEL_VALIDATION_CODE = "MODEL_EXCEL_VALIDATION_FAILED";
+
+const HIDDEN_MODEL_METADATA_KEYS = ["spare1", "spare2"];
 
 const ACTION_COLORS = {
   Created: "green",
@@ -131,57 +121,53 @@ function buildFieldData(fields, values = {}) {
 
 function FieldFormItems({ fields, namePrefix }) {
   return (
-    <Row gutter={[12, 0]}>
+    <div className="model-profile-fields-grid model-profile-robot-grid">
       {fields.map((field) => (
-        <Col xs={24} md={8} key={field.key}>
-          <Form.Item label={field.label} name={[namePrefix, field.key]}>
+        <Form.Item label={field.label} name={[namePrefix, field.key]} key={field.key}>
+          {field.type === "select" ? (
+            <Select size="small" options={field.options} />
+          ) : (
+            <InputNumber
+              size="small"
+              style={{ width: "100%" }}
+              precision={field.type === "real" ? 3 : 0}
+              step={field.type === "real" ? 0.001 : 1}
+            />
+          )}
+        </Form.Item>
+      ))}
+    </div>
+  );
+}
+
+function MetadataFormItems() {
+  const visibleFields = MODEL_METADATA_FIELDS.filter((field) => !HIDDEN_MODEL_METADATA_KEYS.includes(field.key));
+
+  return (
+    <>
+      {HIDDEN_MODEL_METADATA_KEYS.map((key) => (
+        <Form.Item name={key} key={key} hidden>
+          <Input />
+        </Form.Item>
+      ))}
+      <div className="model-profile-fields-grid model-profile-metadata-grid">
+        {visibleFields.map((field) => (
+          <Form.Item label={field.label} name={field.key} key={field.key}>
             {field.type === "select" ? (
-              <Select options={field.options} />
+              <Select size="small" options={field.options} />
+            ) : field.type === "text" ? (
+              <Input size="small" />
             ) : (
               <InputNumber
+                size="small"
                 style={{ width: "100%" }}
                 precision={field.type === "real" ? 3 : 0}
                 step={field.type === "real" ? 0.001 : 1}
               />
             )}
           </Form.Item>
-        </Col>
-      ))}
-    </Row>
-  );
-}
-
-function MetadataFormItems() {
-  const visibleFields = MODEL_METADATA_FIELDS.filter((field) => !["spare1", "spare2"].includes(field.key));
-
-  return (
-    <>
-      <Form.Item name="spare1" hidden>
-        <Input />
-      </Form.Item>
-      <Form.Item name="spare2" hidden>
-        <Input />
-      </Form.Item>
-      <Row gutter={[12, 8]}>
-        {visibleFields.map((field) => (
-          <Col xs={24} sm={12} md={8} lg={6} xl={6} key={field.key}>
-            <Form.Item label={field.label} name={field.key} style={{ marginBottom: 12 }}>
-              {field.type === "select" ? (
-                <Select size="small" options={field.options} />
-              ) : field.type === "text" ? (
-                <Input size="small" />
-              ) : (
-                <InputNumber
-                  size="small"
-                  style={{ width: "100%" }}
-                  precision={field.type === "real" ? 3 : 0}
-                  step={field.type === "real" ? 0.001 : 1}
-                />
-              )}
-            </Form.Item>
-          </Col>
         ))}
-      </Row>
+      </div>
     </>
   );
 }
@@ -213,13 +199,6 @@ function SnapshotDataView({ data, fields }) {
   );
 }
 
-function formatTrayType(value) {
-  if (value == null) return "Nhỏ";
-  if (value === 0 || value === "0") return "Nhỏ";
-  if (value === 1 || value === "1") return "To";
-  return "-";
-}
-
 function formatOrderInput(value) {
   if (value == null) return "Không nhập";
   if (value === 0 || value === "0") return "Không nhập";
@@ -240,7 +219,7 @@ function columnTitle(...lines) {
   );
 }
 
-function buildModelFormValues(model) {
+export function buildModelFormValues(model) {
   if (!model) {
     return {
       modelName: "",
@@ -251,6 +230,8 @@ function buildModelFormValues(model) {
       outerShaftDiameter: 0,
       diameterOp1: 0,
       diameterOp2: 0,
+      inputBlankDiameter: 0,
+      op2ChuckSleeveDepth: 0,
       trayType: 0,
       orderInput: 1,
       robotData: buildFieldDefaults(ROBOT_FIELDS)
@@ -266,13 +247,15 @@ function buildModelFormValues(model) {
     outerShaftDiameter: model.outerShaftDiameter ?? 0,
     diameterOp1: model.diameterOp1 ?? 0,
     diameterOp2: model.diameterOp2 ?? 0,
+    inputBlankDiameter: model.inputBlankDiameter ?? 0,
+    op2ChuckSleeveDepth: model.op2ChuckSleeveDepth ?? 0,
     trayType: model.trayType ?? 0,
     orderInput: model.orderInput ?? 1,
     robotData: buildFieldData(ROBOT_FIELDS, model.robotData)
   };
 }
 
-function buildModelPayload(values, modelName) {
+export function buildModelPayload(values, modelName) {
   return {
     modelName,
     itemType: values.itemType || null,
@@ -282,6 +265,8 @@ function buildModelPayload(values, modelName) {
     outerShaftDiameter: values.outerShaftDiameter ?? 0,
     diameterOp1: values.diameterOp1 ?? 0,
     diameterOp2: values.diameterOp2 ?? 0,
+    inputBlankDiameter: values.inputBlankDiameter ?? 0,
+    op2ChuckSleeveDepth: values.op2ChuckSleeveDepth ?? 0,
     trayType: values.trayType ?? 0,
     orderInput: values.orderInput ?? 1,
     robotData: buildFieldData(ROBOT_FIELDS, values.robotData),
@@ -297,14 +282,11 @@ function hasPositiveNumber(value) {
 
 function getActivationMissingFields(model) {
   const missingFields = [];
-  if (!hasPositiveNumber(model?.diameterOp1)) {
-    missingFields.push("Đường kính Op1");
+  if (!hasPositiveNumber(model?.inputBlankDiameter)) {
+    missingFields.push("Đường kính phôi đầu vào");
   }
-  if (!hasPositiveNumber(model?.diameterOp2)) {
-    missingFields.push("Đường kính Op2");
-  }
-  if (!hasPositiveNumber(model?.robotData?.jigProductHeight)) {
-    missingFields.push("Độ cao trên Jig");
+  if (!hasPositiveNumber(model?.robotData?.inputBlankThickness)) {
+    missingFields.push("Độ dày Phôi đầu vào");
   }
 
   return missingFields;
@@ -658,25 +640,25 @@ function ModelProfiles() {
       render: (value) => value ?? 0
     },
     {
-      title: columnTitle("Đường kính ngoài", "trục"),
-      dataIndex: "outerShaftDiameter",
-      key: "outerShaftDiameter",
-      width: 135,
-      render: (value) => value ?? 0
-    },
-    {
-      title: "Loại tray",
-      dataIndex: "trayType",
-      key: "trayType",
-      width: 110,
-      render: (value) => formatTrayType(value)
-    },
-    {
       title: "Nhập order",
       dataIndex: "orderInput",
       key: "orderInput",
       width: 120,
       render: (value) => formatOrderInput(value)
+    },
+    {
+      title: columnTitle("Đường kính", "phôi đầu vào"),
+      dataIndex: "inputBlankDiameter",
+      key: "inputBlankDiameter",
+      width: 140,
+      render: (value) => value ?? 0
+    },
+    {
+      title: columnTitle("Chiều sâu", "bạc OP2"),
+      dataIndex: "op2ChuckSleeveDepth",
+      key: "op2ChuckSleeveDepth",
+      width: 135,
+      render: (value) => value ?? 0
     },
     {
       title: "Người tạo",
@@ -849,6 +831,7 @@ function ModelProfiles() {
             title={editingModel ? `Sửa Article ID: ${editingModel.modelName}` : "Tạo model mới"}
             open={modalOpen}
             width={1100}
+            className="model-profile-modal"
             confirmLoading={saving}
             onCancel={closeModal}
             onOk={() => form.submit()}
@@ -858,6 +841,7 @@ function ModelProfiles() {
               key={editingModel?.id ?? "new-model"}
               form={form}
               layout="vertical"
+              className="model-profile-form"
               initialValues={formValues}
               preserve={false}
               onFinish={handleSubmit}
@@ -881,17 +865,13 @@ function ModelProfiles() {
                     }
                   }
                 ]}
-                style={{ maxWidth: 360 }}
+                style={{ maxWidth: 320, marginBottom: 8 }}
               >
-                <Input placeholder="VD: AN1147G" disabled={!!editingModel} />
+                <Input size="small" placeholder="VD: AN1147G" disabled={!!editingModel} />
               </Form.Item>
 
               <MetadataFormItems />
-
-              <div style={{ marginTop: 12 }}>
-                <Text strong style={{ display: "block", marginBottom: 12 }}>Thông số Robot & Jig</Text>
-                <FieldFormItems fields={ROBOT_FIELDS} namePrefix="robotData" />
-              </div>
+              <FieldFormItems fields={ROBOT_FIELDS} namePrefix="robotData" />
             </Form>
           </AppModal>
 
@@ -922,7 +902,17 @@ function ModelProfiles() {
               scroll={{ x: 980 }}
               expandable={{
                 expandedRowRender: (record) => (
-                  <SnapshotDataView data={record.robotData} fields={ROBOT_FIELDS} />
+                  <Space direction="vertical" style={{ display: "flex" }}>
+                    <Descriptions column={2} size="small" bordered>
+                      <Descriptions.Item label="Đường kính phôi đầu vào">
+                        {record.inputBlankDiameter ?? 0}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Chiều sâu bạc mâm cặp OP2">
+                        {record.op2ChuckSleeveDepth ?? 0}
+                      </Descriptions.Item>
+                    </Descriptions>
+                    <SnapshotDataView data={record.robotData} fields={ROBOT_FIELDS} />
+                  </Space>
                 )
               }}
               columns={[

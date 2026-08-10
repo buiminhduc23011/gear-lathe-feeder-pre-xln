@@ -104,6 +104,8 @@ public sealed class AppDbContext : DbContext
             entity.Property(x => x.Spare1).HasMaxLength(150);
             entity.Property(x => x.Spare2).HasMaxLength(150);
             entity.Property(x => x.OuterShaftDiameter).HasPrecision(18, 3);
+            entity.Property(x => x.InputBlankDiameter).HasColumnType("real");
+            entity.Property(x => x.Op2ChuckSleeveDepth).HasColumnType("real");
             entity.Property(x => x.RobotData).IsRequired();
             entity.Property(x => x.Line1Data).IsRequired();
             entity.Property(x => x.Line2Data).IsRequired();
@@ -132,6 +134,8 @@ public sealed class AppDbContext : DbContext
             entity.Property(x => x.Spare1).HasMaxLength(150);
             entity.Property(x => x.Spare2).HasMaxLength(150);
             entity.Property(x => x.OuterShaftDiameter).HasPrecision(18, 3);
+            entity.Property(x => x.InputBlankDiameter).HasColumnType("real");
+            entity.Property(x => x.Op2ChuckSleeveDepth).HasColumnType("real");
             entity.Property(x => x.RobotData).IsRequired();
             entity.Property(x => x.Line1Data).IsRequired();
             entity.Property(x => x.Line2Data).IsRequired();

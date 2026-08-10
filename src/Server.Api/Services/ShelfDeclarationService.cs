@@ -844,6 +844,8 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
                 jigCenterOffset = profileData?.JigCenterOffset,
                 jigDepthOffset = profileData?.JigDepthOffset,
                 diameterOp1 = profileData?.DiameterOp1,
+                inputBlankDiameter = profileData?.InputBlankDiameter,
+                op2ChuckSleeveDepth = profileData?.Op2ChuckSleeveDepth,
                 status = (string?)null,
                 completedAtUtc = (DateTimeOffset?)null
             };
@@ -858,7 +860,9 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         float PartHoverHeight,
         float JigCenterOffset,
         float JigDepthOffset,
-        float? DiameterOp1);
+        float? DiameterOp1,
+        float? InputBlankDiameter,
+        float? Op2ChuckSleeveDepth);
 
     private async Task<Dictionary<string, ModelProfileData>> LoadProfileDataByModelNameAsync(
         int machineId,
@@ -880,7 +884,7 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         var profiles = await _db.ModelProfiles
             .AsNoTracking()
             .Where(x => x.MachineId == machineId && !x.IsDeleted)
-            .Select(x => new { x.Id, x.ModelName, x.RobotData, x.Line1Data, x.Line2Data, x.DiameterOp1 })
+            .Select(x => new { x.Id, x.ModelName, x.RobotData, x.Line1Data, x.Line2Data, x.DiameterOp1, x.InputBlankDiameter, x.Op2ChuckSleeveDepth })
             .ToListAsync(cancellationToken);
 
         var missingRequestedModel = requestedModelNames
@@ -903,7 +907,9 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
                 profile.Id,
                 profile.RobotData,
                 localMachineSlotIndex == 2 ? profile.Line2Data : profile.Line1Data,
-                profile.DiameterOp1);
+                profile.DiameterOp1,
+                profile.InputBlankDiameter,
+                profile.Op2ChuckSleeveDepth);
         }
 
         return result;
@@ -937,7 +943,9 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         int profileId,
         string? robotDataJson,
         string? lineDataJson,
-        float? diameterOp1)
+        float? diameterOp1,
+        float? inputBlankDiameter,
+        float? op2ChuckSleeveDepth)
     {
         var robotData = ParseJsonObject(robotDataJson);
         var lineData = ParseJsonObject(lineDataJson);
@@ -948,7 +956,9 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
             ReadFloatOrDefault(robotData, "jigProductHeight"),
             ReadFloatOrDefault(robotData, "jigCenterOffset"),
             ReadFloatOrDefault(robotData, "jigDepthOffset"),
-            diameterOp1);
+            diameterOp1,
+            inputBlankDiameter,
+            op2ChuckSleeveDepth);
     }
 
     private static Dictionary<string, JsonElement> ParseJsonObject(string? json)
@@ -1317,6 +1327,8 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         public float? JigCenterOffset { get; set; }
         public float? JigDepthOffset { get; set; }
         public float? DiameterOp1 { get; set; }
+        public float? InputBlankDiameter { get; set; }
+        public float? Op2ChuckSleeveDepth { get; set; }
         public string? Status { get; set; }
         public DateTimeOffset? CompletedAtUtc { get; set; }
     }

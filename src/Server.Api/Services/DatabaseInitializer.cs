@@ -205,6 +205,8 @@ public sealed class DatabaseInitializer
                 [OuterShaftDiameter] DECIMAL(18,3) NULL,
                 [DiameterOp1] REAL NULL,
                 [DiameterOp2] REAL NULL,
+                [InputBlankDiameter] REAL NULL,
+                [Op2ChuckSleeveDepth] REAL NULL,
                 [TrayUsage] INT NULL,
                 [TrayType] INT NULL,
                 [OrderInput] INT NULL,
@@ -268,6 +270,8 @@ public sealed class DatabaseInitializer
                 [OuterShaftDiameter] DECIMAL(18,3) NULL,
                 [DiameterOp1] REAL NULL,
                 [DiameterOp2] REAL NULL,
+                [InputBlankDiameter] REAL NULL,
+                [Op2ChuckSleeveDepth] REAL NULL,
                 [TrayUsage] INT NULL,
                 [TrayType] INT NULL,
                 [OrderInput] INT NULL,
@@ -342,6 +346,16 @@ public sealed class DatabaseInitializer
             ALTER TABLE [dbo].[ModelProfiles] ADD [DiameterOp2] REAL NULL;
         END;
 
+        IF COL_LENGTH(N'[dbo].[ModelProfiles]', N'InputBlankDiameter') IS NULL
+        BEGIN
+            ALTER TABLE [dbo].[ModelProfiles] ADD [InputBlankDiameter] REAL NULL;
+        END;
+
+        IF COL_LENGTH(N'[dbo].[ModelProfiles]', N'Op2ChuckSleeveDepth') IS NULL
+        BEGIN
+            ALTER TABLE [dbo].[ModelProfiles] ADD [Op2ChuckSleeveDepth] REAL NULL;
+        END;
+
         IF EXISTS (
             SELECT 1
             FROM sys.columns c
@@ -412,6 +426,16 @@ public sealed class DatabaseInitializer
         IF COL_LENGTH(N'[dbo].[ModelProfileSnapshots]', N'DiameterOp2') IS NULL
         BEGIN
             ALTER TABLE [dbo].[ModelProfileSnapshots] ADD [DiameterOp2] REAL NULL;
+        END;
+
+        IF COL_LENGTH(N'[dbo].[ModelProfileSnapshots]', N'InputBlankDiameter') IS NULL
+        BEGIN
+            ALTER TABLE [dbo].[ModelProfileSnapshots] ADD [InputBlankDiameter] REAL NULL;
+        END;
+
+        IF COL_LENGTH(N'[dbo].[ModelProfileSnapshots]', N'Op2ChuckSleeveDepth') IS NULL
+        BEGIN
+            ALTER TABLE [dbo].[ModelProfileSnapshots] ADD [Op2ChuckSleeveDepth] REAL NULL;
         END;
 
         IF EXISTS (

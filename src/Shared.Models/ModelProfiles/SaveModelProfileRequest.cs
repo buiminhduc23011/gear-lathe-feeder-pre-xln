@@ -13,6 +13,8 @@ public sealed class SaveModelProfileRequest
     public decimal? OuterShaftDiameter { get; set; }
     public float? DiameterOp1 { get; set; }
     public float? DiameterOp2 { get; set; }
+    public float? InputBlankDiameter { get; set; }
+    public float? Op2ChuckSleeveDepth { get; set; }
     public int? TrayUsage { get; set; }
     public int? TrayType { get; set; }
     public int? OrderInput { get; set; }

@@ -22,6 +22,10 @@ public sealed class ModelProfileEntity
 
     public float? DiameterOp2 { get; set; }
 
+    public float? InputBlankDiameter { get; set; }
+
+    public float? Op2ChuckSleeveDepth { get; set; }
+
     public int? TrayUsage { get; set; }
 
     /// <summary>0 = small tray, 1 = large tray.</summary>

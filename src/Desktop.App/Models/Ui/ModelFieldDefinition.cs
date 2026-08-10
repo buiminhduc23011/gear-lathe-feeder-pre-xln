@@ -41,8 +41,8 @@ public static class ModelFieldCatalog
 {
     public static readonly ModelFieldDefinition[] RobotFields =
     [
-        new("outerFinishedDiameter",            "Đường kính ngoài phôi thành phẩm"),
         new("inputBlankThickness",               "Độ dày Phôi đầu vào"),
+        new("outerFinishedDiameter",            "Đường kính ngoài phôi thành phẩm"),
         new("op1TurnedThickness",                "Độ dày phôi sau tiện OP1"),
         new("finishedThickness",                 "Độ dày Phôi thành phẩm"),
         new("pickDropZOffset",                   "Ofset tọa độ Z gắp thả hàng"),

@@ -152,7 +152,9 @@ internal sealed class RobotJigTypeResolver
             PartHoverHeight = ReadFloatOrDefault(robotData, "jigProductHeight"),
             JigCenterOffset = ReadFloatOrDefault(robotData, "jigCenterOffset"),
             JigDepthOffset = ReadFloatOrDefault(robotData, "jigDepthOffset"),
-            DiameterOp1 = profile.DiameterOp1 ?? 0f
+            DiameterOp1 = profile.DiameterOp1 ?? 0f,
+            InputBlankDiameter = profile.InputBlankDiameter ?? 0f,
+            Op2ChuckSleeveDepth = profile.Op2ChuckSleeveDepth ?? 0f
         };
     }
 
@@ -295,4 +297,6 @@ internal sealed record RobotProfileLineData
     public float JigCenterOffset { get; init; }
     public float JigDepthOffset { get; init; }
     public float DiameterOp1 { get; init; }
+    public float InputBlankDiameter { get; init; }
+    public float Op2ChuckSleeveDepth { get; init; }
 }

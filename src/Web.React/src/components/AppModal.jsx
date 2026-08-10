@@ -8,6 +8,7 @@ function AppModal({
   okText = "Lưu",
   cancelText = "Hủy",
   confirmLoading = false,
+  className,
   onCancel,
   onOk,
   children
@@ -17,6 +18,7 @@ function AppModal({
       open={open}
       title={title}
       width={width}
+      className={className}
       onCancel={onCancel}
       footer={[
         <Button key="cancel" onClick={onCancel} disabled={confirmLoading}>

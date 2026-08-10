@@ -284,7 +284,8 @@
                             <StackPanel Visibility="{Binding HasModelSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <!--  Model name + save/discard  -->
                                 <Border Style="{StaticResource SectionCard.Subtle}">
-                                    <Grid>
+                                    <StackPanel>
+                                        <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="12" />
@@ -295,6 +296,7 @@
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
@@ -332,51 +334,29 @@
                                             <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding MachiningProgramInput, UpdateSourceTrigger=PropertyChanged}" />
                                         </StackPanel>
                                         <StackPanel Grid.Row="1" Grid.Column="4" Margin="0,10,0,0">
-                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Đường kính ngoài trục" />
-                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding OuterShaftDiameterInput, UpdateSourceTrigger=PropertyChanged}" />
-                                        </StackPanel>
-                                        <StackPanel Grid.Row="1" Grid.Column="6" Margin="0,10,0,0">
-                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Đường kính Op1" />
-                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding DiameterOp1Input, UpdateSourceTrigger=PropertyChanged}" />
-                                        </StackPanel>
-                                        <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,10,0,0">
-                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Đường kính Op2" />
-                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding DiameterOp2Input, UpdateSourceTrigger=PropertyChanged}" />
-                                        </StackPanel>
-                                        <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,10,0,0">
-                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Tray sử dụng" />
-                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding TrayUsageInput, UpdateSourceTrigger=PropertyChanged}" />
-                                        </StackPanel>
-                                        <StackPanel Grid.Row="2" Grid.Column="4" Margin="0,10,0,0">
-                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Loại tray" />
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Nhập order" />
                                             <ComboBox
                                                 Margin="0,6,0,0"
                                                 DisplayMemberPath="Label"
-                                                ItemsSource="{Binding TrayTypeOptions}"
-                                                SelectedValue="{Binding TrayTypeInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                ItemsSource="{Binding OrderInputOptions}"
+                                                SelectedValue="{Binding OrderInputInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 SelectedValuePath="Value"
                                                 Style="{StaticResource FilterToolbarComboBox}" />
                                         </StackPanel>
-                                    </Grid>
-                                </Border>
-
-                                <!--  Robot Parameters Card  -->
-                                <StackPanel>
-                                    <Border Style="{StaticResource SectionCard.Subtle}">
-                                        <StackPanel>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-
-                                                <StackPanel Grid.Column="0">
-                                                    <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số Robot" />
-                                                    <TextBlock Margin="0,4,0,0" Style="{StaticResource SectionSubtitleText}" Text="Thông số chiều cao sản phẩm và offset Jig cho robot." />
-                                                </StackPanel>
-
-                                             </Grid>
-                                            <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding RobotFields}">
+                                        <StackPanel Grid.Row="1" Grid.Column="6" Margin="0,10,0,0">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Tray sử dụng" />
+                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding TrayUsageInput, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,10,0,0">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Đường kính phôi đầu vào" />
+                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding InputBlankDiameterInput, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,10,0,0">
+                                            <TextBlock Style="{StaticResource ModelMetadataLabel}" Text="Chiều sâu bạc mâm cặp OP2" />
+                                            <TextBox Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding Op2ChuckSleeveDepthInput, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        </Grid>
+                                        <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding RobotFields}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <WrapPanel ItemWidth="270" />
@@ -422,10 +402,9 @@
                                                         </Border>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </StackPanel>
-                                    </Border>
-                                </StackPanel>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
                         </StackPanel>
                     </ScrollViewer>

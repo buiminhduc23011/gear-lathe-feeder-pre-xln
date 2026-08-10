@@ -20,7 +20,7 @@ public sealed class ModelProfileService : IModelProfileService
     private const string ModelsSheetName = "Models";
     private const int ModelsHeaderRow = 2;
     private const int ModelsDataStartRow = 3;
-    private const int ModelsMetadataColumnCount = 8;
+    private const int ModelsMetadataColumnCount = 10;
     private const int ModelsRobotStartColumn = ModelsMetadataColumnCount + 1;
     private const string LegacyTrayUsageHeader = "Tray sử dụng";
     private const string ExpectedOrderInputHeader = "Nhập order";
@@ -38,7 +38,9 @@ public sealed class ModelProfileService : IModelProfileService
         new(nameof(ModelProfileEntity.DiameterOp1), "Đường kính Op1", 5, ExcelMetadataKind.Float),
         new(nameof(ModelProfileEntity.DiameterOp2), "Đường kính Op2", 6, ExcelMetadataKind.Float),
         new(nameof(ModelProfileEntity.TrayType), "Loại tray", 7, ExcelMetadataKind.TrayType),
-        new(nameof(ModelProfileEntity.OrderInput), ExpectedOrderInputHeader, 8, ExcelMetadataKind.OrderInput)
+        new(nameof(ModelProfileEntity.OrderInput), ExpectedOrderInputHeader, 8, ExcelMetadataKind.OrderInput),
+        new(nameof(ModelProfileEntity.InputBlankDiameter), "Đường kính phôi đầu vào", 9, ExcelMetadataKind.Float),
+        new(nameof(ModelProfileEntity.Op2ChuckSleeveDepth), "Chiều sâu bạc mâm cặp OP2", 10, ExcelMetadataKind.Float)
     ];
 
     private readonly AppDbContext _dbContext;
@@ -90,7 +92,7 @@ public sealed class ModelProfileService : IModelProfileService
 
         var now = DateTimeOffset.UtcNow;
         var requestRobotData = request.RobotData ?? [];
-        var isActivationReady = HasActivationPrerequisites(DefaultFloat(request.DiameterOp1), DefaultFloat(request.DiameterOp2), requestRobotData);
+        var isActivationReady = HasActivationPrerequisites(DefaultFloat(request.InputBlankDiameter), requestRobotData);
 
         // Check if a soft-deleted model with the same name exists – reactivate it to keep history grouped.
         var deleted = await _dbContext.ModelProfiles
@@ -125,6 +127,8 @@ public sealed class ModelProfileService : IModelProfileService
             OuterShaftDiameter = DefaultDecimal(request.OuterShaftDiameter),
             DiameterOp1 = DefaultFloat(request.DiameterOp1),
             DiameterOp2 = DefaultFloat(request.DiameterOp2),
+            InputBlankDiameter = DefaultFloat(request.InputBlankDiameter),
+            Op2ChuckSleeveDepth = DefaultFloat(request.Op2ChuckSleeveDepth),
             TrayUsage = DefaultInt(request.TrayUsage),
             TrayType = DefaultTrayType(request.TrayType),
             OrderInput = DefaultOrderInput(request.OrderInput),
@@ -175,7 +179,7 @@ public sealed class ModelProfileService : IModelProfileService
 
         if (entity.IsEnabled)
         {
-            EnsureActivationPrerequisites(DefaultFloat(request.DiameterOp1), DefaultFloat(request.DiameterOp2), request.RobotData ?? []);
+            EnsureActivationPrerequisites(DefaultFloat(request.InputBlankDiameter), request.RobotData ?? []);
         }
 
         // Snapshot the current state before applying changes.
@@ -337,7 +341,7 @@ public sealed class ModelProfileService : IModelProfileService
 
                 if (existing.IsEnabled)
                 {
-                    var missingActivationFields = GetMissingActivationFields(nextMetadata.DiameterOp1, nextMetadata.DiameterOp2, nextRobotData);
+                    var missingActivationFields = GetMissingActivationFields(nextMetadata.InputBlankDiameter, nextRobotData);
                     if (missingActivationFields.Count > 0)
                     {
                         validationErrors.Add(CreateActivationExcelValidationError(row, missingActivationFields));
@@ -375,6 +379,8 @@ public sealed class ModelProfileService : IModelProfileService
                     OuterShaftDiameter = newMetadata.OuterShaftDiameter,
                     DiameterOp1 = newMetadata.DiameterOp1,
                     DiameterOp2 = newMetadata.DiameterOp2,
+                    InputBlankDiameter = newMetadata.InputBlankDiameter,
+                    Op2ChuckSleeveDepth = newMetadata.Op2ChuckSleeveDepth,
                     TrayUsage = newMetadata.TrayUsage,
                     TrayType = newMetadata.TrayType,
                     OrderInput = newMetadata.OrderInput,
@@ -385,7 +391,7 @@ public sealed class ModelProfileService : IModelProfileService
                     UpdatedByUsername = username,
                     CreatedAtUtc = now,
                     UpdatedAtUtc = now,
-                    IsEnabled = HasActivationPrerequisites(newMetadata.DiameterOp1, newMetadata.DiameterOp2, robotData)
+                    IsEnabled = HasActivationPrerequisites(newMetadata.InputBlankDiameter, robotData)
                 };
 
                 _dbContext.ModelProfiles.Add(entity);
@@ -468,12 +474,12 @@ public sealed class ModelProfileService : IModelProfileService
 
     private static void EnsureActivationPrerequisites(ModelProfileEntity entity)
     {
-        EnsureActivationPrerequisites(entity.DiameterOp1, entity.DiameterOp2, DeserializeData(entity.RobotData));
+        EnsureActivationPrerequisites(entity.InputBlankDiameter, DeserializeData(entity.RobotData));
     }
 
-    private static void EnsureActivationPrerequisites(float? diameterOp1, float? diameterOp2, Dictionary<string, object?> robotData)
+    private static void EnsureActivationPrerequisites(float? inputBlankDiameter, Dictionary<string, object?> robotData)
     {
-        var missingFields = GetMissingActivationFields(diameterOp1, diameterOp2, robotData);
+        var missingFields = GetMissingActivationFields(inputBlankDiameter, robotData);
         if (missingFields.Count == 0)
         {
             return;
@@ -497,6 +503,8 @@ public sealed class ModelProfileService : IModelProfileService
         entity.OuterShaftDiameter = DefaultDecimal(request.OuterShaftDiameter);
         entity.DiameterOp1 = DefaultFloat(request.DiameterOp1);
         entity.DiameterOp2 = DefaultFloat(request.DiameterOp2);
+        entity.InputBlankDiameter = DefaultFloat(request.InputBlankDiameter);
+        entity.Op2ChuckSleeveDepth = DefaultFloat(request.Op2ChuckSleeveDepth);
         entity.TrayUsage = request.TrayUsage ?? entity.TrayUsage ?? 0;
         entity.TrayType = DefaultTrayType(request.TrayType);
         entity.OrderInput = request.OrderInput ?? entity.OrderInput ?? 1;
@@ -511,6 +519,8 @@ public sealed class ModelProfileService : IModelProfileService
             && entity.OuterShaftDiameter == DefaultDecimal(request.OuterShaftDiameter)
             && entity.DiameterOp1 == DefaultFloat(request.DiameterOp1)
             && entity.DiameterOp2 == DefaultFloat(request.DiameterOp2)
+            && entity.InputBlankDiameter == DefaultFloat(request.InputBlankDiameter)
+            && entity.Op2ChuckSleeveDepth == DefaultFloat(request.Op2ChuckSleeveDepth)
             && entity.TrayUsage == (request.TrayUsage ?? entity.TrayUsage ?? 0)
             && entity.TrayType == DefaultTrayType(request.TrayType)
             && entity.OrderInput == (request.OrderInput ?? entity.OrderInput ?? 1);
@@ -556,6 +566,10 @@ public sealed class ModelProfileService : IModelProfileService
         metadata.HasDiameterOp1 = true;
         metadata.DiameterOp2 ??= 0f;
         metadata.HasDiameterOp2 = true;
+        metadata.InputBlankDiameter ??= 0f;
+        metadata.HasInputBlankDiameter = true;
+        metadata.Op2ChuckSleeveDepth ??= 0f;
+        metadata.HasOp2ChuckSleeveDepth = true;
         metadata.TrayUsage ??= 0;
         metadata.HasTrayUsage = true;
         metadata.TrayType ??= 0;
@@ -577,23 +591,22 @@ public sealed class ModelProfileService : IModelProfileService
         return metadata;
     }
 
-    private static bool HasActivationPrerequisites(float? diameterOp1, float? diameterOp2, Dictionary<string, object?> robotData)
+    private static bool HasActivationPrerequisites(float? inputBlankDiameter, Dictionary<string, object?> robotData)
     {
-        return GetMissingActivationFields(diameterOp1, diameterOp2, robotData).Count == 0;
+        return GetMissingActivationFields(inputBlankDiameter, robotData).Count == 0;
     }
 
-    private static List<string> GetMissingActivationFields(float? diameterOp1, float? diameterOp2, IReadOnlyDictionary<string, object?> robotData)
+    private static List<string> GetMissingActivationFields(float? inputBlankDiameter, IReadOnlyDictionary<string, object?> robotData)
     {
         var missingFields = new List<string>();
 
-        robotData.TryGetValue("outerFinishedDiameter", out var outerFinishedDiameter);
-        if (!HasPositiveValue(outerFinishedDiameter) && !HasPositiveValue(diameterOp1))
+        if (!HasPositiveValue(inputBlankDiameter))
         {
-            missingFields.Add("Đường kính ngoài phôi thành phẩm");
+            missingFields.Add("Đường kính phôi đầu vào");
         }
 
         robotData.TryGetValue("inputBlankThickness", out var inputBlankThickness);
-        if (!HasPositiveValue(inputBlankThickness) && !HasPositiveValue(diameterOp2))
+        if (!HasPositiveValue(inputBlankThickness))
         {
             missingFields.Add("Độ dày Phôi đầu vào");
         }
@@ -627,6 +640,10 @@ public sealed class ModelProfileService : IModelProfileService
             HasDiameterOp1 = true,
             DiameterOp2 = incoming.HasDiameterOp2 ? incoming.DiameterOp2 : existing.DiameterOp2,
             HasDiameterOp2 = true,
+            InputBlankDiameter = incoming.HasInputBlankDiameter ? incoming.InputBlankDiameter : existing.InputBlankDiameter,
+            HasInputBlankDiameter = true,
+            Op2ChuckSleeveDepth = incoming.HasOp2ChuckSleeveDepth ? incoming.Op2ChuckSleeveDepth : existing.Op2ChuckSleeveDepth,
+            HasOp2ChuckSleeveDepth = true,
             TrayUsage = existing.TrayUsage,
             HasTrayUsage = true,
             TrayType = incoming.HasTrayType ? incoming.TrayType : existing.TrayType,
@@ -645,6 +662,8 @@ public sealed class ModelProfileService : IModelProfileService
         entity.OuterShaftDiameter = metadata.OuterShaftDiameter;
         entity.DiameterOp1 = metadata.DiameterOp1;
         entity.DiameterOp2 = metadata.DiameterOp2;
+        entity.InputBlankDiameter = metadata.InputBlankDiameter;
+        entity.Op2ChuckSleeveDepth = metadata.Op2ChuckSleeveDepth;
         entity.TrayUsage = metadata.TrayUsage;
         entity.TrayType = metadata.TrayType;
         entity.OrderInput = metadata.OrderInput;
@@ -659,6 +678,8 @@ public sealed class ModelProfileService : IModelProfileService
             && entity.OuterShaftDiameter == metadata.OuterShaftDiameter
             && entity.DiameterOp1 == metadata.DiameterOp1
             && entity.DiameterOp2 == metadata.DiameterOp2
+            && entity.InputBlankDiameter == metadata.InputBlankDiameter
+            && entity.Op2ChuckSleeveDepth == metadata.Op2ChuckSleeveDepth
             && entity.TrayUsage == metadata.TrayUsage
             && entity.TrayType == metadata.TrayType
             && entity.OrderInput == metadata.OrderInput;
@@ -696,6 +717,14 @@ public sealed class ModelProfileService : IModelProfileService
                 metadata.DiameterOp2 = (float?)item.Value;
                 metadata.HasDiameterOp2 = true;
                 break;
+            case nameof(ModelProfileEntity.InputBlankDiameter):
+                metadata.InputBlankDiameter = (float?)item.Value;
+                metadata.HasInputBlankDiameter = true;
+                break;
+            case nameof(ModelProfileEntity.Op2ChuckSleeveDepth):
+                metadata.Op2ChuckSleeveDepth = (float?)item.Value;
+                metadata.HasOp2ChuckSleeveDepth = true;
+                break;
             case nameof(ModelProfileEntity.TrayType):
                 metadata.TrayType = (int?)item.Value;
                 metadata.HasTrayType = true;
@@ -720,6 +749,8 @@ public sealed class ModelProfileService : IModelProfileService
             OuterShaftDiameter = entity.OuterShaftDiameter,
             DiameterOp1 = entity.DiameterOp1,
             DiameterOp2 = entity.DiameterOp2,
+            InputBlankDiameter = entity.InputBlankDiameter,
+            Op2ChuckSleeveDepth = entity.Op2ChuckSleeveDepth,
             TrayUsage = entity.TrayUsage,
             TrayType = entity.TrayType,
             OrderInput = entity.OrderInput,
@@ -894,8 +925,7 @@ public sealed class ModelProfileService : IModelProfileService
         var robotStart = ModelsRobotStartColumn;
         var lastColumn = robotStart + RobotFieldDefinitions.Length - 1;
 
-        WriteGroupHeader(ws, 1, ModelsMetadataColumnCount, "Thông tin chung");
-        WriteGroupHeader(ws, robotStart, lastColumn, "Robot");
+        WriteGroupHeader(ws, 1, lastColumn, "Thông tin model");
 
         ws.Cell(ModelsHeaderRow, 1).Value = "Article ID";
         foreach (var metadataField in MetadataFieldDefinitions)
@@ -1196,6 +1226,8 @@ public sealed class ModelProfileService : IModelProfileService
         ws.Cell(row, 6).Value = DefaultFloat(profile.DiameterOp2);
         ws.Cell(row, 7).Value = DefaultTrayType(profile.TrayType);
         ws.Cell(row, 8).Value = DefaultOrderInput(profile.OrderInput);
+        ws.Cell(row, 9).Value = DefaultFloat(profile.InputBlankDiameter);
+        ws.Cell(row, 10).Value = DefaultFloat(profile.Op2ChuckSleeveDepth);
     }
 
     private static void ValidateModelsSheetHeader(IXLWorksheet ws, List<ModelExcelValidationError> errors)
@@ -1216,20 +1248,32 @@ public sealed class ModelProfileService : IModelProfileService
         }
 
         var columnHHeader = NormalizeHeaderText(ws.Cell(ModelsHeaderRow, 8).GetString());
-        if (string.Equals(columnHHeader, NormalizeHeaderText(ExpectedOrderInputHeader), StringComparison.OrdinalIgnoreCase))
+        var columnIHeader = NormalizeHeaderText(ws.Cell(ModelsHeaderRow, 9).GetString());
+        var columnJHeader = NormalizeHeaderText(ws.Cell(ModelsHeaderRow, 10).GetString());
+        var expectedHeaders = new[]
         {
-            return;
-        }
+            ("H", ExpectedOrderInputHeader, columnHHeader),
+            ("I", "Đường kính phôi đầu vào", columnIHeader),
+            ("J", "Chiều sâu bạc mâm cặp OP2", columnJHeader)
+        };
 
-        errors.Add(new ModelExcelValidationError
+        foreach (var (column, expected, actual) in expectedHeaders)
         {
-            Sheet = ModelsSheetName,
-            Row = ModelsHeaderRow,
-            Column = "H",
-            Field = ExpectedOrderInputHeader,
-            Value = ws.Cell(ModelsHeaderRow, 8).GetString(),
-            Message = "File Excel đang dùng mẫu cũ thiếu cột Đường kính Op1/Op2 trong thông tin chung. Vui lòng export file mẫu mới rồi nhập lại."
-        });
+            if (string.Equals(actual, NormalizeHeaderText(expected), StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            errors.Add(new ModelExcelValidationError
+            {
+                Sheet = ModelsSheetName,
+                Row = ModelsHeaderRow,
+                Column = column,
+                Field = expected,
+                Value = ws.Cell(ModelsHeaderRow, ColumnNumber(column)).GetString(),
+                Message = $"File Excel đang dùng mẫu cũ hoặc thiếu cột {expected}. Vui lòng export file mẫu mới rồi nhập lại."
+            });
+        }
     }
 
     private static string NormalizeHeaderText(string value)
@@ -1450,6 +1494,17 @@ public sealed class ModelProfileService : IModelProfileService
         return columnName;
     }
 
+    private static int ColumnNumber(string column)
+    {
+        var result = 0;
+        foreach (var character in column)
+        {
+            result = result * 26 + (character - 'A' + 1);
+        }
+
+        return result;
+    }
+
     private static Dictionary<string, object?> DeserializeData(string json)
     {
         if (string.IsNullOrWhiteSpace(json) || json == "{}")
@@ -1528,6 +1583,10 @@ public sealed class ModelProfileService : IModelProfileService
         public bool HasDiameterOp1 { get; set; }
         public float? DiameterOp2 { get; set; }
         public bool HasDiameterOp2 { get; set; }
+        public float? InputBlankDiameter { get; set; }
+        public bool HasInputBlankDiameter { get; set; }
+        public float? Op2ChuckSleeveDepth { get; set; }
+        public bool HasOp2ChuckSleeveDepth { get; set; }
         public int? TrayUsage { get; set; }
         public bool HasTrayUsage { get; set; }
         public int? TrayType { get; set; }

@@ -109,6 +109,12 @@ public class AgvOrderData
     [JsonPropertyName("diameterOp1")]
     public float? DiameterOp1 { get; set; }
 
+    [JsonPropertyName("inputBlankDiameter")]
+    public float? InputBlankDiameter { get; set; }
+
+    [JsonPropertyName("op2ChuckSleeveDepth")]
+    public float? Op2ChuckSleeveDepth { get; set; }
+
     [JsonPropertyName("status")]
     public string? Status { get; set; }
 

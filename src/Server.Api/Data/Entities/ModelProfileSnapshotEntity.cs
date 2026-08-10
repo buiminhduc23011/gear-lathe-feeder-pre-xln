@@ -22,6 +22,10 @@ public sealed class ModelProfileSnapshotEntity
 
     public float? DiameterOp2 { get; set; }
 
+    public float? InputBlankDiameter { get; set; }
+
+    public float? Op2ChuckSleeveDepth { get; set; }
+
     public int? TrayUsage { get; set; }
 
     public int? TrayType { get; set; }
