@@ -450,7 +450,9 @@
                                                     Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding HomeTagName}"
                                                     Content="Home"
-                                                    Style="{StaticResource ButtonSecondary}" />
+                                                    Style="{StaticResource ButtonSecondary}">
+                                                    <Button.MinWidth>0</Button.MinWidth>
+                                                </Button>
                                                 <controls:HoldToRunButton
                                                     Content="{Binding PositiveLabel}"
                                                     PressCommand="{Binding DataContext.StartJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
