@@ -1,5 +1,10 @@
 <Project>
   <PropertyGroup>
     <Version>0.0.1</Version>
+    <BuildDate>$([System.DateTime]::Now.ToString('dd/MM/yyyy'))</BuildDate>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="BuildDate" Value="$(BuildDate)" />
+  </ItemGroup>
 </Project>

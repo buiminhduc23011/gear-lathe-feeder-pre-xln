@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Windows;
@@ -52,6 +53,12 @@ public partial class FooterViewModel : ObservableObject
 
     public string VersionText =>
         $"Desktop {Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0"}";
+
+    public string BuildDateText =>
+        Assembly.GetExecutingAssembly()
+            .GetCustomAttributes<AssemblyMetadataAttribute>()
+            .FirstOrDefault(attribute => attribute.Key == "BuildDate")?.Value
+        ?? File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location).ToString("dd/MM/yyyy");
 
     public string ConnectionBadgeText => "PLC";
 

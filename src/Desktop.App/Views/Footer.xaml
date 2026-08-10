@@ -18,8 +18,14 @@
 
             <TextBlock
                 VerticalAlignment="Center"
-                Style="{StaticResource BodySecondaryText}"
-                Text="{Binding VersionText, StringFormat='{}{0} | Released: 23/03/2026 | Design by STI.Automation'}" />
+                Style="{StaticResource BodySecondaryText}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} | Released: {1} | Design by STI.Automation">
+                        <Binding Path="VersionText" />
+                        <Binding Path="BuildDateText" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
 
             <WrapPanel Grid.Column="1" VerticalAlignment="Center">
                 <!--  PLC scan rate + badge  -->
