@@ -127,7 +127,10 @@
         </Style>
     </UserControl.Resources>
 
-    <shared:PageScaffold PageSubtitle="{Binding Subtitle}" PageTitle="{Binding Title}">
+    <shared:PageScaffold
+        BodyVerticalScrollBarVisibility="Disabled"
+        PageSubtitle="{Binding Subtitle}"
+        PageTitle="{Binding Title}">
         <shared:PageScaffold.BodyContent>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -259,6 +262,12 @@
                         <ColumnDefinition Width="16" />
                         <ColumnDefinition Width="430" />
                     </Grid.ColumnDefinitions>
+
+                    <Border
+                        Grid.Column="1"
+                        Width="1"
+                        HorizontalAlignment="Center"
+                        Background="{DynamicResource Brush.Border.Divider}" />
 
                     <!--  Left: Model fields  -->
                     <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
@@ -407,49 +416,26 @@
                         Grid.Column="2"
                         Padding="16"
                         Background="{DynamicResource Brush.Surface.Panel}"
+                        BorderBrush="{DynamicResource Brush.Border.Divider}"
+                        BorderThickness="0,0,1,0"
                         CornerRadius="12">
-                        <ScrollViewer Padding="0,0,6,0" Style="{StaticResource IndustrialScrollViewer}" VerticalScrollBarVisibility="Auto">
-                            <StackPanel>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
 
-                                <!--  Header + PLC badge  -->
-                                <Grid Margin="0,0,0,12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+                                <!--  Header  -->
+                                <Grid Grid.Row="0" Margin="0,0,0,12">
                                     <StackPanel>
                                         <TextBlock Style="{StaticResource SectionTitleText}" Text="Điều khiển thủ công" />
                                         <TextBlock Margin="0,4,0,0" Style="{StaticResource SectionSubtitleText}" Text="Di chuyển trục, về Home và điều khiển xy lanh." />
                                     </StackPanel>
-                                    <Border Grid.Column="1" VerticalAlignment="Center">
-                                        <Border.Style>
-                                            <Style BasedOn="{StaticResource ServoBadge}" TargetType="Border">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                                        <Setter Property="Background" Value="{StaticResource Brush.Status.RunningSurface}" />
-                                                        <Setter Property="BorderBrush" Value="{StaticResource Brush.Status.Running}" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <TextBlock>
-                                            <TextBlock.Style>
-                                                <Style BasedOn="{StaticResource ServoBadgeText}" TargetType="TextBlock">
-                                                    <Setter Property="Text" Value="PLC offline" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                                            <Setter Property="Text" Value="PLC online" />
-                                                            <Setter Property="Foreground" Value="{StaticResource Brush.Status.Running}" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-                                    </Border>
                                 </Grid>
 
                                 <!--  Tab selector (control panel)  -->
-                                <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                                <StackPanel Grid.Row="1" Margin="0,0,0,12" Orientation="Horizontal">
                                     <ToggleButton
                                         Command="{Binding SelectAxisTabCommand}"
                                         Content="Điều khiển Trục"
@@ -462,6 +448,12 @@
                                         Style="{StaticResource SettingsSegmentButton}" />
                                 </StackPanel>
 
+                                <ScrollViewer
+                                    Grid.Row="2"
+                                    Padding="0,0,6,0"
+                                    Style="{StaticResource IndustrialScrollViewer}"
+                                    VerticalScrollBarVisibility="Auto">
+                                    <Grid>
                                 <!--  ── Tab: Điều khiển Trục ──  -->
                                 <ItemsControl
                                     ItemsSource="{Binding Axes}"
@@ -831,8 +823,9 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
 
-                            </StackPanel>
-                        </ScrollViewer>
+                                    </Grid>
+                                </ScrollViewer>
+                        </Grid>
                     </Border>
                 </Grid>
             </Grid>

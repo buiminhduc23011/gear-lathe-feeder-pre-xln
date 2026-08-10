@@ -71,12 +71,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
-                    <Border
-                        x:Name="ThumbRoot"
-                        Margin="3,2"
-                        Background="{DynamicResource Brush.Text.Secondary}"
-                        CornerRadius="8"
-                        Opacity="0.75"
+                        <Border
+                            x:Name="ThumbRoot"
+                            Margin="10,2"
+                            Background="{DynamicResource Brush.Text.Secondary}"
+                            CornerRadius="0"
+                            Opacity="0.7"
                         SnapsToDevicePixels="True" />
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -84,7 +84,7 @@
                             <Setter TargetName="ThumbRoot" Property="Background" Value="{DynamicResource Brush.Action.Primary}" />
                         </Trigger>
                         <Trigger Property="IsDragging" Value="True">
-                            <Setter TargetName="ThumbRoot" Property="Margin" Value="2,2" />
+                            <Setter TargetName="ThumbRoot" Property="Margin" Value="10,2" />
                             <Setter TargetName="ThumbRoot" Property="Opacity" Value="1.0" />
                             <Setter TargetName="ThumbRoot" Property="Background" Value="{DynamicResource Brush.Action.Primary}" />
                         </Trigger>
@@ -101,10 +101,10 @@
                 <ControlTemplate TargetType="Thumb">
                     <Border
                         x:Name="ThumbRoot"
-                        Margin="2,3"
+                        Margin="8,3"
                         Background="{DynamicResource Brush.Text.Secondary}"
-                        CornerRadius="8"
-                        Opacity="0.75"
+                        CornerRadius="0"
+                        Opacity="0.7"
                         SnapsToDevicePixels="True" />
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -112,7 +112,7 @@
                             <Setter TargetName="ThumbRoot" Property="Background" Value="{DynamicResource Brush.Action.Primary}" />
                         </Trigger>
                         <Trigger Property="IsDragging" Value="True">
-                            <Setter TargetName="ThumbRoot" Property="Margin" Value="2,2" />
+                            <Setter TargetName="ThumbRoot" Property="Margin" Value="8,3" />
                             <Setter TargetName="ThumbRoot" Property="Opacity" Value="1.0" />
                             <Setter TargetName="ThumbRoot" Property="Background" Value="{DynamicResource Brush.Action.Primary}" />
                         </Trigger>
@@ -127,8 +127,8 @@
         <Setter Property="Stylus.IsFlicksEnabled" Value="True" />
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Vertical">
-                <Setter Property="Width" Value="26" />
-                <Setter Property="MinWidth" Value="26" />
+                <Setter Property="Width" Value="32" />
+                <Setter Property="MinWidth" Value="32" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ScrollBar">
@@ -139,10 +139,10 @@
                                 SnapsToDevicePixels="True">
                                 <Border
                                     x:Name="Rail"
-                                    Width="12"
+                                    Width="10"
                                     HorizontalAlignment="Center"
                                     Background="{DynamicResource Brush.Surface.Recessed}"
-                                    CornerRadius="6"
+                                    CornerRadius="0"
                                     Opacity="0.6" />
                                 <Track
                                     x:Name="PART_Track"
@@ -179,7 +179,7 @@
                                     Height="12"
                                     VerticalAlignment="Center"
                                     Background="{DynamicResource Brush.Surface.Recessed}"
-                                    CornerRadius="6"
+                                    CornerRadius="0"
                                     Opacity="0.6" />
                                 <Track
                                     x:Name="PART_Track"

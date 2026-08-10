@@ -55,6 +55,15 @@
                 Margin="0,20,0,0"
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="{Binding BodyVerticalScrollBarVisibility, ElementName=Root}">
+                <ScrollViewer.Style>
+                    <Style TargetType="ScrollViewer">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding BodyVerticalScrollBarVisibility, ElementName=Root}" Value="Disabled">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ScrollViewer.Style>
                 <ContentPresenter Content="{Binding BodyContent, ElementName=Root}">
                     <ContentPresenter.Style>
                         <Style TargetType="ContentPresenter">
@@ -67,6 +76,25 @@
                     </ContentPresenter.Style>
                 </ContentPresenter>
             </ScrollViewer>
+
+            <ContentPresenter
+                Grid.Row="2"
+                Margin="0,20,0,0"
+                Content="{Binding BodyContent, ElementName=Root}">
+                <ContentPresenter.Style>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding BodyVerticalScrollBarVisibility, ElementName=Root}" Value="Disabled">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <Trigger Property="Content" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentPresenter.Style>
+            </ContentPresenter>
 
             <ContentPresenter Grid.Row="3" Content="{Binding ActionContent, ElementName=Root}">
                 <ContentPresenter.Style>
