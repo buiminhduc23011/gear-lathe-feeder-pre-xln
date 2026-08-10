@@ -678,8 +678,10 @@ export function buildSelectedMachineStagingSlots(machines, selectedMachineId) {
   const selectedMachine = machines.find((machine) => machine.machineId === selectedMachineId);
   return new Set(
     (selectedMachine?.stagingSlotIndices ?? [])
-      .filter((slot) => Number.isFinite(slot))
+      .map(Number)
+      .filter((slot) => Number.isFinite(slot) && slot >= 1 && slot <= 4)
       .sort((left, right) => left - right)
+      .slice(0, 1)
   );
 }
 

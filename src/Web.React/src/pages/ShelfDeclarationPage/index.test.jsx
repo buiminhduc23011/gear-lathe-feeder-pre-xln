@@ -153,6 +153,8 @@ const { apiClient } = require("../../config/api");
 const { message, Modal } = require("antd");
 
 describe("ShelfDeclarationPage", () => {
+  let includeActiveManualDeclaration = false;
+
   beforeAll(() => {
     Object.defineProperty(window, "matchMedia", {
       writable: true,
@@ -171,6 +173,7 @@ describe("ShelfDeclarationPage", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    includeActiveManualDeclaration = false;
 
     apiClient.get.mockImplementation((url) => {
       switch (url) {
@@ -181,7 +184,7 @@ describe("ShelfDeclarationPage", () => {
                 machineId: 1,
                 machineCode: "PGR-01",
                 machineName: "Gear Lathe Feeder Robot 01",
-                stagingSlotIndices: [1, 2]
+                stagingSlotIndices: [1]
               }
             ]
           });
@@ -229,7 +232,7 @@ describe("ShelfDeclarationPage", () => {
               {
                 id: 11,
                 mode: "ManualLoad",
-                status: "Created",
+                status: includeActiveManualDeclaration ? "Created" : "Completed",
                 machineSlotIndex: 1,
                 shelfLayoutType: 1,
                 shelfLayoutName: "Loai 1",
@@ -337,7 +340,7 @@ describe("ShelfDeclarationPage", () => {
     await waitFor(() => {
       expect(screen.getByTestId("staging-slot-1")).toHaveAttribute("aria-disabled", "false");
       expect(screen.getByTestId("staging-slot-1")).toHaveAttribute("aria-busy", "true");
-      expect(screen.getByTestId("staging-slot-2")).toHaveAttribute("aria-disabled", "false");
+      expect(screen.getByTestId("staging-slot-2")).toHaveAttribute("aria-disabled", "true");
       expect(screen.getByTestId("staging-slot-3")).toHaveAttribute("aria-disabled", "true");
       expect(screen.getByTestId("staging-slot-4")).toHaveAttribute("aria-disabled", "true");
     });
@@ -348,10 +351,7 @@ describe("ShelfDeclarationPage", () => {
     expect(screen.getByRole("button", { name: /send/i })).toBeDisabled();
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /send/i }));
-    expect(message.warning).toHaveBeenCalled();
+    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
     fireEvent.change(screen.getByPlaceholderText("Nhập Article ID"), { target: { value: "Model A" } });
@@ -361,7 +361,7 @@ describe("ShelfDeclarationPage", () => {
     fireEvent.click(screen.getByRole("button", { name: /Lịch sử khai báo|Lich su khai bao/i }));
     expect(await screen.findByRole("heading", { name: /Lịch sử khai báo|Lich su khai bao/i })).toBeInTheDocument();
     expect(screen.queryByText(/Thu cong|Thá»§ cÃ´ng/i)).not.toBeInTheDocument();
-    expect(screen.getAllByRole("button", { name: /Hủy|Huy/i })).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: /Hủy|Huy/i })).toHaveLength(1);
 
     await waitFor(() => {
       expect(apiClient.get).toHaveBeenCalledWith("/api/machines");
@@ -377,7 +377,7 @@ describe("ShelfDeclarationPage", () => {
     expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
+    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
     fireEvent.change(screen.getByPlaceholderText("Nhập Article ID"), { target: { value: "Model B" } });
@@ -402,12 +402,13 @@ describe("ShelfDeclarationPage", () => {
   });
 
   it("allows selecting an active manual slot to preview its declaration", async () => {
+    includeActiveManualDeclaration = true;
     render(<ShelfDeclarationPage />);
 
     expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
+    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
     const busySlot = screen.getByRole("radio", { name: /Slot 1/i });
     expect(busySlot).not.toBeDisabled();
@@ -429,7 +430,7 @@ describe("ShelfDeclarationPage", () => {
     expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
+    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
     const modelOrderInput = screen.getByPlaceholderText("Nhập Article ID");
@@ -451,7 +452,7 @@ describe("ShelfDeclarationPage", () => {
     expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
+    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
     fireEvent.change(screen.getByPlaceholderText("Nhập Article ID"), { target: { value: "Model B" } });
@@ -488,7 +489,7 @@ describe("ShelfDeclarationPage", () => {
     expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
+    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
     fireEvent.change(screen.getByPlaceholderText("Nhập Article ID"), { target: { value: "Model B" } });
@@ -515,7 +516,7 @@ describe("ShelfDeclarationPage", () => {
     expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
+    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /ThÃªm order|plus/i }));
     fireEvent.change(screen.getAllByPlaceholderText(/Article ID/)[0], { target: { value: "Model B" } });
@@ -543,7 +544,7 @@ describe("ShelfDeclarationPage", () => {
     expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
+    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
     const articleOrderInput = screen.getByPlaceholderText("Nhập Article ID");
@@ -574,7 +575,7 @@ describe("ShelfDeclarationPage", () => {
     expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
 
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 2")).toBeInTheDocument();
+    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
     fireEvent.change(screen.getByPlaceholderText("Nhập Article ID"), { target: { value: "Model B" } });

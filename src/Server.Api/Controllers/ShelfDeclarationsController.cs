@@ -87,9 +87,9 @@ public sealed class ShelfDeclarationsController : ControllerBase
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "machineCode is required.");
         }
 
-        if (machineSlotIndex is < 1 or > 2)
+        if (machineSlotIndex != 1)
         {
-            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "machineSlotIndex must be between 1 and 2.");
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "machineSlotIndex must be 1.");
         }
 
         try
@@ -165,9 +165,9 @@ public sealed class ShelfDeclarationsController : ControllerBase
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "machineCode is required.");
         }
 
-        if (machineSlotIndex is < 1 or > 2)
+        if (machineSlotIndex != 1)
         {
-            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "machineSlotIndex must be between 1 and 2.");
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "machineSlotIndex must be 1.");
         }
 
         try
@@ -195,9 +195,9 @@ public sealed class ShelfDeclarationsController : ControllerBase
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "machineCode is required.");
         }
 
-        if (machineSlotIndex is < 1 or > 2)
+        if (machineSlotIndex != 1)
         {
-            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "machineSlotIndex must be between 1 and 2.");
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "machineSlotIndex must be 1.");
         }
 
         try

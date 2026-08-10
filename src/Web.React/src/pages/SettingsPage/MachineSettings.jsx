@@ -36,7 +36,8 @@ const defaultValues = {
 export function normalizeStagingSlotIndices(stagingSlotIndices) {
   return Array.from(new Set((stagingSlotIndices ?? []).map(Number)))
     .filter((slot) => Number.isFinite(slot) && slot >= 1 && slot <= 4)
-    .sort((left, right) => left - right);
+    .sort((left, right) => left - right)
+    .slice(0, 1);
 }
 
 function getMachineFormValues(machine) {
@@ -129,7 +130,10 @@ function MachineSettings() {
   );
 
   const selectedSlots = Form.useWatch("stagingSlotIndices", form);
-  const currentSelectedSlots = useMemo(() => selectedSlots || [], [selectedSlots]);
+  const currentSelectedSlots = useMemo(
+    () => normalizeStagingSlotIndices(selectedSlots),
+    [selectedSlots]
+  );
 
   const stagingSlotCheckboxOptions = useMemo(
     () => STAGING_SLOT_OPTIONS.map((slot) => {
@@ -179,8 +183,8 @@ function MachineSettings() {
 
   const handleSubmit = async (values) => {
     const stagingSlotIndices = normalizeStagingSlotIndices(values.stagingSlotIndices);
-    if (stagingSlotIndices.length === 0 || stagingSlotIndices.length > 2) {
-      showErrorMessage("Mỗi máy phải được gán tối đa 2 staging slot và ít nhất 1 slot.");
+    if (stagingSlotIndices.length !== 1) {
+      showErrorMessage("Mỗi máy phải được gán đúng 1 staging slot.");
       return;
     }
 
@@ -355,7 +359,7 @@ function MachineSettings() {
               <Form.Item
                 label="Staging slot"
                 name="stagingSlotIndices"
-                extra="Chọn slot staging gán cho máy. Slot đã thuộc máy khác sẽ bị khóa."
+                extra="Chọn 1 staging slot gán cho máy. Slot đã thuộc máy khác sẽ bị khóa."
               >
                 <Checkbox.Group options={stagingSlotCheckboxOptions} />
               </Form.Item>

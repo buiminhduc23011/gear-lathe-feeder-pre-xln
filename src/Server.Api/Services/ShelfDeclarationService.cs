@@ -143,10 +143,7 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
             throw new InvalidOperationException("machineCode is required.");
         }
 
-        if (machineSlotIndex is < 1 or > 2)
-        {
-            throw new InvalidOperationException("machineSlotIndex must be between 1 and 2.");
-        }
+        ValidateMachineSlotIndex(machineSlotIndex);
 
         var machine = await _db.Machines
             .FirstOrDefaultAsync(m => m.MachineCode == normalizedMachineCode, cancellationToken);
@@ -332,10 +329,7 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
             throw new InvalidOperationException("machineCode is required.");
         }
 
-        if (machineSlotIndex is < 1 or > 2)
-        {
-            throw new InvalidOperationException("machineSlotIndex must be between 1 and 2.");
-        }
+        ValidateMachineSlotIndex(machineSlotIndex);
 
         var entity = await _db.ManualShelfDeclarations
             .Where(d => d.Mode == ShelfDeclarationModes.ManualLoad
@@ -371,10 +365,7 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
             throw new InvalidOperationException("machineCode is required.");
         }
 
-        if (machineSlotIndex is < 1 or > 2)
-        {
-            throw new InvalidOperationException("machineSlotIndex must be between 1 and 2.");
-        }
+        ValidateMachineSlotIndex(machineSlotIndex);
 
         var machine = await _db.Machines
             .FirstOrDefaultAsync(m => m.MachineCode == normalizedMachineCode, cancellationToken);
@@ -790,9 +781,9 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
             return;
         }
 
-        if (request.MachineSlotIndex is < 1 or > 2)
+        if (request.MachineSlotIndex is not 1)
         {
-            throw new InvalidOperationException("machineSlotIndex is required for ManualLoad mode.");
+            throw new InvalidOperationException("machineSlotIndex must be 1 for ManualLoad mode.");
         }
     }
 
@@ -906,7 +897,7 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
             result[profile.ModelName] = BuildProfileData(
                 profile.Id,
                 profile.RobotData,
-                localMachineSlotIndex == 2 ? profile.Line2Data : profile.Line1Data,
+                profile.Line1Data,
                 profile.DiameterOp1,
                 profile.InputBlankDiameter,
                 profile.Op2ChuckSleeveDepth);
@@ -1208,42 +1199,31 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
 
     private static HashSet<int> GetAssignedStagingSlots(MachineEntity machine)
     {
-        return new[] { machine.AssignedStagingSlot1, machine.AssignedStagingSlot2 }
-            .Where(slot => slot.HasValue)
-            .Select(slot => slot!.Value)
-            .ToHashSet();
+        var assignedSlot = machine.AssignedStagingSlot1;
+        return assignedSlot.HasValue ? [assignedSlot.Value] : [];
     }
 
-    private static int[] GetOrderedAssignedStagingSlots(MachineEntity machine)
+    private static int GetAssignedStagingSlot(MachineEntity machine)
     {
-        var slots = GetAssignedStagingSlots(machine)
-            .OrderBy(slot => slot)
-            .ToArray();
-        if (slots.Length != 2)
+        var assignedSlot = machine.AssignedStagingSlot1;
+        if (!assignedSlot.HasValue)
         {
-            throw new InvalidOperationException($"Machine {machine.MachineCode} must be assigned exactly 2 staging slots.");
+            throw new InvalidOperationException($"Machine {machine.MachineCode} must be assigned exactly 1 staging slot.");
         }
 
-        return slots;
+        return assignedSlot.Value;
     }
 
     private static int GetStagingSlotForLocalMachineSlot(MachineEntity machine, int machineSlotIndex)
     {
-        if (machineSlotIndex is < 1 or > 2)
-        {
-            throw new InvalidOperationException("machineSlotIndex must be between 1 and 2.");
-        }
+        ValidateMachineSlotIndex(machineSlotIndex);
 
-        var slots = GetOrderedAssignedStagingSlots(machine);
-        return slots[machineSlotIndex - 1];
+        return GetAssignedStagingSlot(machine);
     }
 
     private static int ValidateAgvPickupSlotIndexes(MachineEntity machine, int machineSlotIndex, int? slotIndex)
     {
-        if (machineSlotIndex is < 1 or > 2)
-        {
-            throw new InvalidOperationException("machineSlotIndex must be between 1 and 2.");
-        }
+        ValidateMachineSlotIndex(machineSlotIndex);
 
         var expectedSlotIndex = GetStagingSlotForLocalMachineSlot(machine, machineSlotIndex);
         if (!slotIndex.HasValue)
@@ -1278,14 +1258,21 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
             return null;
         }
 
-        var slots = GetOrderedAssignedStagingSlots(machine);
-        return Array.IndexOf(slots, stagingSlotIndex.Value) switch
+        if (stagingSlotIndex.Value != GetAssignedStagingSlot(machine))
         {
-            0 => 1,
-            1 => 2,
-            _ => throw new InvalidOperationException(
-                $"Staging slot {stagingSlotIndex.Value} does not belong to machine {machine.MachineCode}.")
-        };
+            throw new InvalidOperationException(
+                $"Staging slot {stagingSlotIndex.Value} does not belong to machine {machine.MachineCode}.");
+        }
+
+        return 1;
+    }
+
+    private static void ValidateMachineSlotIndex(int machineSlotIndex)
+    {
+        if (machineSlotIndex != 1)
+        {
+            throw new InvalidOperationException("machineSlotIndex must be 1.");
+        }
     }
 
     public static string GetLayoutName(int shelfLayoutType) => shelfLayoutType switch

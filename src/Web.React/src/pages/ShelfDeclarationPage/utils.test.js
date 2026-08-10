@@ -237,11 +237,11 @@ describe("ShelfDeclaration utils", () => {
 
   it("buildSelectedMachineStagingSlots returns slots for the active machine", () => {
     const result = buildSelectedMachineStagingSlots([
-      { machineId: 1, stagingSlotIndices: [2, 1] },
-      { machineId: 2, stagingSlotIndices: [3, 4] }
+      { machineId: 1, stagingSlotIndices: [1] },
+      { machineId: 2, stagingSlotIndices: [3] }
     ], 1);
 
-    expect(Array.from(result)).toEqual([1, 2]);
+    expect(Array.from(result)).toEqual([1]);
   });
 
   it("buildValidationErrors returns expected messages for missing fields and invalid staging ownership", () => {
@@ -256,8 +256,8 @@ describe("ShelfDeclaration utils", () => {
       mode: DECLARATION_MODES.AGV,
       stagingSlotIndex: 3,
       machineSlotIndex: 1,
-      selectedMachineStagingSlots: new Set([1, 2]),
-      occupiedStagingSlots: new Map([[1, { slotIndex: 1 }]]),
+      selectedMachineStagingSlots: new Set([1]),
+      occupiedStagingSlots: new Map(),
       busyMachineSlots: new Map(),
       knownModelNames: new Set(["model a"])
     });
@@ -292,7 +292,7 @@ describe("ShelfDeclaration utils", () => {
       mode: DECLARATION_MODES.AGV,
       stagingSlotIndex: 1,
       machineSlotIndex: 1,
-      selectedMachineStagingSlots: new Set([1, 2]),
+      selectedMachineStagingSlots: new Set([1]),
       occupiedStagingSlots: new Map(),
       busyMachineSlots: new Map(),
       knownModelNames: new Set(["model a"])
@@ -313,10 +313,9 @@ describe("ShelfDeclaration utils", () => {
       mode: DECLARATION_MODES.AGV,
       stagingSlotIndex: null,
       machineSlotIndex: 1,
-      selectedMachineStagingSlots: new Set([1, 2]),
+      selectedMachineStagingSlots: new Set([1]),
       occupiedStagingSlots: new Map([
         [1, { slotIndex: 1 }],
-        [2, { slotIndex: 2 }]
       ]),
       busyMachineSlots: new Map()
     });

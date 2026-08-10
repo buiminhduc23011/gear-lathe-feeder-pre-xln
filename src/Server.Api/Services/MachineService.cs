@@ -45,7 +45,7 @@ public sealed class MachineService : IMachineService
             SerialNumber = NormalizeOptional(request.SerialNumber),
             Location = NormalizeOptional(request.Location),
             AssignedStagingSlot1 = stagingSlots[0],
-            AssignedStagingSlot2 = stagingSlots[1],
+            AssignedStagingSlot2 = null,
             IsActive = request.IsActive,
             CreatedAtUtc = now,
             UpdatedAtUtc = now
@@ -74,7 +74,7 @@ public sealed class MachineService : IMachineService
         entity.SerialNumber = NormalizeOptional(request.SerialNumber);
         entity.Location = NormalizeOptional(request.Location);
         entity.AssignedStagingSlot1 = stagingSlots[0];
-        entity.AssignedStagingSlot2 = stagingSlots[1];
+        entity.AssignedStagingSlot2 = null;
         entity.IsActive = request.IsActive;
         entity.UpdatedAtUtc = DateTimeOffset.UtcNow;
 
@@ -113,15 +113,14 @@ public sealed class MachineService : IMachineService
             errors["machineCode"] = ["MachineCode must be unique."];
         }
 
-        if (slots.Length == 2)
+        if (slots.Length == 1)
         {
             var assignedSlots = await _dbContext.Machines
                 .Where(x => !existingId.HasValue || x.MachineId != existingId.Value)
-                .Select(x => new { x.AssignedStagingSlot1, x.AssignedStagingSlot2 })
+                .Select(x => x.AssignedStagingSlot1)
                 .ToListAsync(cancellationToken);
 
             var overlaps = assignedSlots
-                .SelectMany(x => new[] { x.AssignedStagingSlot1, x.AssignedStagingSlot2 })
                 .Where(slot => slot.HasValue && slots.Contains(slot.Value))
                 .Select(slot => slot!.Value)
                 .Distinct()
@@ -151,9 +150,9 @@ public sealed class MachineService : IMachineService
     {
         var slots = stagingSlotIndices?.ToArray() ?? Array.Empty<int>();
 
-        if (slots.Length != 2)
+        if (slots.Length != 1)
         {
-            errors["stagingSlotIndices"] = ["Each machine must be assigned exactly 2 staging slots."];
+            errors["stagingSlotIndices"] = ["Each machine must be assigned exactly 1 staging slot."];
             return Array.Empty<int>();
         }
 
@@ -164,7 +163,7 @@ public sealed class MachineService : IMachineService
         }
 
         var distinctSlots = slots.Distinct().OrderBy(slot => slot).ToArray();
-        if (distinctSlots.Length != 2)
+        if (distinctSlots.Length != 1)
         {
             errors["stagingSlotIndices"] = ["Staging slots must be unique for each machine."];
             return Array.Empty<int>();

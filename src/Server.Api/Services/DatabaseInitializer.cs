@@ -778,7 +778,6 @@ public sealed class DatabaseInitializer
             Manufacturer = "STI",
             Description = "",
             AssignedStagingSlot1 = 1,
-            AssignedStagingSlot2 = 2,
             IsActive = true,
             CreatedAtUtc = DateTimeOffset.UtcNow,
             UpdatedAtUtc = DateTimeOffset.UtcNow
@@ -800,37 +799,29 @@ public sealed class DatabaseInitializer
 
         var usedSlots = new HashSet<int>(
             machines
-                .SelectMany(machine => new[] { machine.AssignedStagingSlot1, machine.AssignedStagingSlot2 })
+                .Select(GetExistingStagingSlot)
                 .Where(slot => slot.HasValue)
                 .Select(slot => slot!.Value));
 
-        var availablePairs = new Queue<int[]>(
-            new[]
-            {
-                new[] { 1, 2 },
-                new[] { 3, 4 }
-            }.Where(pair => pair.All(slot => !usedSlots.Contains(slot))));
-
         var changed = false;
-        foreach (var machine in machines.Where(machine => machine.AssignedStagingSlot1 is null || machine.AssignedStagingSlot2 is null))
+        foreach (var machine in machines)
         {
-            if (availablePairs.Count == 0)
+            var assignedSlot = GetExistingStagingSlot(machine);
+            if (!assignedSlot.HasValue)
             {
-                if (machine.AssignedStagingSlot1 is not null || machine.AssignedStagingSlot2 is not null)
+                var availableSlot = Enumerable.Range(1, 4)
+                    .FirstOrDefault(slot => !usedSlots.Contains(slot));
+                if (availableSlot > 0)
                 {
-                    machine.AssignedStagingSlot1 = null;
-                    machine.AssignedStagingSlot2 = null;
-                    changed = true;
+                    assignedSlot = availableSlot;
+                    usedSlots.Add(availableSlot);
                 }
-
-                continue;
             }
 
-            var pair = availablePairs.Dequeue();
-            if (machine.AssignedStagingSlot1 != pair[0] || machine.AssignedStagingSlot2 != pair[1])
+            if (machine.AssignedStagingSlot1 != assignedSlot || machine.AssignedStagingSlot2 is not null)
             {
-                machine.AssignedStagingSlot1 = pair[0];
-                machine.AssignedStagingSlot2 = pair[1];
+                machine.AssignedStagingSlot1 = assignedSlot;
+                machine.AssignedStagingSlot2 = null;
                 machine.UpdatedAtUtc = DateTimeOffset.UtcNow;
                 changed = true;
             }
@@ -840,5 +831,12 @@ public sealed class DatabaseInitializer
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+    }
+
+    private static int? GetExistingStagingSlot(MachineEntity machine)
+    {
+        return machine.AssignedStagingSlot1 is >= 1 and <= 4
+            ? machine.AssignedStagingSlot1
+            : null;
     }
 }

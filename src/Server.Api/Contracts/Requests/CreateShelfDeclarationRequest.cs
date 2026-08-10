@@ -10,7 +10,7 @@ public sealed class CreateShelfDeclarationRequest
     [Range(1, 4)]
     public int? StagingSlotIndex { get; set; }
 
-    [Range(1, 2)]
+    [Range(1, 1)]
     public int? MachineSlotIndex { get; set; }
 
     [Range(1, 4)]

@@ -136,11 +136,8 @@ public sealed class MachinesController : ControllerBase
 
     private static int[] GetStagingSlotIndices(MachineEntity machine)
     {
-        return new[] { machine.AssignedStagingSlot1, machine.AssignedStagingSlot2 }
-            .Where(slot => slot.HasValue)
-            .Select(slot => slot!.Value)
-            .OrderBy(slot => slot)
-            .ToArray();
+        var assignedSlot = machine.AssignedStagingSlot1;
+        return assignedSlot.HasValue ? [assignedSlot.Value] : Array.Empty<int>();
     }
 
     private static ModelStateDictionary ToModelState(ValidationProblemException exception)

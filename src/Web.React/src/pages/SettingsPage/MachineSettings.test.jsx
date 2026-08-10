@@ -4,8 +4,8 @@ import {
 } from "./MachineSettings";
 
 describe("MachineSettings helpers", () => {
-  it("normalizeStagingSlotIndices sorts, de-duplicates, and filters invalid values", () => {
-    expect(normalizeStagingSlotIndices([4, 2, 2, "3", null, 1])).toEqual([1, 2, 3, 4]);
+  it("normalizeStagingSlotIndices keeps exactly one valid slot", () => {
+    expect(normalizeStagingSlotIndices([4, 2, 2, "3", null, 1])).toEqual([1]);
   });
 
   it("buildReservedSlotMap excludes the machine currently being edited", () => {
@@ -23,7 +23,7 @@ describe("MachineSettings helpers", () => {
     ], 2);
 
     expect(reserved.get(1)).toBe("Machine A");
-    expect(reserved.get(2)).toBe("Machine A");
+    expect(reserved.has(2)).toBe(false);
     expect(reserved.has(3)).toBe(false);
     expect(reserved.has(4)).toBe(false);
   });

@@ -21,7 +21,8 @@ public sealed class CreateMachineRequest
 
     public string? Location { get; init; }
 
-    [Required]
+    [MinLength(1)]
+    [MaxLength(1)]
     public int[] StagingSlotIndices { get; init; } = Array.Empty<int>();
 
     public bool IsActive { get; init; } = true;
