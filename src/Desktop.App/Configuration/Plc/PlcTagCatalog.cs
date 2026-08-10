@@ -306,7 +306,7 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition AxisZNegativeLimit = CreateWord("data.axis_z_negative_limit", "D21014", PlcTagDataType.Float, "Limit trục Z-");
         public static readonly PlcTagDefinition LifterTopLimit = CreateWord("data.lifter_top_limit", "D21016", PlcTagDataType.Float, "Limit trên trục nâng phôi");
         public static readonly PlcTagDefinition LifterBottomLimit = CreateWord("data.lifter_bottom_limit", "D21018", PlcTagDataType.Float, "Limit dưới trục nâng phôi");
-        public static readonly PlcTagDefinition AxisXAutoSpeed = CreateWord("data.axis_x_auto_speed", "D21020", PlcTagDataType.Float, "Tốc độ chạy tự động trục X");
+        public static readonly PlcTagDefinition AxisXAutoSpeed = CreateWord("data.axis_x_auto_speed", "D21020", PlcTagDataType.Float, "Tốc độ chạy tự động trục X không có hàng");
         public static readonly PlcTagDefinition AxisZAutoSpeed = CreateWord("data.axis_z_auto_speed", "D21022", PlcTagDataType.Float, "Tốc độ chạy tự động trục Z");
         public static readonly PlcTagDefinition LifterAutoSpeed = CreateWord("data.lifter_auto_speed", "D21024", PlcTagDataType.Float, "Tốc độ chạy tự động trục nâng phôi");
         public static readonly PlcTagDefinition RotaryAutoSpeed = CreateWord("data.rotary_auto_speed", "D21026", PlcTagDataType.Float, "Tốc độ chạy tự động bàn nâng");
@@ -321,6 +321,8 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition AxisXOffset = CreateWord("data.axis_x_offset", "D21044", PlcTagDataType.Float, "Ofset tọa độ trục X");
         public static readonly PlcTagDefinition AxisZOffset = CreateWord("data.axis_z_offset", "D21046", PlcTagDataType.Float, "Ofset tọa độ trục Z");
         public static readonly PlcTagDefinition LifterOffset = CreateWord("data.lifter_offset", "D21048", PlcTagDataType.Float, "Ofset tọa độ trục nâng");
+        public static readonly PlcTagDefinition AxisXAutoSpeedWithPart = CreateWord("data.axis_x_auto_speed_with_part", "D21050", PlcTagDataType.Float, "Tốc độ chạy tự động trục X có hàng");
+        public static readonly PlcTagDefinition AxisZDropPartSpeed = CreateWord("data.axis_z_drop_part_speed", "D21052", PlcTagDataType.Float, "Tốc độ Trục Z thả hàng khối V");
     }
 
     public static class DataMachine
@@ -339,6 +341,13 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition MasterDropFlipX = CreateWord("data.master_drop_flip_x", "D21080", PlcTagDataType.Float, "Tọa độ X Master thả hàng đảo chiều phôi");
         public static readonly PlcTagDefinition MasterPickPostFlipX = CreateWord("data.master_pick_post_flip_x", "D21082", PlcTagDataType.Float, "Tọa độ X Master lấy hàng phôi sau đảo chiều");
         public static readonly PlcTagDefinition MasterDropFlipZ = CreateWord("data.master_drop_flip_z", "D21084", PlcTagDataType.Float, "Tọa độ Z Master thả hàng đảo chiều phôi");
+        public static readonly PlcTagDefinition LatheSafeTravelZ = CreateWord("data.lathe_safe_travel_z", "D21086", PlcTagDataType.Float, "Tọa độ Z An toàn di chuyển trên máy tiện");
+        public static readonly PlcTagDefinition PartSensor1OnDistance = CreateWord("data.part_sensor_1_on_distance", "D21088", PlcTagDataType.Float, "Khoảng cách On cảm biến Part 1");
+        public static readonly PlcTagDefinition PartSensor2OnDistance = CreateWord("data.part_sensor_2_on_distance", "D21090", PlcTagDataType.Float, "Khoảng cách On cảm biến Part 2");
+        public static readonly PlcTagDefinition InputPickXAxisError = CreateWord("data.input_pick_x_axis_error", "D21092", PlcTagDataType.Float, "Sai số trục X gắp hàng đầu vào cho phép");
+        public static readonly PlcTagDefinition InputGripperSafeRaiseDistance = CreateWord("data.input_gripper_safe_raise_distance", "D21094", PlcTagDataType.Float, "Khoảng cách an toàn đi lên so với tay gắp cụm Input");
+        public static readonly PlcTagDefinition MagnetDiameter = CreateWord("data.magnet_diameter", "D21096", PlcTagDataType.Float, "Đường kính nam châm");
+        public static readonly PlcTagDefinition OutputMagnetProductSafeDropDistance = CreateWord("data.output_magnet_product_safe_drop_distance", "D21098", PlcTagDataType.Float, "Khoảng cách mặt sản phẩm với nam châm đầu ra an toàn xuống");
 
         // --- Momen status readouts (Image 2) ---
         public static readonly PlcTagDefinition MomentXMin = CreateWord("data.moment_x_min", "D5190", PlcTagDataType.Int16, "Momen X Min");
