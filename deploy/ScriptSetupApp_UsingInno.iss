@@ -1,4 +1,4 @@
-#define MyAppName "GearLatheFeeder.Desktop"
+#define MyAppName "Gear Lathe Feeder Pre-XLN Desktop"
 #define MyAppExeName "GearLatheFeeder.Desktop.exe"
 #define RepoRoot AddBackslash(SourcePath) + ".."
 #define DesktopProjectPath AddBackslash(RepoRoot) + "src\\Desktop.App\\Desktop.App.csproj"

@@ -4,7 +4,7 @@ const AUTO_API_BASE_URL = "auto";
 
 let runtimeConfig = {
   API_BASE_URL: AUTO_API_BASE_URL,
-  APP_NAME: "Gear Lathe Feeder Robot"
+  APP_NAME: "Gear Lathe Feeder Pre-XLN"
 };
 
 export const apiClient = axios.create({

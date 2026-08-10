@@ -74,7 +74,7 @@ public partial class App : Application
         {
             MessageBox.Show(
                 "Ứng dụng đã đang chạy. Không thể mở thêm.",
-                "Gear Lathe Feeder Desktop",
+                "Gear Lathe Feeder Pre-XLN Desktop",
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
 

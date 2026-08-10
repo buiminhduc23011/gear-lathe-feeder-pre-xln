@@ -23,7 +23,7 @@ import { useAuth } from "../contexts/AuthContext";
 import packageJson from "../../package.json";
 
 const { Header, Content, Footer, Sider } = Layout;
-const { Text, Title } = Typography;
+const { Text } = Typography;
 const { useBreakpoint } = Grid;
 
 function MainLayout() {
@@ -152,28 +152,20 @@ function MainLayout() {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: collapsed && !isMobile ? "center" : "flex-start",
+          justifyContent: "center",
           gap: 12,
           padding: collapsed && !isMobile ? "16px 12px" : "16px 18px 12px"
         }}
       >
         <img 
           src={logoSrc} 
-          alt="Gear Lathe Feeder" 
+          alt="Gear Lathe Feeder Pre-XLN"
           style={{ 
             width: collapsed && !isMobile ? 40 : 48, 
             height: "auto",
             objectFit: "contain"
           }} 
         />
-        {collapsed && !isMobile ? null : (
-          <div style={{ minWidth: 0 }}>
-            <Title level={4} style={{ margin: 0 }}>
-              Gear Lathe Feeder
-            </Title>
-
-          </div>
-        )}
       </div>
 
       <Menu
@@ -293,7 +285,7 @@ function MainLayout() {
         </Content>
 
         <Footer style={{ textAlign: "center", color: "#667085", background: "transparent", padding: "4px 12px 10px" }}>
-          Gear Lathe Feeder Web | Designed by STI.Automation Version {packageJson.version}
+          Gear Lathe Feeder Pre-XLN Web | Designed by STI.Automation Version {packageJson.version}
         </Footer>
       </Layout>
     </Layout>
