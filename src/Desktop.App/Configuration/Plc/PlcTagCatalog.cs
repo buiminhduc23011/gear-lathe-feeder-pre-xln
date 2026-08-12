@@ -251,7 +251,7 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition OrderCode = CreateWord("data.order_code", "D5505", PlcTagDataType.String, "OrderId", 30);
         public static readonly PlcTagDefinition ModelId = CreateWord("data.model_id", "D5520", PlcTagDataType.String, "ModelId (Tên Model)", 30);
         public static readonly PlcTagDefinition QuantityInOrder = CreateWord("data.quantity_in_order", "D5535", PlcTagDataType.Int16, "Số lượng hàng trong order");
-        public static readonly PlcTagDefinition JigSupplyType = CreateWord("data.jig_supply_type", "D5536", PlcTagDataType.Int16, "Vị trí / Loại jig chứa hàng (1;2;3;4;)");
+        public static readonly PlcTagDefinition JigSupplyType = CreateWord("data.jig_supply_type", "D5536", PlcTagDataType.Int16, "Vị trí Jig chứa order (1;2;3;4)");
 
         // --- Model Parameters (Image 1 & 2) ---
         public static readonly PlcTagDefinition OuterFinishedDiameter = CreateWord("data.outer_finished_diameter", "D5540", PlcTagDataType.Float, "Đường kính ngoài phôi thành phẩm");

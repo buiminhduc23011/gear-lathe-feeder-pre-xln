@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Desktop.App.Converters;
 
@@ -19,6 +20,34 @@ public class NullToCollapsedConverter : IValueConverter
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotSupportedException();
+}
+
+/// <summary>Maps Jig type to the product color used by the AutoPage tray visualization.</summary>
+public class JigTypeToBrushConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is int jigType
+            ? jigType switch
+            {
+                1 => CreateBrush(0x25, 0x63, 0xEB),
+                2 => CreateBrush(0xF9, 0x73, 0x16),
+                3 => CreateBrush(0x16, 0xA3, 0x4A),
+                4 => CreateBrush(0xA2, 0x1C, 0xAF),
+                _ => Brushes.LightSlateGray
+            }
+            : Brushes.LightSlateGray;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotSupportedException();
+
+    private static SolidColorBrush CreateBrush(byte red, byte green, byte blue)
+    {
+        var brush = new SolidColorBrush(Color.FromRgb(red, green, blue));
+        brush.Freeze();
+        return brush;
+    }
 }
 
 /// <summary>

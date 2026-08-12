@@ -50,7 +50,8 @@ internal sealed class RobotCurrentOrderParameterWriter
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.OrderCode.Name, orderCode);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ModelId.Name, modelId);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.QuantityInOrder.Name, currentOrder.Quantity);
-        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.JigSupplyType.Name, profileLineData.JigType);
+        // D5536 stores the cart/Jig position containing this order (1-4), not the Jig type.
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.JigSupplyType.Name, currentOrder.CartPositionIndex);
 
         // Model parameter registers D5540 - D5556 and D5560 - D5563
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.OuterFinishedDiameter.Name, profileLineData.OuterFinishedDiameter);

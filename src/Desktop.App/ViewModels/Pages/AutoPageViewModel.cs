@@ -48,10 +48,10 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
     [ObservableProperty] private int ke1CartPosition2Rows = 1;
     [ObservableProperty] private int ke1CartPosition3Rows = 1;
     [ObservableProperty] private int ke1CartPosition4Rows = 1;
-    [ObservableProperty] private string ke1CartPosition1Label = "Xe hàng · Vị trí 1";
-    [ObservableProperty] private string ke1CartPosition2Label = "Xe hàng · Vị trí 2";
-    [ObservableProperty] private string ke1CartPosition3Label = "Xe hàng · Vị trí 3";
-    [ObservableProperty] private string ke1CartPosition4Label = "Xe hàng · Vị trí 4";
+    [ObservableProperty] private string ke1CartPosition1Label = "VỊ TRÍ 1";
+    [ObservableProperty] private string ke1CartPosition2Label = "VỊ TRÍ 2";
+    [ObservableProperty] private string ke1CartPosition3Label = "VỊ TRÍ 3";
+    [ObservableProperty] private string ke1CartPosition4Label = "VỊ TRÍ 4";
     public ObservableCollection<TraySlotState> Ke1CartPosition1Slots { get; } = [];
     public ObservableCollection<TraySlotState> Ke1CartPosition2Slots { get; } = [];
     public ObservableCollection<TraySlotState> Ke1CartPosition3Slots { get; } = [];
@@ -485,7 +485,7 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
         IReadOnlyList<ObservableCollection<TraySlotState>> positionSlots,
         ObservableCollection<OrderDisplayItem> orderItems)
     {
-        var desiredStates = new (SlotStatus Status, string? OrderId, string? ModelName)[4][];
+        var desiredStates = new (SlotStatus Status, string? OrderId, string? ModelName, int JigType)[4][];
         var usedByPosition = new int[4];
         var orders = positionState.Orders.OrderBy(order => order.OrderSequence).ToList();
         var capacities = orders
@@ -500,9 +500,9 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
             var position = index + 1;
             var rows = Math.Max(1, capacities.GetValueOrDefault(position));
             setRows(position, rows);
-            setLabels(position, $"Xe hàng · Vị trí {position}");
+            setLabels(position, $"VỊ TRÍ {position}");
             EnsureSlotCount(positionSlots[index], rows, 1);
-            desiredStates[index] = new (SlotStatus, string?, string?)[rows];
+            desiredStates[index] = new (SlotStatus, string?, string?, int)[rows];
         }
 
         var currentSeq = positionState.CurrentOrderSequence;
@@ -552,7 +552,7 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
                     else if (currentItem > 0 && itemIndex == currentItem) status = SlotStatus.Picking;
                 }
 
-                desiredStates[positionIndex][slotIndex] = (status, order.OrderId, order.ModelName);
+                desiredStates[positionIndex][slotIndex] = (status, order.OrderId, order.ModelName, order.JigType);
             }
         }
 
@@ -600,8 +600,8 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
         EnsureSlotCount(tray1Slots, tray1Total, tray1Cols);
         EnsureSlotCount(tray2Slots, tray2Total, tray2Cols);
 
-        var desiredTray1States = new (SlotStatus Status, string? OrderId, string? ModelName)[tray1Total];
-        var desiredTray2States = new (SlotStatus Status, string? OrderId, string? ModelName)[tray2Total];
+        var desiredTray1States = new (SlotStatus Status, string? OrderId, string? ModelName, int JigType)[tray1Total];
+        var desiredTray2States = new (SlotStatus Status, string? OrderId, string? ModelName, int JigType)[tray2Total];
         var orders = positionState.Orders
             .OrderBy(order => order.OrderSequence)
             .ToList();
@@ -687,7 +687,7 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
                         nextStatus = SlotStatus.HasProduct;
                 }
 
-                targetStates[slotIndex] = (nextStatus, order.OrderId, order.ModelName);
+                targetStates[slotIndex] = (nextStatus, order.OrderId, order.ModelName, order.JigType);
             }
         }
 
@@ -702,7 +702,7 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
 
     private static void ApplyDesiredSlotStates(
         ObservableCollection<TraySlotState> slots,
-        (SlotStatus Status, string? OrderId, string? ModelName)[] desiredStates)
+        (SlotStatus Status, string? OrderId, string? ModelName, int JigType)[] desiredStates)
     {
         var limit = Math.Min(slots.Count, desiredStates.Length);
         for (var i = 0; i < limit; i++)
@@ -713,6 +713,7 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
             if (slot.Status != desired.Status) slot.Status = desired.Status;
             if (slot.OrderId != desired.OrderId) slot.OrderId = desired.OrderId;
             if (slot.ModelName != desired.ModelName) slot.ModelName = desired.ModelName;
+            if (slot.JigType != desired.JigType) slot.JigType = desired.JigType;
         }
     }
 

@@ -9,6 +9,7 @@
 
     <UserControl.Resources>
         <converters:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
+        <converters:JigTypeToBrushConverter x:Key="JigTypeToBrushConverter" />
 
         <!-- Pulse animation for Picking state -->
         <Storyboard x:Key="PulseAnimation" RepeatBehavior="Forever">
@@ -23,21 +24,12 @@
         <!-- Slot item template -->
         <DataTemplate x:Key="SlotTemplate">
             <Border
-                Width="20"
-                Height="20"
-                Margin="2"
-                CornerRadius="10">
+                Margin="1"
+                MinHeight="7"
+                CornerRadius="4">
                 <Border.ToolTip>
                     <StackPanel MaxWidth="200">
                         <TextBlock FontWeight="SemiBold" Text="{Binding Position, StringFormat='Vị trí {0}'}" />
-                        <TextBlock
-                            Foreground="#475569"
-                            Text="{Binding OrderId, StringFormat='Order: {0}'}"
-                            Visibility="{Binding OrderId, Converter={StaticResource NullToCollapsedConverter}}" />
-                        <TextBlock
-                            Foreground="#475569"
-                            Text="{Binding ModelName, StringFormat='Model: {0}'}"
-                            Visibility="{Binding ModelName, Converter={StaticResource NullToCollapsedConverter}}" />
                     </StackPanel>
                 </Border.ToolTip>
                 <Border.Style>
@@ -45,10 +37,10 @@
                         <Setter Property="Background" Value="#E2E8F0" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Status}" Value="HasProduct">
-                                <Setter Property="Background" Value="#2563EB" />
+                                <Setter Property="Background" Value="{Binding JigType, Converter={StaticResource JigTypeToBrushConverter}}" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Status}" Value="Picking">
-                                <Setter Property="Background" Value="#16A34A" />
+                                <Setter Property="Background" Value="{Binding JigType, Converter={StaticResource JigTypeToBrushConverter}}" />
                                 <DataTrigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard RepeatBehavior="Forever">
@@ -75,19 +67,27 @@
         BorderThickness="1"
         CornerRadius="8"
         Padding="10,8">
-        <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
             <!-- Tray label -->
             <TextBlock
                 x:Name="TrayLabelText"
+                Grid.Row="0"
                 Margin="0,0,0,4"
-                FontSize="13"
+                FontSize="10"
                 FontWeight="SemiBold"
+                HorizontalAlignment="Center"
                 Foreground="#64748B"
                 Text="{Binding TrayLabel, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
             <!-- Grid of slots -->
             <ItemsControl
                 x:Name="SlotsItemsControl"
+                Grid.Row="1"
                 ItemTemplate="{StaticResource SlotTemplate}"
                 ItemsSource="{Binding SlotStates, RelativeSource={RelativeSource AncestorType=UserControl}}">
                 <ItemsControl.ItemsPanel>
@@ -103,6 +103,6 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-        </StackPanel>
+        </Grid>
     </Border>
 </UserControl>

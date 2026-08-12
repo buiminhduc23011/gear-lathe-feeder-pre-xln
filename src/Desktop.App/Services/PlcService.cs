@@ -337,7 +337,7 @@ public sealed class PlcService : IPlcService
                 ApplySnapshot(snapshot);
                 UpdateConnectionState(client.IsConnected);
 
-                // Toggle Clock1s (D5640) every 1 second as heartbeat when app is running
+                // Toggle Clock1s (D5572) every 1 second as heartbeat when app is running.
                 if (_clockTagName != null && client.IsConnected && 
                     (System.DateTime.UtcNow - _lastClockToggle).TotalSeconds >= 1.0)
                 {

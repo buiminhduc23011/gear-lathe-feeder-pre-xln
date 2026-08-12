@@ -44,4 +44,8 @@ public partial class TraySlotState : ObservableObject
     /// <summary>Tên model sản phẩm tại ô này (null = không có order).</summary>
     [ObservableProperty]
     private string? modelName;
+
+    /// <summary>Loại Jig của sản phẩm tại ô này.</summary>
+    [ObservableProperty]
+    private int jigType;
 }
