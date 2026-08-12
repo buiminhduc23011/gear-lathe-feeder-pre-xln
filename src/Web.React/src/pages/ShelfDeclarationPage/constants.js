@@ -11,16 +11,10 @@ export const MACHINE_SLOT_OPTIONS = [1];
 
 export const JIG_TYPE_OPTIONS = [
   { value: 0, label: "0: Không xác định" },
-  { value: 1, label: "1: Tay kẹp nhỏ" },
-  { value: 2, label: "2: Tay kẹp to rộng 12mm" },
-  { value: 3, label: "3: Tay kẹp to rộng 25mm" }
-];
-
-export const SHELF_LAYOUT_TYPES = [
-  { value: 1, label: "Loại 1: 2 Tray Nhỏ", tray1: "Nhỏ", tray2: "Nhỏ", tray1Rows: 5, tray1Cols: 9, tray2Rows: 5, tray2Cols: 9 },
-  { value: 2, label: "Loại 2: 2 Tray Lớn", tray1: "Lớn", tray2: "Lớn", tray1Rows: 4, tray1Cols: 8, tray2Rows: 4, tray2Cols: 8 },
-  { value: 3, label: "Loại 3: Nhỏ dưới + Lớn trên", tray1: "Nhỏ", tray2: "Lớn", tray1Rows: 5, tray1Cols: 9, tray2Rows: 4, tray2Cols: 8 },
-  { value: 4, label: "Loại 4: Lớn dưới + Nhỏ trên", tray1: "Lớn", tray2: "Nhỏ", tray1Rows: 4, tray1Cols: 8, tray2Rows: 5, tray2Cols: 9 }
+  { value: 1, label: "1: Jig Phi 20" },
+  { value: 2, label: "2: Jig Phi 30" },
+  { value: 3, label: "3: Jig Phi 40" },
+  { value: 4, label: "4: Jig có thể điều chỉnh" }
 ];
 
 export const STATUS_LABELS = {

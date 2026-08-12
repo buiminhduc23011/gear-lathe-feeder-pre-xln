@@ -1,5 +1,5 @@
 import React from "react";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import ShelfDeclarationPage from "./index";
 
 jest.setTimeout(20000);
@@ -150,7 +150,7 @@ jest.mock("../../config/api", () => ({
 }));
 
 const { apiClient } = require("../../config/api");
-const { message, Modal } = require("antd");
+const { message } = require("antd");
 
 describe("ShelfDeclarationPage", () => {
   let includeActiveManualDeclaration = false;
@@ -184,16 +184,20 @@ describe("ShelfDeclarationPage", () => {
                 machineId: 1,
                 machineCode: "PGR-01",
                 machineName: "Gear Lathe Feeder Robot 01",
-                stagingSlotIndices: [1]
+                stagingSlotIndices: [1],
+                jig1HeightMm: 150,
+                jig2HeightMm: 200,
+                jig3HeightMm: 120,
+                jig4HeightMm: 100
               }
             ]
           });
         case "/api/machines/1/models":
           return Promise.resolve({
             data: [
-              { modelName: "Model A", trayType: 0, orderInput: 1, isDeleted: false },
-              { modelName: "Model B", trayType: 1, orderInput: 0, isDeleted: false },
-              { modelName: "Model C", trayType: 1, orderInput: 1, isDeleted: false, isEnabled: false }
+              { modelName: "Model A", trayType: 0, orderInput: 1, isDeleted: false, robotData: { jigSupplyType: 1, inputBlankThickness: 10 } },
+              { modelName: "Model B", trayType: 1, orderInput: 0, isDeleted: false, robotData: { jigSupplyType: 2, inputBlankThickness: 10 } },
+              { modelName: "Model C", trayType: 1, orderInput: 1, isDeleted: false, isEnabled: false, robotData: { jigSupplyType: 3, inputBlankThickness: 10 } }
             ]
           });
         case "/api/machines/1/shelf-declarations":
@@ -204,16 +208,15 @@ describe("ShelfDeclarationPage", () => {
                 mode: "Agv",
                 status: "Created",
                 stagingSlotIndex: 1,
-                shelfLayoutType: 1,
-                shelfLayoutName: "Loai 1",
+                shelfLayoutType: 0,
+                shelfLayoutName: "Xe hang 4 vi tri",
                 orderCount: 2,
                 ordersJson: JSON.stringify([
                   {
                     orderId: "ORD-BUSY-01",
                     modelName: "Model Busy A",
                     quantity: 2,
-                    trayIndex: 1,
-                    startPosition: 1,
+                    cartPositionIndex: 1,
                     orderSequence: 1,
                     jigType: 1
                   },
@@ -221,8 +224,7 @@ describe("ShelfDeclarationPage", () => {
                     orderId: "ORD-BUSY-02",
                     modelName: "Model Busy B",
                     quantity: 3,
-                    trayIndex: 2,
-                    startPosition: 2,
+                    cartPositionIndex: 2,
                     orderSequence: 2,
                     jigType: 2
                   }
@@ -234,8 +236,8 @@ describe("ShelfDeclarationPage", () => {
                 mode: "ManualLoad",
                 status: includeActiveManualDeclaration ? "Created" : "Completed",
                 machineSlotIndex: 1,
-                shelfLayoutType: 1,
-                shelfLayoutName: "Loai 1",
+                shelfLayoutType: 0,
+                shelfLayoutName: "Xe hang 4 vi tri",
                 orderCount: 2,
                 ordersJson: JSON.stringify([
                   {
@@ -243,8 +245,7 @@ describe("ShelfDeclarationPage", () => {
                     modelName: "Manual Busy A",
                     reportModelName: "Manual Busy A",
                     quantity: 4,
-                    trayIndex: 1,
-                    startPosition: 1,
+                    cartPositionIndex: 1,
                     orderSequence: 1,
                     jigType: 1
                   },
@@ -253,8 +254,7 @@ describe("ShelfDeclarationPage", () => {
                     modelName: "Manual Busy B",
                     reportModelName: "Manual Busy B",
                     quantity: 3,
-                    trayIndex: 2,
-                    startPosition: 1,
+                    cartPositionIndex: 2,
                     orderSequence: 2,
                     jigType: 2
                   }
@@ -266,7 +266,7 @@ describe("ShelfDeclarationPage", () => {
                 mode: "Agv",
                 status: "Created",
                 stagingSlotIndex: 2,
-                shelfLayoutName: "Loai 1",
+                shelfLayoutName: "Xe hang 4 vi tri",
                 orderCount: 1,
                 createdByUsername: "operator",
                 pickedByAgvId: "AGV-01",
@@ -278,7 +278,7 @@ describe("ShelfDeclarationPage", () => {
                 mode: "Agv",
                 status: "Completed",
                 stagingSlotIndex: 2,
-                shelfLayoutName: "Loai 2",
+                shelfLayoutName: "Xe hang 4 vi tri",
                 orderCount: 1,
                 createdByUsername: "operator"
               }
@@ -287,7 +287,7 @@ describe("ShelfDeclarationPage", () => {
         case "/api/machines/1/shelf-declaration-slot-status":
           return Promise.resolve({
             data: [
-              { slotIndex: 1, isOccupied: true, shelfLayoutName: "Loai 1", orderCount: 2 }
+              { slotIndex: 1, isOccupied: true, shelfLayoutName: "Xe hang 4 vi tri", orderCount: 2 }
             ]
           });
         case "/api/shelf-declarations/agv-call-eligibility?machineCode=PGR-01&machineSlotIndex=1":
@@ -356,7 +356,7 @@ describe("ShelfDeclarationPage", () => {
     fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
     fireEvent.change(screen.getByPlaceholderText("Nhập Article ID"), { target: { value: "Model A" } });
     expect(await screen.findByText("Model A")).toBeInTheDocument();
-    expect(await screen.findByText(/TRAY 1 · Tray Nhỏ \(5x9\)/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Trực quan hóa .* Xe hàng/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Lịch sử khai báo|Lich su khai bao/i }));
     expect(await screen.findByRole("heading", { name: /Lịch sử khai báo|Lich su khai bao/i })).toBeInTheDocument();
@@ -419,7 +419,7 @@ describe("ShelfDeclarationPage", () => {
       expect(screen.getAllByText("Manual Busy A").length).toBeGreaterThan(0);
     });
     expect(screen.getAllByText("Manual Busy B").length).toBeGreaterThan(0);
-    expect(screen.getByText(/TRAY 1 .*5x9/i)).toBeInTheDocument();
+    expect(screen.getByText(/Trực quan hóa .* Xe hàng/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /send/i })).toBeDisabled();
     expect(screen.getByRole("button", { name: /ThÃªm order|plus/i })).toBeDisabled();
   });
@@ -444,98 +444,27 @@ describe("ShelfDeclarationPage", () => {
     expect(manualOrderInput).toHaveValue("");
   });
 
-  it("splits overflow quantity into the next matching tray without confirmation", async () => {
-    const confirmSpy = jest.spyOn(Modal, "confirm").mockImplementation(() => ({}));
-
+  it("allocates an overflow order and moves a different jig to the next cart position", async () => {
     render(<ShelfDeclarationPage />);
 
     expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
-
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
     expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
-    fireEvent.change(screen.getByPlaceholderText("Nhập Article ID"), { target: { value: "Model B" } });
-    await screen.findByDisplayValue(/^MODELB-\d{12}-01$/);
-    fireEvent.change(screen.getByPlaceholderText("Nhập SL"), { target: { value: "12" } });
+    fireEvent.change(screen.getByPlaceholderText("Nhập Article ID"), { target: { value: "Model A" } });
+    fireEvent.change(screen.getByPlaceholderText("Nhập Order"), { target: { value: "ORD-A-01" } });
+    fireEvent.change(screen.getByPlaceholderText("Nhập SL"), { target: { value: "20" } });
+
+    expect(await screen.findByText(/Vị trí 1: 15/)).toBeInTheDocument();
+    expect(await screen.findByText(/Vị trí 2: 5/)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
     fireEvent.change(screen.getAllByPlaceholderText("Nhập Article ID")[1], { target: { value: "Model B" } });
     await screen.findByDisplayValue(/^MODELB-\d{12}-02$/);
-    fireEvent.change(screen.getAllByPlaceholderText("Nhập SL")[1], { target: { value: "24" } });
+    fireEvent.change(screen.getAllByPlaceholderText("Nhập SL")[1], { target: { value: "1" } });
 
-    await waitFor(() => {
-      expect(screen.getAllByPlaceholderText("Nhập Article ID")).toHaveLength(3);
-    });
-
-    const quantityInputs = screen.getAllByPlaceholderText("Nhập SL");
-    expect(quantityInputs[0]).toHaveValue("12");
-    expect(quantityInputs[1]).toHaveValue("24");
-    expect(quantityInputs[2]).toHaveValue("8");
-    expect(quantityInputs[1]).not.toBeDisabled();
-    expect(quantityInputs[2]).toBeDisabled();
-    expect(screen.queryByText(/Tự chia|Tự tách|Phần tách tự động/)).not.toBeInTheDocument();
-    expect(screen.getAllByDisplayValue(/^MODELB-\d{12}-02$/)).toHaveLength(2);
-    expect(confirmSpy).not.toHaveBeenCalled();
-
-    confirmSpy.mockRestore();
-  });
-
-  it("keeps the capacity confirmation when overflow exceeds all matching trays", async () => {
-    const confirmSpy = jest.spyOn(Modal, "confirm").mockImplementation(() => ({}));
-
-    render(<ShelfDeclarationPage />);
-
-    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
-
-    fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
-    fireEvent.change(screen.getByPlaceholderText("Nhập Article ID"), { target: { value: "Model B" } });
-    await screen.findByDisplayValue(/^MODELB-\d{12}-01$/);
-    fireEvent.change(screen.getByPlaceholderText("Nhập SL"), { target: { value: "12" } });
-
-    fireEvent.click(screen.getByRole("button", { name: /Thêm order|plus/i }));
-    fireEvent.change(screen.getAllByPlaceholderText("Nhập Article ID")[1], { target: { value: "Model B" } });
-    await screen.findByDisplayValue(/^MODELB-\d{12}-02$/);
-    fireEvent.change(screen.getAllByPlaceholderText("Nhập SL")[1], { target: { value: "60" } });
-
-    expect(confirmSpy).toHaveBeenCalledTimes(1);
-    expect(confirmSpy.mock.calls[0][0].content).toContain("(60)");
-    expect(confirmSpy.mock.calls[0][0].content).toContain("(48)");
-
-    confirmSpy.mockRestore();
-  });
-
-  it("discards the over-limit order when capacity confirmation is cancelled", async () => {
-    const confirmSpy = jest.spyOn(Modal, "confirm").mockImplementation(() => ({}));
-
-    render(<ShelfDeclarationPage />);
-
-    expect((await screen.findAllByText("Gear Lathe Feeder Robot 01 (PGR-01)")).length).toBeGreaterThan(0);
-
-    fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
-    expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /ThÃªm order|plus/i }));
-    fireEvent.change(screen.getAllByPlaceholderText(/Article ID/)[0], { target: { value: "Model B" } });
-    await screen.findByDisplayValue(/^MODELB-\d{12}-01$/);
-    fireEvent.change(screen.getByPlaceholderText(/SL/), { target: { value: "65" } });
-
-    expect(confirmSpy).toHaveBeenCalledTimes(1);
-
-    act(() => {
-      confirmSpy.mock.calls[0][0].onCancel();
-    });
-
-    await waitFor(() => {
-      expect(screen.queryAllByPlaceholderText(/Article ID/)).toHaveLength(0);
-    });
-    expect(screen.queryByPlaceholderText(/SL/)).not.toBeInTheDocument();
-    expect(screen.queryByDisplayValue(/^MODELB-\d{12}-01$/)).not.toBeInTheDocument();
-
-    confirmSpy.mockRestore();
+    expect(await screen.findByText(/Vị trí 3: 1/)).toBeInTheDocument();
   });
 
   it("allows inactive models in the order declaration flow", async () => {

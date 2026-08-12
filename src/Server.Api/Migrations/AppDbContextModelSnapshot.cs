@@ -51,6 +51,18 @@ namespace Server.Api.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<float>("Jig1HeightMm")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Jig2HeightMm")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Jig3HeightMm")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Jig4HeightMm")
+                        .HasColumnType("real");
+
                     b.Property<string>("MachineCode")
                         .IsRequired()
                         .HasMaxLength(50)

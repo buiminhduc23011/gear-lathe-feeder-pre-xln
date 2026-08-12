@@ -40,7 +40,7 @@ public sealed class ProductionLifecycleDeclarationDto
             return string.Join(" | ", Orders
                 .OrderBy(x => x.OrderSequence)
                 .Select(x =>
-                    $"#{x.OrderSequence} Order:{(string.IsNullOrWhiteSpace(x.OrderId) ? "-" : x.OrderId)} Model:{x.DisplayModelName} Article:{(string.IsNullOrWhiteSpace(x.ModelName) ? "-" : x.ModelName)} Qty:{x.Quantity} Tray:{x.TrayIndex}/{x.TrayType} ({x.StatusDisplay})"));
+                    $"#{x.OrderSequence} Order:{(string.IsNullOrWhiteSpace(x.OrderId) ? "-" : x.OrderId)} Model:{x.DisplayModelName} Article:{(string.IsNullOrWhiteSpace(x.ModelName) ? "-" : x.ModelName)} Qty:{x.Quantity} Xe hàng:{x.CartPositionIndex} Jig:{x.JigType} ({x.StatusDisplay})"));
         }
     }
 }
@@ -52,6 +52,7 @@ public sealed class ProductionLifecycleOrderDto
     public string ModelName { get; set; } = string.Empty;
     public string ReportModelName { get; set; } = string.Empty;
     public int Quantity { get; set; }
+    public int CartPositionIndex { get; set; }
     public int TrayIndex { get; set; }
     public int TrayType { get; set; }
     public int JigType { get; set; }

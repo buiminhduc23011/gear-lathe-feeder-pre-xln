@@ -21,6 +21,18 @@ public sealed class UpdateMachineRequest
 
     public string? Location { get; init; }
 
+    [Range(0, 100000)]
+    public float Jig1HeightMm { get; init; }
+
+    [Range(0, 100000)]
+    public float Jig2HeightMm { get; init; }
+
+    [Range(0, 100000)]
+    public float Jig3HeightMm { get; init; }
+
+    [Range(0, 100000)]
+    public float Jig4HeightMm { get; init; }
+
     [MinLength(1)]
     [MaxLength(1)]
     public int[] StagingSlotIndices { get; init; } = Array.Empty<int>();

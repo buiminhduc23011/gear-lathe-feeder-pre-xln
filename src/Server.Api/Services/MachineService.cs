@@ -44,6 +44,10 @@ public sealed class MachineService : IMachineService
             Model = NormalizeOptional(request.Model),
             SerialNumber = NormalizeOptional(request.SerialNumber),
             Location = NormalizeOptional(request.Location),
+            Jig1HeightMm = request.Jig1HeightMm,
+            Jig2HeightMm = request.Jig2HeightMm,
+            Jig3HeightMm = request.Jig3HeightMm,
+            Jig4HeightMm = request.Jig4HeightMm,
             AssignedStagingSlot1 = stagingSlots[0],
             AssignedStagingSlot2 = null,
             IsActive = request.IsActive,
@@ -73,6 +77,10 @@ public sealed class MachineService : IMachineService
         entity.Model = NormalizeOptional(request.Model);
         entity.SerialNumber = NormalizeOptional(request.SerialNumber);
         entity.Location = NormalizeOptional(request.Location);
+        entity.Jig1HeightMm = request.Jig1HeightMm;
+        entity.Jig2HeightMm = request.Jig2HeightMm;
+        entity.Jig3HeightMm = request.Jig3HeightMm;
+        entity.Jig4HeightMm = request.Jig4HeightMm;
         entity.AssignedStagingSlot1 = stagingSlots[0];
         entity.AssignedStagingSlot2 = null;
         entity.IsActive = request.IsActive;

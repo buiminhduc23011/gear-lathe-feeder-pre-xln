@@ -13,7 +13,7 @@ public sealed class CreateShelfDeclarationRequest
     [Range(1, 1)]
     public int? MachineSlotIndex { get; set; }
 
-    [Range(1, 4)]
+    [Range(0, 0)]
     public int ShelfLayoutType { get; set; }
 
     [Required]
@@ -35,12 +35,16 @@ public sealed class ShelfOrderItem
     [Range(1, 999)]
     public int Quantity { get; set; }
 
-    [Range(1, 2)]
-    public int TrayIndex { get; set; }
+    [Required]
+    [Range(1, 4)]
+    public int? CartPositionIndex { get; set; }
 
-    [Range(1, 999)]
-    public int StartPosition { get; set; }
-
-    [Range(0, 3)]
+    [Range(1, 4)]
     public int JigType { get; set; }
+
+    public float? InputThickness { get; set; }
+
+    public float? JigHeightMm { get; set; }
+
+    public int? JigCapacity { get; set; }
 }

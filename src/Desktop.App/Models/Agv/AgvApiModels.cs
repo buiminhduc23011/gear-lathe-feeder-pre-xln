@@ -61,6 +61,9 @@ public class MachineLoadInfo
     [JsonPropertyName("shelfLayoutType")]
     public int ShelfLayoutType { get; set; }
 
+    [JsonPropertyName("cartPositionCount")]
+    public int CartPositionCount { get; set; } = 4;
+
     [JsonPropertyName("ordersJson")]
     public string OrdersJson { get; set; } = "[]";
 
@@ -88,6 +91,9 @@ public class AgvOrderData
     [JsonPropertyName("trayIndex")]
     public int TrayIndex { get; set; }
 
+    [JsonPropertyName("cartPositionIndex")]
+    public int CartPositionIndex { get; set; }
+
     [JsonPropertyName("trayType")]
     public int TrayType { get; set; }
 
@@ -96,6 +102,15 @@ public class AgvOrderData
 
     [JsonPropertyName("jigType")]
     public int JigType { get; set; }
+
+    [JsonPropertyName("inputThickness")]
+    public float? InputThickness { get; set; }
+
+    [JsonPropertyName("jigHeightMm")]
+    public float? JigHeightMm { get; set; }
+
+    [JsonPropertyName("jigCapacity")]
+    public int? JigCapacity { get; set; }
 
     [JsonPropertyName("partHoverHeight")]
     public float? PartHoverHeight { get; set; }

@@ -23,15 +23,18 @@ public partial class OrderDisplayItem : ObservableObject
     [ObservableProperty]
     private int quantity;
 
-    /// <summary>Tray 1 hoặc 2.</summary>
+    /// <summary>Vị trí trên Xe hàng (1-4).</summary>
     [ObservableProperty]
     private int trayIndex;
+
+    [ObservableProperty]
+    private int cartPositionIndex;
 
     /// <summary>Vị trí bắt đầu trên tray (1-indexed).</summary>
     [ObservableProperty]
     private int startPosition;
 
-    /// <summary>"Nhỏ" hoặc "Lớn".</summary>
+    /// <summary>Hiển thị Xe hàng.</summary>
     [ObservableProperty]
     private string trayTypeName = "—";
 

@@ -18,6 +18,14 @@ public sealed class MachineEntity
 
     public string? Location { get; set; }
 
+    public float Jig1HeightMm { get; set; }
+
+    public float Jig2HeightMm { get; set; }
+
+    public float Jig3HeightMm { get; set; }
+
+    public float Jig4HeightMm { get; set; }
+
     public int? AssignedStagingSlot1 { get; set; }
 
     public int? AssignedStagingSlot2 { get; set; }

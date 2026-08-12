@@ -451,19 +451,31 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <!--  Left col: Tray 2 (trên) + Tray 1 (dưới)  -->
+                                    <!--  Left col: Xe hàng gồm 4 vị trí cố định  -->
                                     <StackPanel Grid.Column="0" Width="260">
                                         <controls:TrayGridControl
                                             Margin="0,0,0,6"
-                                            GridColumns="{Binding Ke1Tray2Cols}"
-                                            GridRows="{Binding Ke1Tray2Rows}"
-                                            SlotStates="{Binding Ke1Tray2Slots}"
-                                            TrayLabel="{Binding Ke1TrayLabel2}" />
+                                            GridColumns="1"
+                                            GridRows="{Binding Ke1CartPosition1Rows}"
+                                            SlotStates="{Binding Ke1CartPosition1Slots}"
+                                            TrayLabel="{Binding Ke1CartPosition1Label}" />
                                         <controls:TrayGridControl
-                                            GridColumns="{Binding Ke1Tray1Cols}"
-                                            GridRows="{Binding Ke1Tray1Rows}"
-                                            SlotStates="{Binding Ke1Tray1Slots}"
-                                            TrayLabel="{Binding Ke1TrayLabel1}" />
+                                            Margin="0,0,0,6"
+                                            GridColumns="1"
+                                            GridRows="{Binding Ke1CartPosition2Rows}"
+                                            SlotStates="{Binding Ke1CartPosition2Slots}"
+                                            TrayLabel="{Binding Ke1CartPosition2Label}" />
+                                        <controls:TrayGridControl
+                                            Margin="0,0,0,6"
+                                            GridColumns="1"
+                                            GridRows="{Binding Ke1CartPosition3Rows}"
+                                            SlotStates="{Binding Ke1CartPosition3Slots}"
+                                            TrayLabel="{Binding Ke1CartPosition3Label}" />
+                                        <controls:TrayGridControl
+                                            GridColumns="1"
+                                            GridRows="{Binding Ke1CartPosition4Rows}"
+                                            SlotStates="{Binding Ke1CartPosition4Slots}"
+                                            TrayLabel="{Binding Ke1CartPosition4Label}" />
                                     </StackPanel>
 
                                     <!--  Right col: Order table  -->
@@ -495,7 +507,7 @@
                                                 <TextBlock Grid.Column="0" Style="{StaticResource OrderTableHeader}" Text="#" />
                                                 <TextBlock Grid.Column="1" Style="{StaticResource OrderTableHeader}" Text="MODEL" />
                                                 <TextBlock Grid.Column="2" Style="{StaticResource OrderTableHeader}" Text="SL" />
-                                                <TextBlock Grid.Column="3" Style="{StaticResource OrderTableHeader}" Text="TRAY" />
+                                                <TextBlock Grid.Column="3" Style="{StaticResource OrderTableHeader}" Text="XE HÀNG" />
                                                 <TextBlock Grid.Column="4" Style="{StaticResource OrderTableHeader}" Text="VỊ TRÍ" />
                                                 <TextBlock Grid.Column="5" Style="{StaticResource OrderTableHeader}" Text="JIG" />
                                                 <TextBlock Grid.Column="6" Style="{StaticResource OrderTableHeader}" Text="T.THÁI" />

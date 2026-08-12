@@ -10,13 +10,13 @@ import {
   Spin,
   Table,
   Tag,
-  Typography,
-  message
+  Typography
 } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import PageHeader from "../components/ui/PageHeader";
 import SectionCard from "../components/ui/SectionCard";
 import { API_ENDPOINTS, apiClient, getApiErrorMessage } from "../config/api";
+import { showErrorMessage, showWarningMessage } from "../utils/appMessage";
 
 const { Text } = Typography;
 
@@ -81,7 +81,7 @@ function ProductionReportPage() {
       setReport(response.data);
     } catch (error) {
       const fallback = "Không tải được báo cáo sản xuất.";
-      message.error(getApiErrorMessage(error, fallback));
+      showErrorMessage(getApiErrorMessage(error, fallback));
     } finally {
       setLoading(false);
     }
@@ -89,13 +89,13 @@ function ProductionReportPage() {
 
   useEffect(() => {
     fetchMachines().catch((error) => {
-      message.error(getApiErrorMessage(error, "Không tải được danh sách máy."));
+      showErrorMessage(getApiErrorMessage(error, "Không tải được danh sách máy."));
     });
   }, [fetchMachines]);
 
   useEffect(() => {
     fetchReport().catch((error) => {
-      message.error(getApiErrorMessage(error, "Không tải được báo cáo sản xuất."));
+      showErrorMessage(getApiErrorMessage(error, "Không tải được báo cáo sản xuất."));
     });
   }, [fetchReport]);
 
@@ -297,7 +297,7 @@ function ProductionReportPage() {
   const exportToExcel = useCallback(() => {
     const items = filteredItems ?? [];
     if (items.length === 0) {
-      message.warning("Không có dữ liệu để xuất.");
+      showWarningMessage("Không có dữ liệu để xuất.");
       return;
     }
 

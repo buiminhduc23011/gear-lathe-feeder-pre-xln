@@ -23,6 +23,10 @@ public sealed class DatabaseInitializer
                 [Model] NVARCHAR(100) NULL,
                 [SerialNumber] NVARCHAR(100) NULL,
                 [Location] NVARCHAR(200) NULL,
+                [Jig1HeightMm] REAL NOT NULL,
+                [Jig2HeightMm] REAL NOT NULL,
+                [Jig3HeightMm] REAL NOT NULL,
+                [Jig4HeightMm] REAL NOT NULL,
                 [AssignedStagingSlot1] INT NULL,
                 [AssignedStagingSlot2] INT NULL,
                 [IsActive] BIT NOT NULL,
@@ -30,6 +34,26 @@ public sealed class DatabaseInitializer
                 [UpdatedAtUtc] DATETIMEOFFSET NOT NULL,
                 CONSTRAINT [PK_Machines] PRIMARY KEY ([MachineId])
             );
+        END;
+
+        IF COL_LENGTH(N'[dbo].[Machines]', N'Jig1HeightMm') IS NULL
+        BEGIN
+            ALTER TABLE [dbo].[Machines] ADD [Jig1HeightMm] REAL NOT NULL CONSTRAINT [DF_Machines_Jig1HeightMm] DEFAULT 0;
+        END;
+
+        IF COL_LENGTH(N'[dbo].[Machines]', N'Jig2HeightMm') IS NULL
+        BEGIN
+            ALTER TABLE [dbo].[Machines] ADD [Jig2HeightMm] REAL NOT NULL CONSTRAINT [DF_Machines_Jig2HeightMm] DEFAULT 0;
+        END;
+
+        IF COL_LENGTH(N'[dbo].[Machines]', N'Jig3HeightMm') IS NULL
+        BEGIN
+            ALTER TABLE [dbo].[Machines] ADD [Jig3HeightMm] REAL NOT NULL CONSTRAINT [DF_Machines_Jig3HeightMm] DEFAULT 0;
+        END;
+
+        IF COL_LENGTH(N'[dbo].[Machines]', N'Jig4HeightMm') IS NULL
+        BEGIN
+            ALTER TABLE [dbo].[Machines] ADD [Jig4HeightMm] REAL NOT NULL CONSTRAINT [DF_Machines_Jig4HeightMm] DEFAULT 0;
         END;
 
         IF COL_LENGTH(N'[dbo].[Machines]', N'AssignedStagingSlot1') IS NULL

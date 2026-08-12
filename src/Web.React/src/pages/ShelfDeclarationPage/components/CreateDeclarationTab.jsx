@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Button, Col, Form, Row } from "antd";
+import { Button, Col, Form, Row, Typography } from "antd";
 import { ReloadOutlined, SendOutlined } from "@ant-design/icons";
 import SectionCard from "../../../components/ui/SectionCard";
 import DeclarationControls from "./DeclarationControls";
@@ -11,20 +11,19 @@ function CreateDeclarationTab({
   stagingSlotIndex,
   machineSlotIndex,
   orders,
-  layoutInfo,
-  displayLayoutInfo,
   maxTotal,
   totalCapacity,
   canAddOrder,
   computedOrders,
   orderRows,
   orderQuantityCaps,
-  preview,
+  cartPreview,
   selectedOrderIndex,
   selectedOrderSlots,
   occupiedStagingSlots,
   selectedMachineStagingSlots,
   busyMachineSlots,
+  validationErrors,
   isBusyLocked,
   loadingSlots,
   submitting,
@@ -40,6 +39,7 @@ function CreateDeclarationTab({
   onSubmit
 }) {
   const submitButtonRef = useRef(null);
+  const { Text } = Typography;
 
   return (
     <SectionCard
@@ -61,13 +61,31 @@ function CreateDeclarationTab({
           stagingSlotIndex={stagingSlotIndex}
           onSelectStagingSlot={onSelectStagingSlot}
           machineSlotIndex={machineSlotIndex}
+          busyMachineSlots={busyMachineSlots}
           onMachineSlotChange={onMachineSlotChange}
         />
+
+        {validationErrors?.length ? (
+          <div
+            role="status"
+            style={{
+              color: "#8a5a00",
+              fontSize: 13,
+              lineHeight: 1.45,
+              marginBottom: 16,
+              padding: "8px 10px",
+              borderLeft: "3px solid #d89614",
+              background: "#fffaf0"
+            }}
+          >
+            <Text strong style={{ color: "inherit" }}>Chưa thể khai báo: </Text>
+            <Text style={{ color: "inherit" }}>{validationErrors.join(" ")}</Text>
+          </div>
+        ) : null}
 
         <Row gutter={[16, 16]}>
           <Col xs={24} xl={16} xxl={17}>
             <OrderEditorTable
-              layoutInfo={layoutInfo}
               orders={orders}
               maxTotal={maxTotal}
               totalCapacity={totalCapacity}
@@ -91,8 +109,7 @@ function CreateDeclarationTab({
               mode={mode}
               machineSlotIndex={machineSlotIndex}
               busyMachineSlots={busyMachineSlots}
-              layoutInfo={displayLayoutInfo}
-              preview={preview}
+              cartPreview={cartPreview}
               selectedOrderSlots={selectedOrderSlots}
             />
           </Col>

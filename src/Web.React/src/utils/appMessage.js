@@ -38,6 +38,13 @@ export function showInfoMessage(content, options = {}) {
   });
 }
 
+export function showWarningMessage(content, options = {}) {
+  getApi()?.warning({
+    content,
+    duration: options.duration ?? 4
+  });
+}
+
 export function clearAllMessages() {
   getApi()?.destroy();
 }

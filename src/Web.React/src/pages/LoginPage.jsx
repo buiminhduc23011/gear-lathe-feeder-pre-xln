@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, Card, Button, Form, Input, Space, Typography } from "antd";
+import { Card, Button, Form, Input, Space, Typography } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getApiErrorMessage } from "../config/api";
@@ -60,12 +60,21 @@ function LoginPage() {
           </Paragraph>
 
           {errorMessage ? (
-            <Alert
-              type="error"
-              showIcon
-              message="Đăng nhập thất bại"
-              description={errorMessage}
-            />
+            <div
+              role="alert"
+              style={{
+                color: "#a61d24",
+                fontSize: 13,
+                lineHeight: 1.45,
+                marginBottom: 16,
+                padding: "8px 10px",
+                borderLeft: "3px solid #d14343",
+                background: "#fff2f0"
+              }}
+            >
+              <strong>Đăng nhập thất bại: </strong>
+              {errorMessage}
+            </div>
           ) : null}
 
           <Form layout="vertical" onFinish={handleSubmit}>

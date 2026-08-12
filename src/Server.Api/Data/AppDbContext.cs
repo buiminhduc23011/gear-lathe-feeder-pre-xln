@@ -44,6 +44,10 @@ public sealed class AppDbContext : DbContext
             entity.Property(x => x.Model).HasMaxLength(100);
             entity.Property(x => x.SerialNumber).HasMaxLength(100);
             entity.Property(x => x.Location).HasMaxLength(200);
+            entity.Property(x => x.Jig1HeightMm).HasColumnType("real");
+            entity.Property(x => x.Jig2HeightMm).HasColumnType("real");
+            entity.Property(x => x.Jig3HeightMm).HasColumnType("real");
+            entity.Property(x => x.Jig4HeightMm).HasColumnType("real");
             entity.Property(x => x.AssignedStagingSlot1);
             entity.Property(x => x.AssignedStagingSlot2);
             entity.Property(x => x.CreatedAtUtc).IsRequired();

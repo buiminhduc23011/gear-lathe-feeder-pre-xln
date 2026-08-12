@@ -14,14 +14,6 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
 
     private readonly AppDbContext _db;
 
-    private static readonly Dictionary<int, (int Tray1, int Tray2)> LayoutTrayTypes = new()
-    {
-        [1] = (1, 1),
-        [2] = (2, 2),
-        [3] = (1, 2),
-        [4] = (2, 1),
-    };
-
     public ShelfDeclarationService(AppDbContext db)
     {
         _db = db;
@@ -769,6 +761,11 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
 
     private static void ValidateCreateRequest(CreateShelfDeclarationRequest request, string normalizedMode)
     {
+        if (request.ShelfLayoutType != 0)
+        {
+            throw new InvalidOperationException("Shelf layout phải là Xe hàng 4 vị trí.");
+        }
+
         ValidateOrderIds(request.Orders);
 
         if (normalizedMode == ShelfDeclarationModes.Agv)
@@ -805,7 +802,6 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         string normalizedMode,
         CancellationToken cancellationToken)
     {
-        var trayTypes = LayoutTrayTypes.GetValueOrDefault(request.ShelfLayoutType, (Tray1: 1, Tray2: 1));
         var localMachineSlotIndex = normalizedMode == ShelfDeclarationModes.Agv
             ? GetLocalMachineSlotIndex(machine, request.StagingSlotIndex)
             : request.MachineSlotIndex;
@@ -816,9 +812,15 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
             request.Orders,
             cancellationToken);
 
+        ValidateCartOrders(machine, request.Orders, profileDataByModelName);
+
         var orders = request.Orders.Select((o, index) =>
         {
             var profileData = ResolveProfileData(o.ModelName, profileDataByModelName);
+            var cartPositionIndex = ResolveCartPositionIndex(o);
+            var jigType = profileData?.JigType ?? o.JigType;
+            var inputThickness = profileData?.InputBlankThickness ?? o.InputThickness;
+            var jigHeightMm = GetJigHeight(machine, jigType);
             return new
             {
                 orderId = o.OrderId!.Trim(),
@@ -826,11 +828,12 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
                 modelName = o.ModelName,
                 reportModelName = NormalizeOptionalReportModelName(o.ReportModelName),
                 quantity = o.Quantity,
-                startPosition = o.StartPosition,
-                trayIndex = o.TrayIndex,
-                trayType = o.TrayIndex == 2 ? trayTypes.Tray2 : trayTypes.Tray1,
+                cartPositionIndex,
                 orderSequence = index + 1,
-                jigType = profileData?.JigType ?? 0,
+                jigType,
+                inputThickness,
+                jigHeightMm,
+                jigCapacity = GetJigCapacity(jigHeightMm, inputThickness),
                 partHoverHeight = profileData?.PartHoverHeight,
                 jigCenterOffset = profileData?.JigCenterOffset,
                 jigDepthOffset = profileData?.JigDepthOffset,
@@ -845,9 +848,107 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         return JsonSerializer.Serialize(orders, JsonOptions);
     }
 
+    private static void ValidateCartOrders(
+        MachineEntity machine,
+        IReadOnlyList<ShelfOrderItem> orders,
+        IReadOnlyDictionary<string, ModelProfileData> profileDataByModelName)
+    {
+        var positionStates = new Dictionary<int, (int JigType, int Quantity, int Capacity)>();
+        var previousPosition = 0;
+
+        foreach (var order in orders)
+        {
+            var position = ResolveCartPositionIndex(order);
+            if (!position.HasValue)
+            {
+                throw new InvalidOperationException("Mỗi order phải có vị trí Xe hàng từ 1 đến 4.");
+            }
+
+            if (position.Value < 1
+                || position.Value > 4
+                || position.Value < previousPosition
+                || (position.Value != previousPosition && position.Value != previousPosition + 1))
+            {
+                throw new InvalidOperationException("Các vị trí Xe hàng phải nằm trong 1-4 và đi theo thứ tự tăng dần.");
+            }
+
+            var profileData = ResolveProfileData(order.ModelName, profileDataByModelName);
+            var jigType = profileData?.JigType ?? order.JigType;
+            var inputThickness = profileData?.InputBlankThickness ?? order.InputThickness;
+            var jigHeightMm = GetJigHeight(machine, jigType);
+            var capacity = GetJigCapacity(jigHeightMm, inputThickness);
+            if (jigType is < 1 or > 4)
+            {
+                throw new InvalidOperationException($"Model '{order.ModelName}' chưa có Jig Type hợp lệ (1-4).");
+            }
+
+            if (inputThickness is null or <= 0)
+            {
+                throw new InvalidOperationException($"Model '{order.ModelName}' chưa có độ dày phôi đầu vào hợp lệ.");
+            }
+
+            if (jigHeightMm <= 0 || capacity <= 0)
+            {
+                throw new InvalidOperationException($"Máy chưa cấu hình chiều cao Jig {jigType} hoặc sức chứa bằng 0.");
+            }
+
+            if (positionStates.TryGetValue(position.Value, out var current))
+            {
+                if (current.JigType != jigType)
+                {
+                    throw new InvalidOperationException($"Vị trí Xe hàng {position} không được chứa nhiều loại Jig.");
+                }
+
+                var nextQuantity = current.Quantity + order.Quantity;
+                if (nextQuantity > current.Capacity)
+                {
+                    throw new InvalidOperationException($"Vị trí Xe hàng {position} vượt sức chứa {current.Capacity} sản phẩm.");
+                }
+
+                positionStates[position.Value] = (current.JigType, nextQuantity, current.Capacity);
+            }
+            else
+            {
+                if (order.Quantity > capacity)
+                {
+                    throw new InvalidOperationException($"Vị trí Xe hàng {position} vượt sức chứa {capacity} sản phẩm.");
+                }
+
+                positionStates[position.Value] = (jigType, order.Quantity, capacity);
+            }
+
+            previousPosition = position.Value;
+        }
+    }
+
+    private static int? ResolveCartPositionIndex(ShelfOrderItem order)
+    {
+        return order.CartPositionIndex;
+    }
+
+    private static float GetJigHeight(MachineEntity machine, int jigType) => jigType switch
+    {
+        1 => machine.Jig1HeightMm,
+        2 => machine.Jig2HeightMm,
+        3 => machine.Jig3HeightMm,
+        4 => machine.Jig4HeightMm,
+        _ => 0f
+    };
+
+    private static int GetJigCapacity(float jigHeightMm, float? inputThickness)
+    {
+        if (jigHeightMm <= 0 || inputThickness is null or <= 0)
+        {
+            return 0;
+        }
+
+        return (int)Math.Floor(jigHeightMm / inputThickness.Value);
+    }
+
     private sealed record ModelProfileData(
         int ProfileId,
         int JigType,
+        float InputBlankThickness,
         float PartHoverHeight,
         float JigCenterOffset,
         float JigDepthOffset,
@@ -943,7 +1044,10 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
 
         return new ModelProfileData(
             profileId,
-            ReadIntOrDefault(lineData, "jigType"),
+            ReadIntOrDefault(robotData, "jigSupplyType") is var robotJigType && robotJigType > 0
+                ? robotJigType
+                : ReadIntOrDefault(lineData, "jigType"),
+            ReadFloatOrDefault(robotData, "inputBlankThickness"),
             ReadFloatOrDefault(robotData, "jigProductHeight"),
             ReadFloatOrDefault(robotData, "jigCenterOffset"),
             ReadFloatOrDefault(robotData, "jigDepthOffset"),
@@ -1103,8 +1207,7 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
                 ModelName = o.ModelName ?? string.Empty,
                 ReportModelName = ResolveReportModelName(o.ReportModelName, o.ModelName),
                 Quantity = o.Quantity,
-                TrayIndex = o.TrayIndex,
-                TrayType = o.TrayType,
+                CartPositionIndex = o.CartPositionIndex ?? 0,
                 JigType = o.JigType,
                 Status = string.IsNullOrWhiteSpace(o.Status) ? entity.Status : o.Status!
             })
@@ -1275,14 +1378,9 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         }
     }
 
-    public static string GetLayoutName(int shelfLayoutType) => shelfLayoutType switch
-    {
-        1 => "2 Tray Nho",
-        2 => "2 Tray Lon",
-        3 => "Nho duoi + Lon tren",
-        4 => "Lon duoi + Nho tren",
-        _ => "Khong xac dinh"
-    };
+    public static string GetLayoutName(int shelfLayoutType) => shelfLayoutType == 0
+        ? "Xe hàng 4 vị trí"
+        : "Không xác định";
 
     private sealed class AgvSlotSnapshot
     {
@@ -1306,10 +1404,12 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         public string? ModelName { get; set; }
         public string? ReportModelName { get; set; }
         public int Quantity { get; set; }
-        public int TrayIndex { get; set; }
-        public int TrayType { get; set; }
+        public int? CartPositionIndex { get; set; }
         public int OrderSequence { get; set; }
         public int JigType { get; set; }
+        public float? InputThickness { get; set; }
+        public float? JigHeightMm { get; set; }
+        public int? JigCapacity { get; set; }
         public float? PartHoverHeight { get; set; }
         public float? JigCenterOffset { get; set; }
         public float? JigDepthOffset { get; set; }

@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Select, Space, Tabs, Tag, message } from "antd";
+import { Select, Space, Tabs, Tag } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import PageHeader from "../../components/ui/PageHeader";
 import useShelfDeclarationData from "./hooks/useShelfDeclarationData";
@@ -7,6 +7,7 @@ import useShelfDeclarationForm from "./hooks/useShelfDeclarationForm";
 import { DECLARATION_MODES } from "./constants";
 import CreateDeclarationTab from "./components/CreateDeclarationTab";
 import HistoryDeclarationTab from "./components/HistoryDeclarationTab";
+import { showWarningMessage } from "../../utils/appMessage";
 import "./types";
 
 function buildSubmitPayload(formState) {
@@ -14,14 +15,17 @@ function buildSubmitPayload(formState) {
     mode: formState.mode,
     stagingSlotIndex: formState.mode === DECLARATION_MODES.AGV ? formState.stagingSlotIndex : null,
     machineSlotIndex: formState.mode === DECLARATION_MODES.MANUAL ? formState.machineSlotIndex : null,
-    shelfLayoutType: formState.shelfLayoutType,
-    orders: formState.computedOrders.map((order) => ({
+    shelfLayoutType: 0,
+    orders: formState.placementRows.map((order) => ({
       orderId: order.orderId?.trim() || null,
       modelName: order.modelName,
       reportModelName: order.reportModelName || null,
       quantity: order.quantity,
-      trayIndex: order.trayIndex,
-      startPosition: order.startPosition
+      cartPositionIndex: order.cartPositionIndex,
+      jigType: order.jigType,
+      inputThickness: order.inputThickness,
+      jigHeightMm: order.jigHeightMm,
+      jigCapacity: order.maxQty
     }))
   };
 }
@@ -47,7 +51,7 @@ function ShelfDeclarationPage() {
     }
 
     if (!form.canSubmit) {
-      message.warning(form.validationErrors[0] ?? "Dữ liệu chưa hợp lệ.");
+      showWarningMessage(form.validationErrors[0] ?? "Dữ liệu chưa hợp lệ.");
       return;
     }
 
@@ -87,17 +91,16 @@ function ShelfDeclarationPage() {
                 stagingSlotIndex={form.stagingSlotIndex}
                 machineSlotIndex={form.machineSlotIndex}
                 orders={form.orders}
-                layoutInfo={form.layoutInfo}
-                displayLayoutInfo={form.displayLayoutInfo}
                 maxTotal={form.maxTotal}
                 totalCapacity={form.totalCapacity}
                 canAddOrder={form.canAddOrder}
-                computedOrders={form.computedOrders}
-                orderRows={form.orderRows}
+                computedOrders={form.displayComputedOrders}
+                orderRows={form.displayComputedOrders}
                 orderQuantityCaps={form.orderQuantityCaps}
-                preview={form.displayPreview}
+                cartPreview={form.displayCartPreview}
                 selectedOrderIndex={form.selectedOrderIndex}
                 selectedOrderSlots={form.selectedOrderSlots}
+                validationErrors={form.validationErrors}
                 occupiedStagingSlots={form.occupiedStagingSlots}
                 selectedMachineStagingSlots={form.selectedMachineStagingSlots}
                 busyMachineSlots={form.busyMachineSlots}

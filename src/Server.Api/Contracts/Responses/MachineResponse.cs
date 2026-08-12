@@ -18,6 +18,14 @@ public sealed class MachineResponse
 
     public string? Location { get; init; }
 
+    public float Jig1HeightMm { get; init; }
+
+    public float Jig2HeightMm { get; init; }
+
+    public float Jig3HeightMm { get; init; }
+
+    public float Jig4HeightMm { get; init; }
+
     public IReadOnlyList<int> StagingSlotIndices { get; init; } = Array.Empty<int>();
 
     public bool IsActive { get; init; }

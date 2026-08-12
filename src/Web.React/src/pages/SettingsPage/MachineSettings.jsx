@@ -29,6 +29,10 @@ const defaultValues = {
   model: "",
   serialNumber: "",
   location: "",
+  jig1HeightMm: 0,
+  jig2HeightMm: 0,
+  jig3HeightMm: 0,
+  jig4HeightMm: 0,
   stagingSlotIndices: [],
   isActive: true
 };
@@ -53,6 +57,10 @@ function getMachineFormValues(machine) {
     model: machine.model || "",
     serialNumber: machine.serialNumber || "",
     location: machine.location || "",
+    jig1HeightMm: machine.jig1HeightMm ?? 0,
+    jig2HeightMm: machine.jig2HeightMm ?? 0,
+    jig3HeightMm: machine.jig3HeightMm ?? 0,
+    jig4HeightMm: machine.jig4HeightMm ?? 0,
     stagingSlotIndices: normalizeStagingSlotIndices(machine.stagingSlotIndices),
     isActive: machine.isActive ?? true
   };
@@ -244,6 +252,11 @@ function MachineSettings() {
     },
     { title: "Hãng", dataIndex: "manufacturer", key: "manufacturer" },
     { title: "Model", dataIndex: "model", key: "model", render: (value) => value || "-" },
+    {
+      title: "Jig height (mm)",
+      key: "jigHeights",
+      render: (_, record) => [1, 2, 3, 4].map((jig) => `J${jig}: ${record[`jig${jig}HeightMm`] ?? 0}`).join(" | ")
+    },
     { title: "Vị trí", dataIndex: "location", key: "location", render: (value) => value || "-" },
     {
       title: "Trạng thái",
@@ -384,6 +397,17 @@ function MachineSettings() {
                 <Input />
               </Form.Item>
             </Col>
+            {[1, 2, 3, 4].map((jig) => (
+              <Col xs={24} md={6} key={jig}>
+                <Form.Item
+                  label={`Chiều cao Jig ${jig} (mm)`}
+                  name={`jig${jig}HeightMm`}
+                  rules={[{ validator: (_, value) => Number(value) >= 0 ? Promise.resolve() : Promise.reject(new Error("Chiều cao không được âm.")) }]}
+                >
+                  <Input type="number" min={0} step="0.001" />
+                </Form.Item>
+              </Col>
+            ))}
             <Col xs={24} md={6}>
               <Form.Item label="Kích hoạt" name="isActive" valuePropName="checked">
                 <Switch />

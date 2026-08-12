@@ -46,6 +46,7 @@ public sealed class ProductionLifecycleOrderResponse
     public string ModelName { get; set; } = string.Empty;
     public string ReportModelName { get; set; } = string.Empty;
     public int Quantity { get; set; }
+    public int CartPositionIndex { get; set; }
     public int TrayIndex { get; set; }
     public int TrayType { get; set; }
     public int JigType { get; set; }

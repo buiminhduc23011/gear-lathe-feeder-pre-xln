@@ -10,5 +10,13 @@ public sealed class MachineDto
 
     public string Manufacturer { get; set; } = string.Empty;
 
+    public float Jig1HeightMm { get; set; }
+
+    public float Jig2HeightMm { get; set; }
+
+    public float Jig3HeightMm { get; set; }
+
+    public float Jig4HeightMm { get; set; }
+
     public DateTimeOffset UpdatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
 }

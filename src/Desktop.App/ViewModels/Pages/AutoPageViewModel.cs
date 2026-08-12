@@ -44,6 +44,19 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
     public ObservableCollection<TraySlotState> Ke1Tray1Slots { get; } = [];
     public ObservableCollection<TraySlotState> Ke1Tray2Slots { get; } = [];
 
+    [ObservableProperty] private int ke1CartPosition1Rows = 1;
+    [ObservableProperty] private int ke1CartPosition2Rows = 1;
+    [ObservableProperty] private int ke1CartPosition3Rows = 1;
+    [ObservableProperty] private int ke1CartPosition4Rows = 1;
+    [ObservableProperty] private string ke1CartPosition1Label = "Xe hàng · Vị trí 1";
+    [ObservableProperty] private string ke1CartPosition2Label = "Xe hàng · Vị trí 2";
+    [ObservableProperty] private string ke1CartPosition3Label = "Xe hàng · Vị trí 3";
+    [ObservableProperty] private string ke1CartPosition4Label = "Xe hàng · Vị trí 4";
+    public ObservableCollection<TraySlotState> Ke1CartPosition1Slots { get; } = [];
+    public ObservableCollection<TraySlotState> Ke1CartPosition2Slots { get; } = [];
+    public ObservableCollection<TraySlotState> Ke1CartPosition3Slots { get; } = [];
+    public ObservableCollection<TraySlotState> Ke1CartPosition4Slots { get; } = [];
+
     // --- Tray grid properties: Kệ 2 ---
     [ObservableProperty] private int ke2Tray1Rows = 5;
     [ObservableProperty] private int ke2Tray1Cols = 9;
@@ -435,10 +448,122 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
     /// <summary>Rebuild all 4 tray slot collections from current AGV position state + layout type.</summary>
     private void RebuildAllTraySlots()
     {
-        RebuildPositionSlots(AgvService.Position1State,
-            s => { Ke1Tray1Rows = s.t1r; Ke1Tray1Cols = s.t1c; Ke1Tray2Rows = s.t2r; Ke1Tray2Cols = s.t2c; },
-            (l1, l2) => { Ke1TrayLabel1 = l1; Ke1TrayLabel2 = l2; },
-            Ke1Tray1Slots, Ke1Tray2Slots, Ke1Orders);
+        RebuildCartPositionSlots(
+            AgvService.Position1State,
+            (position, rows) => SetCartPositionRows(position, rows),
+            (position, label) => SetCartPositionLabel(position, label),
+            [Ke1CartPosition1Slots, Ke1CartPosition2Slots, Ke1CartPosition3Slots, Ke1CartPosition4Slots],
+            Ke1Orders);
+    }
+
+    private void SetCartPositionRows(int position, int rows)
+    {
+        switch (position)
+        {
+            case 1: Ke1CartPosition1Rows = rows; break;
+            case 2: Ke1CartPosition2Rows = rows; break;
+            case 3: Ke1CartPosition3Rows = rows; break;
+            case 4: Ke1CartPosition4Rows = rows; break;
+        }
+    }
+
+    private void SetCartPositionLabel(int position, string label)
+    {
+        switch (position)
+        {
+            case 1: Ke1CartPosition1Label = label; break;
+            case 2: Ke1CartPosition2Label = label; break;
+            case 3: Ke1CartPosition3Label = label; break;
+            case 4: Ke1CartPosition4Label = label; break;
+        }
+    }
+
+    private static void RebuildCartPositionSlots(
+        AgvPositionState positionState,
+        Action<int, int> setRows,
+        Action<int, string> setLabels,
+        IReadOnlyList<ObservableCollection<TraySlotState>> positionSlots,
+        ObservableCollection<OrderDisplayItem> orderItems)
+    {
+        var desiredStates = new (SlotStatus Status, string? OrderId, string? ModelName)[4][];
+        var usedByPosition = new int[4];
+        var orders = positionState.Orders.OrderBy(order => order.OrderSequence).ToList();
+        var capacities = orders
+            .Where(order => order.CartPositionIndex is >= 1 and <= 4)
+            .GroupBy(order => order.CartPositionIndex)
+            .ToDictionary(group => group.Key, group => Math.Max(
+                group.Sum(order => Math.Max(0, order.Quantity)),
+                group.Max(order => order.JigCapacity ?? 0)));
+
+        for (var index = 0; index < 4; index++)
+        {
+            var position = index + 1;
+            var rows = Math.Max(1, capacities.GetValueOrDefault(position));
+            setRows(position, rows);
+            setLabels(position, $"Xe hàng · Vị trí {position}");
+            EnsureSlotCount(positionSlots[index], rows, 1);
+            desiredStates[index] = new (SlotStatus, string?, string?)[rows];
+        }
+
+        var currentSeq = positionState.CurrentOrderSequence;
+        var currentItem = positionState.CurrentItemInOrder;
+        var desiredOrderItems = new List<OrderDisplayItem>(orders.Count);
+        string? currentModelName = null;
+
+        foreach (var order in orders)
+        {
+            var position = order.CartPositionIndex;
+            if (position is < 1 or > 4)
+            {
+                continue;
+            }
+
+            var positionIndex = position - 1;
+            var isCompleted = currentSeq > 0 && order.OrderSequence < currentSeq;
+            var isRunning = currentSeq > 0 && order.OrderSequence == currentSeq;
+            if (isRunning) currentModelName = order.ModelName;
+
+            desiredOrderItems.Add(new OrderDisplayItem
+            {
+                Sequence = order.OrderSequence,
+                OrderId = order.OrderId,
+                ModelName = string.IsNullOrEmpty(order.ModelName) ? "—" : order.ModelName,
+                Quantity = order.Quantity,
+                TrayIndex = position,
+                CartPositionIndex = position,
+                StartPosition = 1,
+                TrayTypeName = "Xe hàng",
+                JigTypeName = GetJigTypeText(order.JigType),
+                StatusText = isCompleted ? "Hoàn thành" : isRunning ? "Đang chạy" : "Chờ",
+                StatusBadgeKey = isCompleted ? "BadgeSuccess" : isRunning ? "BadgeInfo" : "BadgeWarning"
+            });
+
+            for (var item = 0; item < order.Quantity; item++)
+            {
+                var slotIndex = usedByPosition[positionIndex]++;
+                if (slotIndex < 0 || slotIndex >= desiredStates[positionIndex].Length) continue;
+
+                var status = SlotStatus.HasProduct;
+                if (isCompleted) status = SlotStatus.Empty;
+                else if (isRunning)
+                {
+                    var itemIndex = item + 1;
+                    if (positionState.CompletionAcknowledged || (currentItem > 0 && itemIndex < currentItem)) status = SlotStatus.Empty;
+                    else if (currentItem > 0 && itemIndex == currentItem) status = SlotStatus.Picking;
+                }
+
+                desiredStates[positionIndex][slotIndex] = (status, order.OrderId, order.ModelName);
+            }
+        }
+
+        SyncOrderDisplayItems(orderItems, desiredOrderItems);
+        for (var index = 0; index < 4; index++)
+        {
+            ApplyDesiredSlotStates(positionSlots[index], desiredStates[index]);
+        }
+
+        positionState.ShelfLayoutDisplayText = "Xe hàng 4 vị trí";
+        positionState.CurrentModelName = currentModelName ?? "—";
     }
 
     private void RebuildPositionSlots(
@@ -619,6 +744,7 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
         target.ModelName = source.ModelName;
         target.Quantity = source.Quantity;
         target.TrayIndex = source.TrayIndex;
+        target.CartPositionIndex = source.CartPositionIndex;
         target.StartPosition = source.StartPosition;
         target.TrayTypeName = source.TrayTypeName;
         target.JigTypeName = source.JigTypeName;
@@ -635,6 +761,7 @@ public partial class AutoPageViewModel : ObservableObject, IDisposable
             ModelName = source.ModelName,
             Quantity = source.Quantity,
             TrayIndex = source.TrayIndex,
+            CartPositionIndex = source.CartPositionIndex,
             StartPosition = source.StartPosition,
             TrayTypeName = source.TrayTypeName,
             JigTypeName = source.JigTypeName,

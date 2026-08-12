@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { message } from "antd";
 import { API_ENDPOINTS, apiClient, getApiErrorMessage } from "../../../config/api";
+import { showErrorMessage, showSuccessMessage } from "../../../utils/appMessage";
 
 function normalizeArrayResponse(response) {
   return Array.isArray(response?.data) ? response.data : [];
@@ -97,11 +97,11 @@ export default function useShelfDeclarationData() {
 
     try {
       await apiClient.post(API_ENDPOINTS.shelfDeclarations(machineId), payload);
-      message.success("Da tao khai bao ke thanh cong.");
+      showSuccessMessage("Đã tạo khai báo kệ thành công.");
       await refreshAll(machineId);
       return true;
     } catch (error) {
-      message.error(getApiErrorMessage(error, "Khong the tao khai bao."));
+      showErrorMessage(getApiErrorMessage(error, "Không thể tạo khai báo."));
       return false;
     } finally {
       setSubmitting(false);
@@ -111,10 +111,10 @@ export default function useShelfDeclarationData() {
   const cancelDeclaration = useCallback(async (id, machineId = selectedMachineId) => {
     try {
       await apiClient.delete(`/api/shelf-declarations/${id}`);
-      message.success("Da huy khai bao.");
+      showSuccessMessage("Đã hủy khai báo.");
       await refreshAll(machineId);
     } catch (error) {
-      message.error(getApiErrorMessage(error, "Khong the huy khai bao."));
+      showErrorMessage(getApiErrorMessage(error, "Không thể hủy khai báo."));
     }
   }, [refreshAll, selectedMachineId]);
 

@@ -455,6 +455,14 @@ public sealed class ModelProfileService : IModelProfileService
 
     private static void ValidateRequestMetadata(SaveModelProfileRequest request)
     {
+        if (ReadRobotInt(request.RobotData, "jigSupplyType") is < 1 or > 4)
+        {
+            throw new ValidationProblemException(new Dictionary<string, string[]>
+            {
+                ["robotData.jigSupplyType"] = ["Loại Jig cấp hàng phải được chọn từ 1 đến 4."]
+            });
+        }
+
         if (request.TrayType is not null and not (0 or 1))
         {
             throw new ValidationProblemException(new Dictionary<string, string[]>
@@ -470,6 +478,41 @@ public sealed class ModelProfileService : IModelProfileService
                 ["orderInput"] = ["Nhập order chỉ được nhập 0 (Không nhập) hoặc 1 (Nhập)."]
             });
         }
+    }
+
+    private static int ReadRobotInt(IReadOnlyDictionary<string, object?> data, string key)
+    {
+        if (!data.TryGetValue(key, out var value) || value is null)
+        {
+            return 0;
+        }
+
+        if (value is JsonElement element)
+        {
+            if (element.ValueKind == JsonValueKind.Number && element.TryGetInt32(out var number))
+            {
+                return number;
+            }
+
+            if (element.ValueKind == JsonValueKind.String
+                && int.TryParse(element.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out number))
+            {
+                return number;
+            }
+
+            return 0;
+        }
+
+        return value switch
+        {
+            int number => number,
+            long number => (int)number,
+            float number => (int)number,
+            double number => (int)number,
+            decimal number => (int)number,
+            string text when int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) => number,
+            _ => 0
+        };
     }
 
     private static void EnsureActivationPrerequisites(ModelProfileEntity entity)

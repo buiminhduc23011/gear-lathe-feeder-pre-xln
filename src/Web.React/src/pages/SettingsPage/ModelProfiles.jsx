@@ -120,8 +120,16 @@ function buildFieldData(fields, values = {}) {
 }
 
 function ModelFormField({ field, name }) {
+  const rules = field.key === "jigSupplyType"
+    ? [{
+        validator: (_, value) => Number(value) > 0
+          ? Promise.resolve()
+          : Promise.reject(new Error("Vui lòng chọn loại Jig cấp hàng."))
+      }]
+    : undefined;
+
   return (
-    <Form.Item label={field.label} name={name}>
+    <Form.Item label={field.label} name={name} rules={rules}>
       {field.type === "select" ? (
         <Select size="small" options={field.options} />
       ) : field.type === "text" ? (
