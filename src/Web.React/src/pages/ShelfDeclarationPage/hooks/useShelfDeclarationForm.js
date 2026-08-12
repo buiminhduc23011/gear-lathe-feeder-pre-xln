@@ -163,26 +163,32 @@ export default function useShelfDeclarationForm({
   }, [busyMachineSlots, history, machineSlotIndex, mode, occupiedStagingSlots, stagingSlotIndex]);
 
   const shouldUseDeclarationPreview = Boolean(selectedPreviewDeclaration);
-  const displayComputedOrders = useMemo(() => (
+  const persistedPreviewOrders = useMemo(() => (
     shouldUseDeclarationPreview
-      ? parseOrdersJson(selectedPreviewDeclaration.ordersJson).map((order, index) => ({
-        ...order,
-        key: `persisted-${order.orderSequence ?? index + 1}-${order.orderId ?? index}`,
-        placements: [{
+      ? parseOrdersJson(selectedPreviewDeclaration.ordersJson).map((order, index) => {
+        const key = `persisted-${order.orderSequence ?? index + 1}-${index}`;
+        return {
           ...order,
-          key: `persisted-placement-${order.orderSequence ?? index + 1}`,
-          cartPositionIndex: order.cartPositionIndex ?? 0,
-          quantity: order.quantity,
-          maxQty: order.maxQty ?? order.jigCapacity ?? 0
-        }]
-      }))
-      : computedOrders
-  ), [computedOrders, selectedPreviewDeclaration, shouldUseDeclarationPreview]);
+          key,
+          orderKey: key,
+          placements: [{
+            ...order,
+            key: `${key}-placement`,
+            orderKey: key,
+            cartPositionIndex: order.cartPositionIndex ?? 0,
+            quantity: order.quantity,
+            maxQty: order.maxQty ?? order.jigCapacity ?? 0
+          }]
+        };
+      })
+      : []
+  ), [selectedPreviewDeclaration, shouldUseDeclarationPreview]);
+  const displayComputedOrders = shouldUseDeclarationPreview ? persistedPreviewOrders : computedOrders;
   const displayCartPreview = useMemo(() => (
     shouldUseDeclarationPreview
-      ? buildCartPreviewFromPlacements(parseOrdersJson(selectedPreviewDeclaration.ordersJson))
+      ? buildCartPreviewFromPlacements(persistedPreviewOrders)
       : cartPreview
-  ), [cartPreview, selectedPreviewDeclaration, shouldUseDeclarationPreview]);
+  ), [cartPreview, persistedPreviewOrders, shouldUseDeclarationPreview]);
 
   const isBusyLocked = useMemo(() => {
     if (mode === DECLARATION_MODES.AGV) {
@@ -196,7 +202,9 @@ export default function useShelfDeclarationForm({
   );
   const selectedOrderSlots = useMemo(() => {
     const selected = displayComputedOrders[selectedOrderIndex];
-    return { cartPositions: new Set((selected?.placements ?? []).map((item) => item.cartPositionIndex)) };
+    return {
+      highlightedPlacements: new Set((selected?.placements ?? []).map((item) => item.orderKey ?? item.key))
+    };
   }, [displayComputedOrders, selectedOrderIndex]);
 
   useEffect(() => {
@@ -223,25 +231,32 @@ export default function useShelfDeclarationForm({
   }, [mode]);
 
   useEffect(() => {
-    if (selectedOrderIndex >= orderRows.length) {
-      setSelectedOrderIndex(orderRows.length > 0 ? orderRows.length - 1 : null);
+    if (selectedOrderIndex >= displayComputedOrders.length) {
+      setSelectedOrderIndex(displayComputedOrders.length > 0 ? displayComputedOrders.length - 1 : null);
     }
-  }, [orderRows.length, selectedOrderIndex]);
+  }, [displayComputedOrders.length, selectedOrderIndex]);
 
-  const validationErrors = useMemo(() => buildValidationErrors({
-    selectedMachineId,
-    orders,
-    computedOrders,
-    allocationErrors: allocation.errors,
-    knownModelNames,
-    mode,
-    stagingSlotIndex,
-    machineSlotIndex,
-    selectedMachineStagingSlots,
-    occupiedStagingSlots,
-    busyMachineSlots
-  }), [allocation.errors, busyMachineSlots, computedOrders, knownModelNames, machineSlotIndex, mode,
-    occupiedStagingSlots, orders, selectedMachineId, selectedMachineStagingSlots, stagingSlotIndex]);
+  const validationErrors = useMemo(() => {
+    if (shouldUseDeclarationPreview) {
+      return ["Slot đang có khai báo chưa chạy."];
+    }
+
+    return buildValidationErrors({
+      selectedMachineId,
+      orders,
+      computedOrders,
+      allocationErrors: allocation.errors,
+      knownModelNames,
+      mode,
+      stagingSlotIndex,
+      machineSlotIndex,
+      selectedMachineStagingSlots,
+      occupiedStagingSlots,
+      busyMachineSlots
+    });
+  }, [allocation.errors, busyMachineSlots, computedOrders, knownModelNames, machineSlotIndex, mode,
+    occupiedStagingSlots, orders, selectedMachineId, selectedMachineStagingSlots, shouldUseDeclarationPreview,
+    stagingSlotIndex]);
 
   const addOrder = () => {
     if (!canAddOrder) return;

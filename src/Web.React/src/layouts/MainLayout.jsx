@@ -278,8 +278,14 @@ function MainLayout() {
           </div>
         </Header>
 
-        <Content style={{ padding: isMobile ? 10 : 12 }}>
-          <div style={{ width: "100%", margin: "0 auto" }}>
+        <Content
+          style={{
+            display: "flex",
+            minHeight: 0,
+            padding: isMobile ? 10 : 12
+          }}
+        >
+          <div style={{ width: "100%", minHeight: 0, margin: "0 auto" }}>
             <Outlet />
           </div>
         </Content>

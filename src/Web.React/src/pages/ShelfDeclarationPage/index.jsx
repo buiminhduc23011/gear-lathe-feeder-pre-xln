@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Select, Space, Tabs, Tag } from "antd";
+import { Select, Space, Tabs } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import PageHeader from "../../components/ui/PageHeader";
 import useShelfDeclarationData from "./hooks/useShelfDeclarationData";
@@ -66,7 +66,6 @@ function ShelfDeclarationPage() {
       <PageHeader
         title="Khai báo kệ"
         description="Tạo và quản lý các bản khai báo kệ gia công."
-        meta={<Tag>{form.selectedMachineLabel}</Tag>}
         actions={(
           <Select
             placeholder="Chọn máy"

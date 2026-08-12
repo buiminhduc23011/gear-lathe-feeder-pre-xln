@@ -3,7 +3,7 @@ import { Card, Space, Typography } from "antd";
 
 const { Paragraph, Text, Title } = Typography;
 
-function SectionCard({ eyebrow, title, description, toolbar, children, style, ...cardProps }) {
+function SectionCard({ eyebrow, title, description, toolbar, children, compactHeader = false, style, ...cardProps }) {
   return (
     <Card
       variant="borderless"
@@ -23,7 +23,7 @@ function SectionCard({ eyebrow, title, description, toolbar, children, style, ..
             alignItems: "flex-start",
             gap: 12,
             flexWrap: "wrap",
-            marginBottom: 12
+             marginBottom: compactHeader ? 4 : 12
           }}
         >
           <Space direction="vertical" size={1} style={{ maxWidth: 760 }}>

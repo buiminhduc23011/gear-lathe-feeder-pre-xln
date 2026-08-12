@@ -28,11 +28,17 @@ function LegendDot({ color, border }) {
   );
 }
 
-function CartStack({ position, highlighted }) {
+function getPlacementKey(placement) {
+  return placement?.orderKey ?? placement?.key ?? placement?.orderId ?? placement?.modelName ?? placement?.orderSequence;
+}
+
+function CartStack({ position, highlightedPlacements }) {
   const capacity = Math.max(0, Number(position.capacity) || 0);
   const quantity = Math.max(0, Number(position.quantity) || 0);
   const layerCount = Math.min(Math.max(capacity, quantity), MAX_VISIBLE_LAYERS);
-  const color = JIG_COLORS[position.jigType] ?? "#cbd5e1";
+  const placements = (position.placements ?? []).flatMap((placement) => (
+    Array.from({ length: Math.max(0, Number(placement.quantity) || 0) }, () => placement)
+  ));
 
   if (!layerCount) {
     return (
@@ -44,7 +50,7 @@ function CartStack({ position, highlighted }) {
           flex: 1,
           fontSize: 12,
           justifyContent: "center",
-          minHeight: 220
+          minHeight: 0
         }}
       >
         Chưa xếp hàng
@@ -58,16 +64,18 @@ function CartStack({ position, highlighted }) {
       style={{
         alignItems: "stretch",
         display: "flex",
-        flex: 1,
+        flex: "1 1 0",
         flexDirection: "column-reverse",
         gap: 3,
         justifyContent: "flex-start",
-        minHeight: 220,
-        padding: "8px 10px"
+        minHeight: 0,
+        padding: "8px 10px",
+        boxSizing: "border-box"
       }}
     >
       {Array.from({ length: layerCount }, (_, index) => {
         const filled = index < quantity;
+        const placement = placements[index];
         return (
           <Tooltip
             key={`${position.position}-layer-${index}`}
@@ -75,10 +83,12 @@ function CartStack({ position, highlighted }) {
           >
             <div
               style={{
-                background: filled ? color : "#e2e8f0",
+                background: filled ? JIG_COLORS[position.jigType] ?? "#cbd5e1" : "#e2e8f0",
                 border: "1px solid rgba(15,23,42,0.06)",
                 borderRadius: 4,
-                boxShadow: highlighted && filled ? "0 0 0 2px #ef4444" : "none",
+                boxShadow: filled && highlightedPlacements.has(getPlacementKey(placement))
+                  ? "0 0 0 2px #ef4444"
+                  : "none",
                 flex: "1 1 0",
                 minHeight: 7,
                 opacity: filled ? 1 : 0.72,
@@ -92,10 +102,9 @@ function CartStack({ position, highlighted }) {
   );
 }
 
-function CartPositionPreview({ position, highlighted }) {
+function CartPositionPreview({ position, highlightedPlacements }) {
   const filled = position.quantity > 0;
   const color = JIG_COLORS[position.jigType] ?? "#cbd5e1";
-  const hiddenLayers = Math.max(0, (Number(position.capacity) || 0) - MAX_VISIBLE_LAYERS);
 
   return (
     <div style={{ width: 92 }}>
@@ -107,9 +116,9 @@ function CartPositionPreview({ position, highlighted }) {
       <div
         style={{
           background: filled ? "#f8fafc" : "#fbfdff",
-          border: `1px solid ${highlighted ? "#ef4444" : filled ? color : "#e2e8f0"}`,
+           border: `1px solid ${filled ? color : "#e2e8f0"}`,
           borderRadius: 10,
-          boxShadow: highlighted ? "0 0 0 2px rgba(239,68,68,0.16)" : "none",
+           boxShadow: "none",
           boxSizing: "border-box",
           display: "flex",
           flexDirection: "column",
@@ -134,41 +143,18 @@ function CartPositionPreview({ position, highlighted }) {
           </Tag>
         </div>
 
-        <CartStack position={position} highlighted={highlighted} />
-
-        <div style={{ borderTop: "1px solid #eef2f7", padding: "7px 8px 8px" }}>
-          <Text strong style={{ display: "block", fontSize: 12, textAlign: "center" }}>
-            {position.quantity} / {position.capacity || 0}
-          </Text>
-          <Text type="secondary" style={{ display: "block", fontSize: 10, textAlign: "center" }}>
-            {position.jigHeightMm || 0} mm · {position.inputThickness || 0} mm
-          </Text>
-        </div>
+        <CartStack position={position} highlightedPlacements={highlightedPlacements} />
       </div>
-      <Tooltip title={position.orderIds?.join(", ") || "Chưa có order"}>
-        <Text
-          ellipsis
-          type="secondary"
-          style={{ display: "block", fontSize: 11, marginTop: 6, textAlign: "center" }}
-        >
-          {position.orderIds?.length ? position.orderIds.join(", ") : "Chưa có order"}
-        </Text>
-      </Tooltip>
-      {hiddenLayers > 0 ? (
-        <Text type="secondary" style={{ display: "block", fontSize: 10, textAlign: "center" }}>
-          +{hiddenLayers} lớp
-        </Text>
-      ) : null}
     </div>
   );
 }
 
 function TrayPreviewPanel({ mode, machineSlotIndex, busyMachineSlots, cartPreview, selectedOrderSlots }) {
-  const highlightedPositions = selectedOrderSlots?.cartPositions ?? new Set();
+  const highlightedPlacements = selectedOrderSlots?.highlightedPlacements ?? new Set();
   const positions = cartPreview ?? [];
 
   return (
-    <Space direction="vertical" size={12} style={{ display: "flex" }}>
+    <Space direction="vertical" size={12} style={{ display: "flex", height: "100%" }}>
       {mode !== DECLARATION_MODES.AGV ? (
         <div style={{ background: "#fcfcfd", border: "1px solid #eef2f7", borderRadius: 14, padding: 14 }}>
           <Space direction="vertical" size={6} style={{ width: "100%" }}>
@@ -191,7 +177,7 @@ function TrayPreviewPanel({ mode, machineSlotIndex, busyMachineSlots, cartPrevie
           margin: "0 auto",
           maxWidth: "100%",
           padding: 10,
-          width: "fit-content"
+          width: "100%"
         }}
       >
         <div style={{ marginBottom: 8 }}>
@@ -229,7 +215,7 @@ function TrayPreviewPanel({ mode, machineSlotIndex, busyMachineSlots, cartPrevie
             <CartPositionPreview
               key={position.position}
               position={position}
-              highlighted={highlightedPositions.has(position.position)}
+              highlightedPlacements={highlightedPlacements}
             />
           ))}
         </div>

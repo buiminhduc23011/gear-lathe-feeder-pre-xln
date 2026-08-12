@@ -66,7 +66,7 @@ jest.mock("antd", () => {
     );
   };
 
-  const MockTable = ({ columns, dataSource, rowKey, locale }) => (
+  const MockTable = ({ columns, dataSource, rowKey, locale, onRow }) => (
     <table>
       <tbody>
         {dataSource.length === 0 ? (
@@ -74,7 +74,7 @@ jest.mock("antd", () => {
             <td>{locale?.emptyText ?? null}</td>
           </tr>
         ) : dataSource.map((record, rowIndex) => (
-          <tr key={record[rowKey] ?? rowIndex}>
+          <tr key={record[rowKey] ?? rowIndex} {...(onRow?.(record, rowIndex) ?? {})}>
             {columns.map((column, columnIndex) => {
               const rawValue = column.dataIndex ? record[column.dataIndex] : undefined;
               const content = column.render ? column.render(rawValue, record, rowIndex) : rawValue;

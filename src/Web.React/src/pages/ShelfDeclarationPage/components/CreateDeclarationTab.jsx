@@ -45,13 +45,16 @@ function CreateDeclarationTab({
     <SectionCard
       title="Tạo khai báo mới"
       description="Nhập liệu thông tin kệ cho bản khai báo mới."
+      compactHeader
+      style={{ minHeight: "min(680px, calc(100vh - 125px))" }}
+      styles={{ body: { display: "flex", flexDirection: "column", minHeight: "min(680px, calc(100vh - 125px))", padding: 12 } }}
       toolbar={(
         <Button icon={<ReloadOutlined />} onClick={() => onRefresh()}>
           Làm mới
         </Button>
       )}
     >
-      <Form layout="vertical">
+      <Form layout="vertical" style={{ display: "flex", flex: 1, flexDirection: "column", minHeight: 0 }}>
         <DeclarationControls
           mode={mode}
           onModeChange={onModeChange}
@@ -83,8 +86,8 @@ function CreateDeclarationTab({
           </div>
         ) : null}
 
-        <Row gutter={[16, 16]}>
-          <Col xs={24} xl={16} xxl={17}>
+        <Row gutter={[16, 16]} style={{ flex: "1 1 auto", minHeight: 0 }}>
+          <Col xs={24} xl={16} xxl={17} style={{ display: "flex", minHeight: 0 }}>
             <OrderEditorTable
               orders={orders}
               maxTotal={maxTotal}
@@ -104,7 +107,7 @@ function CreateDeclarationTab({
             />
           </Col>
 
-          <Col xs={24} xl={8} xxl={7}>
+          <Col xs={24} xl={8} xxl={7} style={{ display: "flex", minHeight: 0 }}>
             <TrayPreviewPanel
               mode={mode}
               machineSlotIndex={machineSlotIndex}

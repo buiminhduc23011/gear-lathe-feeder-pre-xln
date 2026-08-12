@@ -187,7 +187,7 @@ function OrderEditorTable({
     <div style={{ background: "#fcfcfd", border: "1px solid #eef2f7", borderRadius: 14, padding: 14, height: "100%" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 8 }}>
         <Space size={12} wrap>
-          <Text strong>Danh sách order ({orders.length})</Text>
+          <Text strong>Danh sách order ({tableRows.length})</Text>
           <Tag>Xe hàng: 4 vị trí</Tag>
           <Tag>Sức chứa: {totalCapacity}</Tag>
         </Space>
@@ -199,10 +199,13 @@ function OrderEditorTable({
         dataSource={tableRows}
         columns={columns}
         rowKey="key"
-        onRow={(_, index) => ({
-          onClick: () => onSelectOrder(index),
-          style: { background: selectedOrderIndex === index ? "#fff1f2" : undefined, cursor: "pointer" }
-        })}
+        onRow={(record) => {
+          const rowIndex = tableRows.findIndex((row) => row.key === record.key);
+          return {
+            onClick: () => onSelectOrder(rowIndex),
+            style: { background: selectedOrderIndex === rowIndex ? "#fff1f2" : undefined, cursor: "pointer" }
+          };
+        }}
         pagination={false}
         size="small"
         bordered
