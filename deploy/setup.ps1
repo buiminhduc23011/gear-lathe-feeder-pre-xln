@@ -156,7 +156,18 @@ if (-not $isAdmin) {
 }
 
 # --- Stop existing service if running -----------------------------------------
-$svcName = 'GearLatheFeeder.Server'
+$legacySvcName = 'GearLatheFeeder.Server'
+$svcName       = 'GearLatheFeederPreXLN.Server'
+
+$legacySvc = Get-Service -Name $legacySvcName -ErrorAction SilentlyContinue
+if ($legacySvc) {
+    Write-Host "  Stopping legacy $legacySvcName service..." -ForegroundColor Yellow
+    Stop-Service -Name $legacySvcName -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Seconds 2
+    sc.exe delete $legacySvcName | Out-Null
+    Write-OK "Legacy service $legacySvcName removed."
+}
+
 $existingSvc = Get-Service -Name $svcName -ErrorAction SilentlyContinue
 if ($existingSvc -and $existingSvc.Status -eq 'Running') {
     Write-Host "  Stopping $svcName service before reconfiguration..." -ForegroundColor Yellow
@@ -252,7 +263,7 @@ if ($preExistingWebCfg.AppName)   { $webCfgExisting.AppName    = $preExistingWeb
 
 # --- Defaults ----------------------------------------------------------------
 $def_port       = if ($cfg.ApiPort)     { $cfg.ApiPort }     else { '5000' }
-$def_dbconn     = if ($cfg.DbConn)      { $cfg.DbConn }      else { 'Server=127.0.0.1;Database=GearLatheFeederDb;User Id=sa;Password=YourPassword;TrustServerCertificate=True' }
+$def_dbconn     = if ($cfg.DbConn)      { $cfg.DbConn }      else { 'Server=127.0.0.1;Database=GearLatheFeederPreXLNDb;User Id=sti;Password=66668888;TrustServerCertificate=True' }
 $def_jwtkey     = if ($cfg.JwtKey)      { $cfg.JwtKey }      else { "GearLatheFeeder.SigningKey.$(Get-Random -Maximum 99999).ReplaceInProduction" }
 $def_adminuser  = if ($cfg.AdminUser)   { $cfg.AdminUser }   else { 'admin' }
 $def_adminpwd   = if ($cfg.AdminPwd)    { $cfg.AdminPwd }    else { 'Admin@123' }
@@ -433,7 +444,7 @@ if ($null -eq $existingService) {
             Write-Err "Executable not found: $Executable"
             Write-Warn 'Run build.ps1 first to generate the package.'
         } else {
-            sc.exe create $svcName binPath= "`"$Executable`"" start= auto DisplayName= 'Gear Lathe Feeder Server' | Out-Null
+            sc.exe create $svcName binPath= "`"$Executable`"" start= auto DisplayName= 'Gear Lathe Feeder Pre-XLN Server' | Out-Null
             sc.exe description $svcName 'Gear Lathe Feeder Pre-XLN Management Server' | Out-Null
             Write-OK "Service '$svcName' installed (auto-start)."
         }
@@ -470,13 +481,22 @@ $svc = Get-Service -Name $svcName -ErrorAction SilentlyContinue
 if ($null -ne $svc -and $svc.Status -ne 'Running') {
     $startNow = Read-YesNo "Start '$svcName' service now?" $true
     if ($startNow) {
-        Start-Service -Name $svcName
-        Start-Sleep -Seconds 2
-        $svc.Refresh()
-        if ($svc.Status -eq 'Running') {
-            Write-OK 'Service is running.'
-        } else {
-            Write-Warn "Service status: $($svc.Status). Check Event Viewer for details."
+        try {
+            Start-Service -Name $svcName
+            Start-Sleep -Seconds 2
+            $svc.Refresh()
+            if ($svc.Status -eq 'Running') {
+                Write-OK 'Service is running.'
+            } else {
+                Write-Warn "Service status: $($svc.Status). Check Event Viewer for details."
+            }
+        } catch {
+            Write-Err "Could not start service '$svcName': $($_.Exception.Message)"
+            Write-Host ''
+            Write-Host '  Tip: To see exact console error details, test running manually:' -ForegroundColor Yellow
+            Write-Host "       cd `"$ServerDir`"" -ForegroundColor Yellow
+            Write-Host '       .\Server.Api.exe' -ForegroundColor Yellow
+            Write-Host ''
         }
     }
 }

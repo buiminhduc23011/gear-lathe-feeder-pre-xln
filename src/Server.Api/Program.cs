@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseWindowsService(options =>
 {
-    options.ServiceName = "GearLatheFeeder.Server";
+    options.ServiceName = "GearLatheFeederPreXLN.Server";
 });
 
 builder.Services.AddControllers();

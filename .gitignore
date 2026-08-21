@@ -2,6 +2,8 @@
 **/bin/
 **/obj/
 **/dist/
+**/dist*/
+dist_gear_xln/
 **/build/
 **/.tmp/
 **/node_modules/
@@ -37,8 +39,14 @@ Thumbs.db
 [Dd]esktop.ini
 .DS_Store
 
-# Publish artifacts
+# Publish and Release Artifacts
 publish/
+**/publish/
 deploy/Output/
+[Oo]utput/
 *.rar
 *.zip
+*.7z
+*.tar.gz
+*Setup*.exe
+*setup*.exe
