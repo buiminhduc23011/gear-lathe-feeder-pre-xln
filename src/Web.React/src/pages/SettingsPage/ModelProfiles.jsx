@@ -32,6 +32,7 @@ import PageHeader from "../../components/ui/PageHeader";
 import SectionCard from "../../components/ui/SectionCard";
 import { API_ENDPOINTS, apiClient, getApiErrorMessage } from "../../config/api";
 import { showErrorMessage, showSuccessMessage } from "../../utils/appMessage";
+import { useMachineContext } from "../../contexts/MachineContext";
 
 const { Paragraph, Text } = Typography;
 
@@ -366,8 +367,9 @@ function formatDateTime(value) {
 }
 
 function ModelProfiles() {
-  const [machines, setMachines] = useState([]);
-  const [selectedMachineId, setSelectedMachineId] = useState(null);
+  const machineContext = useMachineContext();
+  const [localMachines, setLocalMachines] = useState([]);
+  const [localMachineId, setLocalMachineId] = useState(null);
   const [models, setModels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -388,6 +390,16 @@ function ModelProfiles() {
   const importExcelInputRef = useRef(null);
   const [form] = Form.useForm();
 
+  const machines = machineContext?.machines?.length > 0 ? machineContext.machines : localMachines;
+  const selectedMachineId = machineContext?.currentMachineId ?? localMachineId;
+
+  const handleMachineChange = useCallback((id) => {
+    setLocalMachineId(id);
+    if (machineContext?.changeMachine) {
+      machineContext.changeMachine(id);
+    }
+  }, [machineContext]);
+
   const handleFilterName = (value) => {
     setFilterName(value);
     clearTimeout(nameTimerRef.current);
@@ -404,18 +416,20 @@ function ModelProfiles() {
   }, [filterNameDebounced, models]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const response = await apiClient.get(API_ENDPOINTS.machines);
-        setMachines(response.data);
-        if (response.data.length > 0) {
-          setSelectedMachineId(response.data[0].machineId);
+    if (!machineContext?.machines?.length) {
+      (async () => {
+        try {
+          const response = await apiClient.get(API_ENDPOINTS.machines);
+          setLocalMachines(response.data);
+          if (response.data.length > 0) {
+            setLocalMachineId(response.data[0].machineId);
+          }
+        } catch (error) {
+          showErrorMessage(getApiErrorMessage(error, "Không thể tải danh sách máy."));
         }
-      } catch (error) {
-        showErrorMessage(getApiErrorMessage(error, "Không thể tải danh sách máy."));
-      }
-    })();
-  }, []);
+      })();
+    }
+  }, [machineContext?.machines]);
 
   const loadModels = useCallback(async () => {
     if (!selectedMachineId) {
@@ -758,7 +772,7 @@ function ModelProfiles() {
             style={{ width: "100%", minWidth: 300 }}
             placeholder="Chọn máy"
             value={selectedMachineId}
-            onChange={setSelectedMachineId}
+            onChange={handleMachineChange}
             options={machineOptions}
           />
         )}

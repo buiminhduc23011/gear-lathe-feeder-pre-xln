@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Drawer, Grid, Layout, Menu, Space, Tag, Typography } from "antd";
+import { Button, Drawer, Grid, Layout, Menu, Select, Space, Tag, Typography } from "antd";
 import {
   AppstoreOutlined,
   ControlOutlined,
@@ -20,6 +20,7 @@ import {
   canAccessShelfDeclaration
 } from "../config/access";
 import { useAuth } from "../contexts/AuthContext";
+import { useMachine } from "../contexts/MachineContext";
 import packageJson from "../../package.json";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -35,15 +36,17 @@ function MainLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
+  const { machines, loadingMachines, currentMachine, currentMachineCode, changeMachine } = useMachine();
   const config = getConfig();
   const logoSrc = `${process.env.PUBLIC_URL || ""}/Logo.png`;
 
   const menuItems = useMemo(() => {
+    const code = currentMachineCode || "default";
     const items = [
       {
         key: "/files",
         icon: <FileTextOutlined />,
-        label: <NavLink to="/files">Tệp tải lên</NavLink>
+        label: <NavLink to={`/m/${encodeURIComponent(code)}/files`}>Tệp tải lên</NavLink>
       }
     ];
 
@@ -51,7 +54,7 @@ function MainLayout() {
       items.push({
         key: "/shelf-declaration",
         icon: <InboxOutlined />,
-        label: <NavLink to="/shelf-declaration">Khai báo kệ</NavLink>
+        label: <NavLink to={`/m/${encodeURIComponent(code)}/shelf-declaration`}>Khai báo kệ</NavLink>
       });
     }
 
@@ -59,7 +62,7 @@ function MainLayout() {
       items.push({
         key: "/production-report",
         icon: <FileTextOutlined />,
-        label: <NavLink to="/production-report">Báo cáo sản xuất</NavLink>
+        label: <NavLink to={`/m/${encodeURIComponent(code)}/production-report`}>Báo cáo sản xuất</NavLink>
       });
     }
 
@@ -68,21 +71,20 @@ function MainLayout() {
         {
           key: "/settings/models",
           icon: <ControlOutlined />,
-          label: <NavLink to="/settings/models">Quản lý model</NavLink>
+          label: <NavLink to={`/m/${encodeURIComponent(code)}/settings/models`}>Quản lý model</NavLink>
         },
         {
           key: "/settings/machines",
           icon: <AppstoreOutlined />,
-          label: <NavLink to="/settings/machines">Cài đặt máy</NavLink>
+          label: <NavLink to={`/m/${encodeURIComponent(code)}/settings/machines`}>Cài đặt máy</NavLink>
         }
-        
       ];
 
       if (currentUser.role === "Admin") {
         settingChildren.push({
           key: "/settings/users",
           icon: <TeamOutlined />,
-          label: <NavLink to="/settings/users">Cài đặt người dùng</NavLink>
+          label: <NavLink to={`/m/${encodeURIComponent(code)}/settings/users`}>Cài đặt người dùng</NavLink>
         });
       }
 
@@ -95,28 +97,29 @@ function MainLayout() {
     }
 
     return items;
-  }, [currentUser]);
+  }, [currentUser, currentMachineCode]);
 
   const selectedKey = useMemo(() => {
-    if (location.pathname.startsWith("/settings/users")) {
+    const subPath = location.pathname.replace(/^\/m\/[^/]+/, "");
+    if (subPath.startsWith("/settings/users")) {
       return "/settings/users";
     }
-    if (location.pathname.startsWith("/settings/models")) {
+    if (subPath.startsWith("/settings/models")) {
       return "/settings/models";
     }
-    if (location.pathname.startsWith("/settings/machines")) {
+    if (subPath.startsWith("/settings/machines")) {
       return "/settings/machines";
     }
-    if (location.pathname.startsWith("/shelf-declaration")) {
+    if (subPath.startsWith("/shelf-declaration")) {
       return "/shelf-declaration";
     }
-    if (location.pathname.startsWith("/production-report")) {
+    if (subPath.startsWith("/production-report")) {
       return "/production-report";
     }
-    if (location.pathname.startsWith("/files")) {
+    if (subPath.startsWith("/files")) {
       return "/files";
     }
-    return location.pathname;
+    return subPath || "/files";
   }, [location.pathname]);
 
   useEffect(() => {
@@ -252,7 +255,7 @@ function MainLayout() {
             flexWrap: isMobile ? "wrap" : "nowrap"
           }}
         >
-          <Space size={12} style={{ minWidth: 0 }}>
+          <Space size={12} style={{ minWidth: 0, flexWrap: "wrap" }}>
             <Button
               type="text"
               icon={
@@ -266,6 +269,21 @@ function MainLayout() {
               aria-label="Toggle navigation"
             />
             <Text strong style={{ whiteSpace: "nowrap" }}>{config.APP_NAME}</Text>
+
+            {machines.length > 0 ? (
+              <Select
+                value={currentMachine?.machineCode || currentMachineCode}
+                onChange={(val) => changeMachine(val)}
+                loading={loadingMachines}
+                aria-label="Chọn máy"
+                style={{ minWidth: isMobile ? 130 : 240, maxWidth: 300 }}
+                popupMatchSelectWidth={false}
+                options={machines.map((m) => ({
+                  value: m.machineCode,
+                  label: `${m.machineCode} - ${m.machineName || m.machineCode}`
+                }))}
+              />
+            ) : null}
           </Space>
           <div
             style={{

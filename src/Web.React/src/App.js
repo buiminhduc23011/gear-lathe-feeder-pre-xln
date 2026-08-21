@@ -4,8 +4,10 @@ import { App as AntApp, ConfigProvider, theme } from "antd";
 import viVN from "antd/locale/vi_VN";
 import MainLayout from "./layouts/MainLayout";
 import { AuthProvider } from "./contexts/AuthContext";
+import { MachineProvider } from "./contexts/MachineContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppMessageBridge from "./components/AppMessageBridge";
+import MachineRedirect from "./components/MachineRedirect";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import FilesPage from "./pages/FilesPage";
@@ -128,68 +130,81 @@ function App() {
         <AppMessageBridge />
         <AuthProvider>
           <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/" element={<MainLayout />}>
-              <Route index element={<Navigate to="/files" replace />} />
-                <Route
-                  path="files"
-                  element={
-                    <ProtectedRoute>
-                      <FilesPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="settings"
-                  element={<Navigate to="/settings/machines" replace />}
-                />
-                <Route
-                  path="settings/machines"
-                  element={
-                    <ProtectedRoute roles={["Admin", "Technician"]}>
-                      <MachineSettings />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="settings/models"
-                  element={
-                    <ProtectedRoute roles={["Admin", "Technician"]}>
-                      <ModelProfiles />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="settings/users"
-                  element={
-                    <ProtectedRoute roles={["Admin"]}>
-                      <UserSettings />
-                    </ProtectedRoute>
-                  }
-                />
+            <MachineProvider>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
 
-                <Route
-                  path="shelf-declaration"
-                  element={
-                    <ProtectedRoute roles={SHELF_DECLARATION_ROLES}>
-                      <ShelfDeclarationPage />
-                    </ProtectedRoute>
-                  }
-                />
+                {/* Machine-scoped routes */}
+                <Route path="/m/:machineCode" element={<MainLayout />}>
+                  <Route index element={<Navigate to="files" replace />} />
+                  <Route
+                    path="files"
+                    element={
+                      <ProtectedRoute>
+                        <FilesPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="settings"
+                    element={<Navigate to="machines" replace />}
+                  />
+                  <Route
+                    path="settings/machines"
+                    element={
+                      <ProtectedRoute roles={["Admin", "Technician"]}>
+                        <MachineSettings />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="settings/models"
+                    element={
+                      <ProtectedRoute roles={["Admin", "Technician"]}>
+                        <ModelProfiles />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="settings/users"
+                    element={
+                      <ProtectedRoute roles={["Admin"]}>
+                        <UserSettings />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="shelf-declaration"
+                    element={
+                      <ProtectedRoute roles={SHELF_DECLARATION_ROLES}>
+                        <ShelfDeclarationPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="production-report"
+                    element={
+                      <ProtectedRoute roles={PRODUCTION_REPORT_ROLES}>
+                        <ProductionReportPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Route>
 
-                <Route
-                  path="production-report"
-                  element={
-                    <ProtectedRoute roles={PRODUCTION_REPORT_ROLES}>
-                      <ProductionReportPage />
-                    </ProtectedRoute>
-                  }
-                />
+                {/* Legacy non-prefixed routes redirect into active machine */}
+                <Route path="/" element={<MachineRedirect to="files" />} />
+                <Route path="/files" element={<MachineRedirect to="files" />} />
+                <Route path="/shelf-declaration" element={<MachineRedirect to="shelf-declaration" />} />
+                <Route path="/production-report" element={<MachineRedirect to="production-report" />} />
+                <Route path="/settings" element={<MachineRedirect to="settings/machines" />} />
+                <Route path="/settings/machines" element={<MachineRedirect to="settings/machines" />} />
+                <Route path="/settings/models" element={<MachineRedirect to="settings/models" />} />
+                <Route path="/settings/users" element={<MachineRedirect to="settings/users" />} />
 
                 <Route path="*" element={<NotFoundPage />} />
-              </Route>
-            </Routes>
+              </Routes>
+            </MachineProvider>
           </BrowserRouter>
         </AuthProvider>
       </AntApp>

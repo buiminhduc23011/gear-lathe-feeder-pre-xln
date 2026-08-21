@@ -410,8 +410,8 @@ describe("ShelfDeclarationPage", () => {
     fireEvent.click(screen.getByRole("radio", { name: /Th/i }));
     expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();
 
-    const busySlot = screen.getByRole("radio", { name: /Slot 1/i });
-    expect(busySlot).not.toBeDisabled();
+    const busySlot = screen.getByTestId("machine-slot-1");
+    expect(busySlot).not.toHaveAttribute("aria-disabled", "true");
     fireEvent.click(busySlot);
 
     expect(await screen.findByText("Machine slot 1")).toBeInTheDocument();

@@ -39,3 +39,6 @@ Thumbs.db
 
 # Publish artifacts
 publish/
+deploy/Output/
+*.rar
+*.zip

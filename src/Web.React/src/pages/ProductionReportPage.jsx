@@ -17,6 +17,7 @@ import PageHeader from "../components/ui/PageHeader";
 import SectionCard from "../components/ui/SectionCard";
 import { API_ENDPOINTS, apiClient, getApiErrorMessage } from "../config/api";
 import { showErrorMessage, showWarningMessage } from "../utils/appMessage";
+import { useMachineContext } from "../contexts/MachineContext";
 
 const { Text } = Typography;
 
@@ -37,8 +38,9 @@ const SHELF_OPTIONS = [
 ];
 
 function ProductionReportPage() {
-  const [machines, setMachines] = useState([]);
-  const [machineId, setMachineId] = useState(null);
+  const machineContext = useMachineContext();
+  const [localMachines, setLocalMachines] = useState([]);
+  const [localMachineId, setLocalMachineId] = useState(null);
   const [status, setStatus] = useState("");
   const [shelfIndex, setShelfIndex] = useState(0);
   const [searchOrder, setSearchOrder] = useState("");
@@ -48,16 +50,30 @@ function ProductionReportPage() {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const machines = machineContext?.machines?.length > 0 ? machineContext.machines : localMachines;
+  const machineId = machineContext?.currentMachineId ?? localMachineId;
+
+  const handleMachineChange = useCallback((id) => {
+    setLocalMachineId(id);
+    if (machineContext?.changeMachine) {
+      machineContext.changeMachine(id);
+    }
+  }, [machineContext]);
+
   const fetchMachines = useCallback(async () => {
-    const response = await apiClient.get(API_ENDPOINTS.machines);
-    const items = response.data ?? [];
-    setMachines(items);
-    if (items.length > 0) {
-      setMachineId((previous) => previous ?? items[0].machineId);
+    try {
+      const response = await apiClient.get(API_ENDPOINTS.machines);
+      const items = response.data ?? [];
+      setLocalMachines(items);
+      if (items.length > 0) {
+        setLocalMachineId((previous) => previous ?? items[0].machineId);
+      }
+    } catch {
+      setLocalMachines([]);
     }
   }, []);
 
-  const fetchReport = useCallback(async (isManual = false) => {
+  const fetchReport = useCallback(async () => {
     if (!machineId) {
       setReport(null);
       return;
@@ -88,18 +104,18 @@ function ProductionReportPage() {
   }, [machineId, shelfIndex, status, startDate, endDate]);
 
   useEffect(() => {
-    fetchMachines().catch((error) => {
-      showErrorMessage(getApiErrorMessage(error, "Không tải được danh sách máy."));
-    });
-  }, [fetchMachines]);
+    if (!machineContext?.machines?.length) {
+      fetchMachines().catch((error) => {
+        showErrorMessage(getApiErrorMessage(error, "Không tải được danh sách máy."));
+      });
+    }
+  }, [fetchMachines, machineContext?.machines]);
 
   useEffect(() => {
     fetchReport().catch((error) => {
       showErrorMessage(getApiErrorMessage(error, "Không tải được báo cáo sản xuất."));
     });
   }, [fetchReport]);
-
-
 
   const machineOptions = useMemo(
     () =>
@@ -125,110 +141,90 @@ function ProductionReportPage() {
         render: (value) => value ?? "-"
       },
       {
-        title: "Trạng thái",
-        dataIndex: "status",
-        width: 130,
-        render: (_, row) => (
-          <Space wrap size={4}>
-            <Tag color={mapStatusColor(row.status)} style={{ marginInlineEnd: 0 }}>
-              {getStatusLabel(row.status)}
-            </Tag>
-            {row.isLoadingParameters ? (
-              <Tag color="gold" style={{ marginInlineEnd: 0 }}>
-                Loading
-              </Tag>
+        title: "Chế độ",
+        dataIndex: "mode",
+        width: 110,
+        render: (value, row) => (
+          <div>
+            <Tag color="cyan">{value || "Manual"}</Tag>
+            {value === "AGV" && row.stagingSlotIndex ? (
+              <div style={{ fontSize: "11px", color: "#666" }}>Staging #{row.stagingSlotIndex}</div>
             ) : null}
-          </Space>
+            {value === "Manual" && row.machineSlotIndex ? (
+              <div style={{ fontSize: "11px", color: "#666" }}>Machine #{row.machineSlotIndex}</div>
+            ) : null}
+          </div>
         )
       },
       {
-        title: "Timeline",
-        key: "timeline",
-        width: 190,
-        render: (_, row) => {
-          const items = [];
-          if (row.createdAtUtc) {
-            items.push(
-              <Text key="c" type="secondary" style={{ fontSize: "12px", display: "block" }}>
-                Tạo: {formatDateTimeShort(row.createdAtUtc)}
-              </Text>
-            );
-          }
-          if (row.agvTakenAtUtc) {
-            items.push(
-              <Text key="a" type="secondary" style={{ fontSize: "12px", display: "block" }}>
-                AGV lấy: {formatDateTimeShort(row.agvTakenAtUtc)}
-              </Text>
-            );
-          }
-          if (row.productionStartedAtUtc) {
-            items.push(
-              <Text key="p" type="secondary" style={{ fontSize: "12px", display: "block" }}>
-                Bắt đầu SX: {formatDateTimeShort(row.productionStartedAtUtc)}
-              </Text>
-            );
-          }
-          const endUtc = row.completedAtUtc ?? row.clearedAtUtc;
-          if (endUtc) {
-            items.push(
-              <Text key="e" type="secondary" style={{ fontSize: "12px", display: "block" }}>
-                Kết thúc: {formatDateTimeShort(endUtc)}
-              </Text>
-            );
+        title: "Trạng thái",
+        dataIndex: "status",
+        width: 130,
+        render: (value) => <Tag color={mapStatusColor(value)}>{getStatusLabel(value)}</Tag>
+      },
+      {
+        title: "Tiến độ order",
+        width: 320,
+        render: (_, record) => {
+          const orders = record.orders ?? [];
+          if (orders.length === 0) {
+            return <Text type="secondary">Không có order</Text>;
           }
 
-          return items.length === 0 ? (
-            "-"
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-              {items}
-            </div>
+          return (
+            <Space direction="vertical" size={2} style={{ width: "100%" }}>
+              {orders.map((order) => (
+                <div
+                  key={order.orderSequence}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 8,
+                    fontSize: 12,
+                    padding: "2px 0",
+                    borderBottom: "1px dashed #f0f0f0"
+                  }}
+                >
+                  <Text strong={order.status === "InProduction"}>
+                    #{order.orderSequence} {order.orderId || "(No ID)"} - {order.modelName}
+                  </Text>
+                  <Space size={4}>
+                    <Text type="secondary">{order.quantity} pcs</Text>
+                    <Tag
+                      color={mapStatusColor(order.status)}
+                      style={{ fontSize: 10, lineHeight: "16px", padding: "0 4px", margin: 0 }}
+                    >
+                      {getStatusLabel(order.status)}
+                    </Tag>
+                  </Space>
+                </div>
+              ))}
+            </Space>
           );
         }
       },
       {
-        title: "KPI",
-        key: "kpi",
+        title: "Thời điểm lifecycle",
         width: 220,
-        render: (_, row) => (
-          <Space direction="vertical" size={0}>
-            <Text>Mode: {row.mode?.toLowerCase() === "manualload" ? "Manual" : "AGV"}</Text>
-            {row.mode?.toLowerCase() === "agv" && (
-              <Text>AGV lấy: {formatSeconds(row.agvPickupDurationSeconds)}</Text>
-            )}
-            <Text>Sản xuất: {formatSeconds(row.productionDurationSeconds)}</Text>
-            <Text>Tổng thời gian: {formatSeconds(row.lifecycleDurationSeconds)}</Text>
-          </Space>
+        render: (_, record) => (
+          <div style={{ fontSize: 12, lineHeight: 1.4 }}>
+            <div>Tạo: {formatDateTimeShort(record.createdAtUtc)}</div>
+            <div>AGV lấy: {formatDateTimeShort(record.agvTakenAtUtc) || "-"}</div>
+            <div>SX: {formatDateTimeShort(record.productionStartedAtUtc) || "-"}</div>
+            <div>Kết thúc: {formatDateTimeShort(record.endedAtUtc) || "-"}</div>
+          </div>
         )
       },
       {
-        title: "Order con",
-        key: "orders",
-        render: (_, row) =>
-          (row.orders ?? []).length === 0 ? (
-            "-"
-          ) : (
-            <Space direction="vertical" size={4}>
-              {row.orders.map((order) => {
-                const reportModel = order.reportModelName || "";
-                const articleName = order.modelName || "";
-                const isDuplicate =
-                  !reportModel ||
-                  !articleName ||
-                  reportModel.trim().toLowerCase() === articleName.trim().toLowerCase();
-
-                const modelArticleText = isDuplicate
-                  ? `Article: ${articleName || reportModel || "-"}`
-                  : `Article: ${articleName} | Model: ${reportModel}`;
-
-                return (
-                  <Tag key={`${row.declarationId}-${order.orderSequence}`} style={{ marginInlineEnd: 0 }}>
-                    #{order.orderSequence} | Order: {order.orderId || "-"} | {modelArticleText} | Qty: {order.quantity ?? "-"} | {getStatusLabel(order.status)}
-                  </Tag>
-                );
-              })}
-            </Space>
-          )
+        title: "Thời gian chu kỳ",
+        width: 160,
+        render: (_, record) => (
+          <div style={{ fontSize: 12, lineHeight: 1.4 }}>
+            <div>Chờ AGV: {formatSeconds(record.agvPickupDurationSeconds)}</div>
+            <div>Sản xuất: {formatSeconds(record.productionDurationSeconds)}</div>
+            <div>Tổng vòng đời: {formatSeconds(record.lifecycleDurationSeconds)}</div>
+          </div>
+        )
       }
     ],
     []
@@ -236,53 +232,64 @@ function ProductionReportPage() {
 
   const filteredItems = useMemo(() => {
     const items = report?.items ?? [];
-    const orderKeyword = searchOrder.trim().toLowerCase();
-    const modelKeyword = searchModel.trim().toLowerCase();
-
-    if (!orderKeyword && !modelKeyword) {
+    if (!searchOrder && !searchModel) {
       return items;
     }
 
-    return items
-      .map((item) => {
-        const matchedOrders = (item.orders ?? []).filter((order) => {
-          const orderId = (order.orderId || "").toLowerCase();
-          const articleId = (order.modelName || "").toLowerCase();
-          const reportModelName = (order.reportModelName || "").toLowerCase();
+    const lowerOrder = searchOrder.toLowerCase().trim();
+    const lowerModel = searchModel.toLowerCase().trim();
 
-          const orderMatched = !orderKeyword || orderId.includes(orderKeyword);
-          const modelMatched = !modelKeyword || articleId.includes(modelKeyword) || reportModelName.includes(modelKeyword);
-          return orderMatched && modelMatched;
-        });
+    return items.filter((item) => {
+      const orders = item.orders ?? [];
+      const matchOrder =
+        !searchOrder ||
+        orders.some((ord) => (ord.orderId ?? "").toLowerCase().includes(lowerOrder));
+      const matchModel =
+        !searchModel ||
+        orders.some(
+          (ord) =>
+            (ord.modelName ?? "").toLowerCase().includes(lowerModel) ||
+            (ord.reportModelName ?? "").toLowerCase().includes(lowerModel)
+        );
 
-        return {
-          ...item,
-          orders: matchedOrders
-        };
-      })
-      .filter((item) => item.orders.length > 0);
+      return matchOrder && matchModel;
+    });
   }, [report, searchOrder, searchModel]);
 
   const quickStats = useMemo(() => {
-    const orders = filteredItems.flatMap((item) => item.orders ?? []);
-    const totalOrders = orders.length;
-    const totalProducts = orders.reduce((sum, order) => sum + (order.quantity || 0), 0);
-    const runningProducts = filteredItems
-      .filter((item) => item.status === "InProduction")
-      .flatMap((item) => item.orders ?? [])
-      .reduce((sum, order) => sum + (order.quantity || 0), 0);
-    const completedProducts = filteredItems
-      .filter((item) => item.status === "Completed")
-      .flatMap((item) => item.orders ?? [])
-      .reduce((sum, order) => sum + (order.quantity || 0), 0);
-    const clearedProducts = filteredItems
-      .filter((item) => item.status === "Cleared")
-      .flatMap((item) => item.orders ?? [])
-      .reduce((sum, order) => sum + (order.quantity || 0), 0);
-    const cancelledProducts = filteredItems
-      .filter((item) => item.status === "Cancelled")
-      .flatMap((item) => item.orders ?? [])
-      .reduce((sum, order) => sum + (order.quantity || 0), 0);
+    let totalOrders = 0;
+    let totalProducts = 0;
+    let runningProducts = 0;
+    let completedProducts = 0;
+    let clearedProducts = 0;
+    let cancelledProducts = 0;
+
+    filteredItems.forEach((item) => {
+      const orders = item.orders ?? [];
+      totalOrders += orders.length;
+
+      orders.forEach((ord) => {
+        const qty = ord.quantity || 0;
+        totalProducts += qty;
+
+        switch (ord.status) {
+          case "InProduction":
+            runningProducts += qty;
+            break;
+          case "Completed":
+            completedProducts += qty;
+            break;
+          case "Cleared":
+            clearedProducts += qty;
+            break;
+          case "Cancelled":
+            cancelledProducts += qty;
+            break;
+          default:
+            break;
+        }
+      });
+    });
 
     return {
       totalOrders,
@@ -295,42 +302,42 @@ function ProductionReportPage() {
   }, [filteredItems]);
 
   const exportToExcel = useCallback(() => {
-    const items = filteredItems ?? [];
-    if (items.length === 0) {
-      showWarningMessage("Không có dữ liệu để xuất.");
+    if (!filteredItems || filteredItems.length === 0) {
+      showWarningMessage("Không có dữ liệu để xuất Excel.");
       return;
     }
 
     const headers = [
-      "Mã kệ",
-      "Kệ số",
-      "Chế độ nạp",
-      "Trạng thái kệ",
+      "Declaration ID",
+      "Kệ",
+      "Chế độ",
+      "Trạng thái Declaration",
       "Thời gian tạo",
       "Thời gian AGV lấy",
-      "Thời gian Bắt đầu SX",
-      "Thời gian Kết thúc",
-      "KPI AGV lấy (giây)",
-      "KPI Sản xuất (giây)",
-      "KPI Tổng thời gian (giây)",
-      "STT Order con",
-      "Mã Order con",
-      "Article ID",
-      "Model Name",
+      "Thời gian bắt đầu SX",
+      "Thời gian kết thúc",
+      "Thời gian chờ AGV lấy (s)",
+      "Thời gian sản xuất (s)",
+      "Tổng thời gian vòng đời (s)",
+      "Order STT",
+      "Order ID",
+      "Model",
+      "Report Model",
       "Số lượng",
-      "Trạng thái Order con"
+      "Trạng thái Order"
     ];
 
     const rows = [];
 
-    items.forEach((item) => {
-      const endUtc = item.completedAtUtc ?? item.clearedAtUtc;
-      const modeText = item.mode?.toLowerCase() === "manualload" ? "Manual" : "AGV";
+    filteredItems.forEach((item) => {
+      const modeText = item.mode === "AGV" 
+        ? `AGV (Slot ${item.stagingSlotIndex ?? "-"})` 
+        : `Manual (Slot ${item.machineSlotIndex ?? "-"})`;
       const statusText = getStatusLabel(item.status);
       const createdAt = formatDateTime(item.createdAtUtc);
       const agvTakenAt = formatDateTime(item.agvTakenAtUtc);
       const productionStartedAt = formatDateTime(item.productionStartedAtUtc);
-      const endAt = formatDateTime(endUtc);
+      const endAt = formatDateTime(item.endedAtUtc);
 
       const orders = item.orders ?? [];
       if (orders.length === 0) {
@@ -451,7 +458,7 @@ function ProductionReportPage() {
         actions={(
           <Select
             value={machineId}
-            onChange={setMachineId}
+            onChange={handleMachineChange}
             options={machineOptions}
             style={{ minWidth: 320 }}
             placeholder="Chọn máy"

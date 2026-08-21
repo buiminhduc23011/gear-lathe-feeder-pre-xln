@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { API_ENDPOINTS, apiClient, getApiErrorMessage } from "../../../config/api";
 import { showErrorMessage, showSuccessMessage } from "../../../utils/appMessage";
+import { useMachineContext } from "../../../contexts/MachineContext";
 
 function normalizeArrayResponse(response) {
   return Array.isArray(response?.data) ? response.data : [];
 }
 
 export default function useShelfDeclarationData() {
-  const [machines, setMachines] = useState([]);
-  const [selectedMachineId, setSelectedMachineId] = useState(null);
+  const machineContext = useMachineContext();
+  const [machines, setMachines] = useState(machineContext?.machines ?? []);
+  const [selectedMachineId, setSelectedMachineId] = useState(machineContext?.currentMachineId ?? null);
   const [models, setModels] = useState([]);
   const [history, setHistory] = useState([]);
   const [slotStatuses, setSlotStatuses] = useState([]);
@@ -120,11 +122,24 @@ export default function useShelfDeclarationData() {
 
   const handleMachineChange = useCallback((machineId) => {
     setSelectedMachineId(machineId);
-  }, []);
+    if (machineContext?.changeMachine) {
+      machineContext.changeMachine(machineId);
+    }
+  }, [machineContext]);
 
   useEffect(() => {
-    loadMachines();
-  }, [loadMachines]);
+    if (machineContext?.machines?.length > 0) {
+      setMachines(machineContext.machines);
+    } else {
+      loadMachines();
+    }
+  }, [loadMachines, machineContext?.machines]);
+
+  useEffect(() => {
+    if (machineContext?.currentMachineId) {
+      setSelectedMachineId(machineContext.currentMachineId);
+    }
+  }, [machineContext?.currentMachineId]);
 
   useEffect(() => {
     if (!selectedMachineId) {

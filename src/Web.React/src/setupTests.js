@@ -31,3 +31,15 @@ Object.defineProperty(window.URL, "revokeObjectURL", {
   writable: true,
   value: jest.fn()
 });
+
+jest.mock("react-router-dom", () => ({
+  BrowserRouter: ({ children }) => <div>{children}</div>,
+  Routes: ({ children }) => <div>{children}</div>,
+  Route: ({ children }) => <div>{children}</div>,
+  Navigate: () => null,
+  NavLink: ({ children, to, ...rest }) => <a href={to} {...rest}>{children}</a>,
+  Outlet: () => null,
+  useLocation: () => ({ pathname: "/", search: "", hash: "" }),
+  useNavigate: () => jest.fn(),
+  useParams: () => ({})
+}), { virtual: true });

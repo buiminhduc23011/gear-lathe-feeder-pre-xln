@@ -16,7 +16,10 @@ function LoginPage() {
   const { login } = useAuth();
   const logoSrc = `${process.env.PUBLIC_URL || ""}/Logo.png`;
 
-  const redirectTo = location.state?.from?.pathname || "/";
+  const fromState = location.state?.from;
+  const redirectTo = fromState
+    ? `${fromState.pathname || "/"}${fromState.search || ""}${fromState.hash || ""}`
+    : "/";
 
   const handleSubmit = async (values) => {
     setLoading(true);

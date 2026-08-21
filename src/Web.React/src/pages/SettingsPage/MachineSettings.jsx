@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -18,6 +18,7 @@ import PageHeader from "../../components/ui/PageHeader";
 import SectionCard from "../../components/ui/SectionCard";
 import { API_ENDPOINTS, apiClient, getApiErrorMessage } from "../../config/api";
 import { showErrorMessage, showSuccessMessage } from "../../utils/appMessage";
+import { useMachineContext } from "../../contexts/MachineContext";
 
 const STAGING_SLOT_OPTIONS = [1, 2, 3, 4];
 
@@ -100,6 +101,7 @@ function renderAssignedSlots(stagingSlotIndices) {
 }
 
 function MachineSettings() {
+  const machineContext = useMachineContext();
   const [machines, setMachines] = useState([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -107,21 +109,24 @@ function MachineSettings() {
   const [editingMachine, setEditingMachine] = useState(null);
   const [form] = Form.useForm();
 
-  const loadMachines = async () => {
+  const loadMachines = useCallback(async () => {
     setLoading(true);
     try {
       const response = await apiClient.get(API_ENDPOINTS.machines);
       setMachines(response.data);
+      if (machineContext?.fetchMachines) {
+        machineContext.fetchMachines();
+      }
     } catch (error) {
       showErrorMessage(getApiErrorMessage(error, "Không thể tải danh sách máy."));
     } finally {
       setLoading(false);
     }
-  };
+  }, [machineContext]);
 
   useEffect(() => {
     loadMachines();
-  }, []);
+  }, [loadMachines]);
 
   const metrics = useMemo(() => {
     const active = machines.filter((item) => item.isActive).length;
