@@ -271,7 +271,7 @@ $def_techuser   = if ($cfg.TechUser)    { $cfg.TechUser }    else { 'technician'
 $def_techpwd    = if ($cfg.TechPwd)     { $cfg.TechPwd }     else { 'Technician@123' }
 $def_storage    = if ($cfg.StoragePath) { $cfg.StoragePath } else { 'Storage/Uploads' }
 $def_remotePath = if ($cfg.RemotePath)  { $cfg.RemotePath }  else { '' }
-$def_webapi     = if ($webCfgExisting.ApiBaseUrl) { $webCfgExisting.ApiBaseUrl } else { 'auto' }
+$def_webapi     = if ($webCfgExisting.ApiBaseUrl -and ($webCfgExisting.ApiBaseUrl -notmatch 'localhost')) { $webCfgExisting.ApiBaseUrl } else { 'auto' }
 $def_webappname = if ($webCfgExisting.AppName)    { $webCfgExisting.AppName }    else { 'Gear Lathe Feeder Pre-XLN' }
 $hostIp         = Get-PrimaryIPv4
 
