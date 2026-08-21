@@ -3,7 +3,7 @@
 #define RepoRoot AddBackslash(SourcePath) + ".."
 #define DesktopProjectPath AddBackslash(RepoRoot) + "src\\Desktop.App\\Desktop.App.csproj"
 #define BuildWorkingDir RepoRoot
-#define BuildParams "publish """ + DesktopProjectPath + """ -c Release -f net10.0-windows"
+#define BuildParams "publish """ + DesktopProjectPath + """ -c Release -f net10.0-windows --self-contained true -r win-x64"
 #define BuildExitCode Exec("dotnet", BuildParams, BuildWorkingDir, 1)
 
 ; Auto-build Desktop.App in Release mode each time this installer script is compiled.
@@ -11,7 +11,7 @@
   #error "dotnet publish failed with exit code " + Str(BuildExitCode)
 #endif
 
-#define MyAppSourceDir "..\src\Desktop.App\bin\Release\net10.0-windows\publish"
+#define MyAppSourceDir "..\src\Desktop.App\bin\Release\net10.0-windows\win-x64\publish"
 #define MyAppExePath MyAppSourceDir + "\" + MyAppExeName
 #ifndef MyAppVersion
   #define MyAppVersion GetVersionNumbersString(MyAppExePath)
@@ -86,23 +86,6 @@ begin
 end;
 
 function InitializeSetup(): Boolean;
-var
-  ErrorCode: Integer;
 begin
-  Result := IsDotNet10DesktopRuntimeInstalled;
-
-  if Result then
-  begin
-    Exit;
-  end;
-
-  if MsgBox(
-    '.NET 10 Desktop Runtime is required to run ' + ExpandConstant('{#MyAppName}') + '.' + #13#10 + #13#10 +
-    'Please install .NET 10 Desktop Runtime first, then run this setup again.' + #13#10 + #13#10 +
-    'Open the Microsoft download page now?',
-    mbConfirmation,
-    MB_YESNO) = IDYES then
-  begin
-    ShellExec('open', ExpandConstant('{#DotNetDesktopRuntimeUrl}'), '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
-  end;
+  Result := True;
 end;

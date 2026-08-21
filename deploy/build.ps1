@@ -39,7 +39,7 @@
 param(
     [string]$OutputDir     = 'dist',
     [string]$Configuration = 'Release',
-    [switch]$SelfContained,
+    [bool]$SelfContained   = $true,
     [string]$Runtime       = 'win-x64'
 )
 
