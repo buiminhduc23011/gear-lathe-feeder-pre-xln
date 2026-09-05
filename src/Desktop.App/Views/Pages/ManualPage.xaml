@@ -20,6 +20,12 @@
             x:Key="ManualNumericTextBox"
             BasedOn="{StaticResource ParameterInput}"
             TargetType="TextBox">
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Height" Value="48" />
+            <Setter Property="Padding" Value="4,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
             <EventSetter Event="PreviewTextInput" Handler="NumericField_PreviewTextInput" />
             <EventSetter Event="DataObject.Pasting" Handler="NumericField_Pasting" />
         </Style>
@@ -355,7 +361,7 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Margin="0,0,24,24" Padding="26" Style="{StaticResource SectionCard}">
+                                    <Border Margin="0,0,12,16" Padding="14,18" Style="{StaticResource SectionCard}">
                                         <StackPanel>
 
                                             <!--  ── Header: tên trục + vị trí hiện tại ──  -->
@@ -396,7 +402,7 @@
                                             <Grid Margin="0,20,0,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="20" />
+                                                    <ColumnDefinition Width="12" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
 
@@ -410,15 +416,9 @@
                                                     <TextBox
                                                         Margin="0,6,0,0"
                                                         LostFocus="SpeedInput_LostFocus"
+                                                        PreviewKeyDown="SpeedInput_PreviewKeyDown"
                                                         Style="{StaticResource ManualNumericTextBox}"
-                                                        Text="{Binding ManualSpeedInput, UpdateSourceTrigger=PropertyChanged}">
-                                                        <TextBox.InputBindings>
-                                                            <KeyBinding
-                                                                Key="Return"
-                                                                Command="{Binding DataContext.ApplyAxisSpeedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                CommandParameter="{Binding}" />
-                                                        </TextBox.InputBindings>
-                                                    </TextBox>
+                                                        Text="{Binding ManualSpeedInput, UpdateSourceTrigger=PropertyChanged}" />
                                                     <TextBlock
                                                         Margin="0,4,0,0"
                                                         FontSize="{DynamicResource FontSize.Caption}"
@@ -437,15 +437,9 @@
                                                     <TextBox
                                                         Margin="0,6,0,0"
                                                         LostFocus="MovePointInput_LostFocus"
+                                                        PreviewKeyDown="MovePointInput_PreviewKeyDown"
                                                         Style="{StaticResource ManualNumericTextBox}"
-                                                        Text="{Binding MovePointInput, UpdateSourceTrigger=PropertyChanged}">
-                                                        <TextBox.InputBindings>
-                                                            <KeyBinding
-                                                                Key="Return"
-                                                                Command="{Binding DataContext.WriteMovePointValueCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                CommandParameter="{Binding}" />
-                                                        </TextBox.InputBindings>
-                                                    </TextBox>
+                                                        Text="{Binding MovePointInput, UpdateSourceTrigger=PropertyChanged}" />
                                                     <TextBlock
                                                         Margin="0,4,0,0"
                                                         FontSize="{DynamicResource FontSize.Caption}"
@@ -458,7 +452,7 @@
                                             <!--  ── Buttons: Home & Chạy tới điểm (cùng 1 hàng) ──  -->
                                             <UniformGrid Margin="0,18,0,0" Columns="2">
                                                 <Button
-                                                    Margin="0,0,10,0"
+                                                    Margin="0,0,6,0"
                                                     Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding HomeTagName}"
                                                     Content="Home"
@@ -466,7 +460,7 @@
                                                     <Button.MinWidth>0</Button.MinWidth>
                                                 </Button>
                                                 <Button
-                                                    Margin="10,0,0,0"
+                                                    Margin="6,0,0,0"
                                                     Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}"
                                                     Content="Chạy tới điểm"
@@ -478,7 +472,7 @@
                                             <!--  ── Jog buttons: X− · X+ ──  -->
                                             <UniformGrid Margin="0,16,0,0" Columns="2">
                                                 <controls:HoldToRunButton
-                                                    Margin="0,0,10,0"
+                                                    Margin="0,0,6,0"
                                                     Content="{Binding NegativeLabel}"
                                                     PressCommand="{Binding DataContext.StartJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     PressCommandParameter="{Binding NegativeJogTagName}"
@@ -504,7 +498,7 @@
                                                     </controls:HoldToRunButton.Style>
                                                 </controls:HoldToRunButton>
                                                 <controls:HoldToRunButton
-                                                    Margin="10,0,0,0"
+                                                    Margin="6,0,0,0"
                                                     Content="{Binding PositiveLabel}"
                                                     PressCommand="{Binding DataContext.StartJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     PressCommandParameter="{Binding PositiveJogTagName}"
