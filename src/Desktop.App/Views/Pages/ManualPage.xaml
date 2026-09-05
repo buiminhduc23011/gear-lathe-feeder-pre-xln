@@ -450,91 +450,76 @@
                                                 </StackPanel>
                                             </StackPanel>
 
-                                            <!--  ── Speed input (auto-sync on LostFocus / Enter) ──  -->
-                                            <Grid Margin="0,18,0,0">
+                                            <!--  ── Inputs: Tốc độ & Tới điểm (title trên ô nhập, 2 ô nhập trên 1 dòng) ──  -->
+                                            <Grid Margin="0,16,0,0">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="12" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                </Grid.RowDefinitions>
-                                                <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    Style="{StaticResource ParameterLabel}"
-                                                    Text="{Binding SpeedLabel}" />
-                                                <TextBox
-                                                    Grid.Row="0"
-                                                    Grid.Column="1"
-                                                    LostFocus="SpeedInput_LostFocus"
-                                                    Style="{StaticResource ManualNumericTextBox}"
-                                                    Text="{Binding ManualSpeedInput, UpdateSourceTrigger=PropertyChanged}">
-                                                    <TextBox.InputBindings>
-                                                        <KeyBinding
-                                                            Key="Return"
-                                                            Command="{Binding DataContext.ApplyAxisSpeedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                            CommandParameter="{Binding}" />
-                                                    </TextBox.InputBindings>
-                                                </TextBox>
-                                                <TextBlock
-                                                    Grid.Row="1"
-                                                    Grid.Column="1"
-                                                    Margin="0,4,0,0"
-                                                    FontSize="{DynamicResource FontSize.Caption}"
-                                                    Foreground="{DynamicResource Brush.Action.Danger}"
-                                                    Text="{Binding ManualSpeedValidationMessage}"
-                                                    Visibility="{Binding HasManualSpeedValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                                                <!--  Cột 1: Tốc độ  -->
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock
+                                                        Width="Auto"
+                                                        HorizontalAlignment="Left"
+                                                        Style="{StaticResource ParameterLabel}"
+                                                        Text="{Binding SpeedLabel}" />
+                                                    <TextBox
+                                                        Margin="0,6,0,0"
+                                                        LostFocus="SpeedInput_LostFocus"
+                                                        Style="{StaticResource ManualNumericTextBox}"
+                                                        Text="{Binding ManualSpeedInput, UpdateSourceTrigger=PropertyChanged}">
+                                                        <TextBox.InputBindings>
+                                                            <KeyBinding
+                                                                Key="Return"
+                                                                Command="{Binding DataContext.ApplyAxisSpeedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                CommandParameter="{Binding}" />
+                                                        </TextBox.InputBindings>
+                                                    </TextBox>
+                                                    <TextBlock
+                                                        Margin="0,4,0,0"
+                                                        FontSize="{DynamicResource FontSize.Caption}"
+                                                        Foreground="{DynamicResource Brush.Action.Danger}"
+                                                        Text="{Binding ManualSpeedValidationMessage}"
+                                                        Visibility="{Binding HasManualSpeedValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                                </StackPanel>
+
+                                                <!--  Cột 2: Tới điểm  -->
+                                                <StackPanel Grid.Column="2">
+                                                    <TextBlock
+                                                        Width="Auto"
+                                                        HorizontalAlignment="Left"
+                                                        Style="{StaticResource ParameterLabel}"
+                                                        Text="{Binding MovePointLabel}" />
+                                                    <TextBox
+                                                        Margin="0,6,0,0"
+                                                        LostFocus="MovePointInput_LostFocus"
+                                                        Style="{StaticResource ManualNumericTextBox}"
+                                                        Text="{Binding MovePointInput, UpdateSourceTrigger=PropertyChanged}">
+                                                        <TextBox.InputBindings>
+                                                            <KeyBinding
+                                                                Key="Return"
+                                                                Command="{Binding DataContext.WriteMovePointValueCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                CommandParameter="{Binding}" />
+                                                        </TextBox.InputBindings>
+                                                    </TextBox>
+                                                    <TextBlock
+                                                        Margin="0,4,0,0"
+                                                        FontSize="{DynamicResource FontSize.Caption}"
+                                                        Foreground="{DynamicResource Brush.Action.Danger}"
+                                                        Text="{Binding MovePointValidationMessage}"
+                                                        Visibility="{Binding HasMovePointValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                                </StackPanel>
                                             </Grid>
 
-                                            <!--  ── Move-point input + Chạy tới điểm ──  -->
-                                            <Grid Margin="0,10,0,0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="Auto" />
-                                                    <RowDefinition Height="10" />
-                                                    <RowDefinition Height="Auto" />
-                                                </Grid.RowDefinitions>
-                                                <TextBlock
-                                                    Grid.Row="0"
-                                                    Grid.Column="0"
-                                                    VerticalAlignment="Center"
-                                                    Style="{StaticResource ParameterLabel}"
-                                                    Text="{Binding MovePointLabel}" />
-                                                <TextBox
-                                                    Grid.Row="0"
-                                                    Grid.Column="1"
-                                                    LostFocus="MovePointInput_LostFocus"
-                                                    Style="{StaticResource ManualNumericTextBox}"
-                                                    Text="{Binding MovePointInput, UpdateSourceTrigger=PropertyChanged}">
-                                                    <TextBox.InputBindings>
-                                                        <KeyBinding
-                                                            Key="Return"
-                                                            Command="{Binding DataContext.WriteMovePointValueCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                            CommandParameter="{Binding}" />
-                                                    </TextBox.InputBindings>
-                                                </TextBox>
-                                                <TextBlock
-                                                    Grid.Row="1"
-                                                    Grid.Column="1"
-                                                    Margin="0,4,0,0"
-                                                    FontSize="{DynamicResource FontSize.Caption}"
-                                                    Foreground="{DynamicResource Brush.Action.Danger}"
-                                                    Text="{Binding MovePointValidationMessage}"
-                                                    Visibility="{Binding HasMovePointValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                                <Button
-                                                    Grid.Row="3"
-                                                    Grid.Column="0"
-                                                    Grid.ColumnSpan="2"
-                                                    Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                    CommandParameter="{Binding}"
-                                                    Content="Chạy tới điểm"
-                                                    Style="{StaticResource ButtonPrimary}" />
-                                            </Grid>
+                                            <!--  ── Button: Chạy tới điểm ──  -->
+                                            <Button
+                                                Margin="0,12,0,0"
+                                                Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Content="Chạy tới điểm"
+                                                Style="{StaticResource ButtonPrimary}" />
 
                                             <!--  ── Jog buttons: X− · Home · X+ ──  -->
                                             <UniformGrid Margin="0,16,0,0" Columns="3">
