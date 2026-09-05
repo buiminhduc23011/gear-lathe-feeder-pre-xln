@@ -360,8 +360,6 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             new ManualHomeActionState("Home Trục Z", "Trục Z về vị trí gốc.", PlcTagCatalog.Manual.HomeZ.Name),
             new ManualHomeActionState("Home Trục Cấp Phôi", "Trục Cấp Phôi về vị trí gốc.", PlcTagCatalog.Manual.HomeLifter.Name),
             new ManualHomeActionState("Home Bàn Xoay", "Bàn Xoay về vị trí gốc.", PlcTagCatalog.Manual.HomeRotary.Name),
-            new ManualHomeActionState("Home Tay Rodal", "Tay Rodal về vị trí 0°.", PlcTagCatalog.Manual.RodalRotate0.Name),
-            new ManualHomeActionState("Home XL Lật Đầu Vào", "Xilanh lật phôi về vị trí 0°.", PlcTagCatalog.Manual.InputRotate0.Name),
         ];
         _originActionsByTagName = OriginActions.ToDictionary(item => item.CommandTagName, StringComparer.OrdinalIgnoreCase);
 
@@ -780,16 +778,6 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         UpdateOriginAction(PlcTagCatalog.Manual.HomeZ.Name, AxisZ.IsHoming || AxisZ.IsHomeCommandActive, AxisZ.IsHomed, AxisZ.IsHomeCommandActive);
         UpdateOriginAction(PlcTagCatalog.Manual.HomeLifter.Name, AxisLifter.IsHoming || AxisLifter.IsHomeCommandActive, AxisLifter.IsHomed, AxisLifter.IsHomeCommandActive);
         UpdateOriginAction(PlcTagCatalog.Manual.HomeRotary.Name, AxisRotary.IsHoming || AxisRotary.IsHomeCommandActive, AxisRotary.IsHomed, AxisRotary.IsHomeCommandActive);
-        UpdateOriginAction(
-            PlcTagCatalog.Manual.RodalRotate0.Name,
-            ReadBool(PlcTagCatalog.Manual.RodalRotate0.Name),
-            ReadBool(PlcTagCatalog.Manual.RodalRotated0Signal.Name),
-            ReadBool(PlcTagCatalog.Manual.RodalRotate0.Name));
-        UpdateOriginAction(
-            PlcTagCatalog.Manual.InputRotate0.Name,
-            ReadBool(PlcTagCatalog.Manual.InputRotate0.Name),
-            ReadBool(PlcTagCatalog.Manual.InputRotated0Signal.Name),
-            ReadBool(PlcTagCatalog.Manual.InputRotate0.Name));
     }
 
     private void SyncSummaryStatus()
