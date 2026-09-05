@@ -357,6 +357,24 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             ..OutputBinaryOutputs,
         ];
 
+        ToolArmItems =
+        [
+            ..ToolArmCylinders,
+            ..ToolArmBinaryOutputs,
+        ];
+
+        OutputClusterItems =
+        [
+            ..OutputCylinders,
+            ..OutputBinaryOutputs,
+        ];
+
+        LatheItems =
+        [
+            ..LatheCylinders,
+            ..LatheRunActions,
+        ];
+
         OriginActions =
         [
             new ManualHomeActionState("Home Trục X", "Trục X về vị trí gốc.", PlcTagCatalog.Manual.HomeX.Name),
@@ -402,13 +420,19 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     public IReadOnlyList<ManualBinaryOutputState> ToolArmBinaryOutputs { get; }
 
+    public IReadOnlyList<object> ToolArmItems { get; }
+
     public IReadOnlyList<ManualCylinderState> OutputCylinders { get; }
 
     public IReadOnlyList<ManualBinaryOutputState> OutputBinaryOutputs { get; }
 
+    public IReadOnlyList<object> OutputClusterItems { get; }
+
     public IReadOnlyList<ManualCylinderState> LatheCylinders { get; }
 
     public IReadOnlyList<ManualLatheRunState> LatheRunActions { get; }
+
+    public IReadOnlyList<object> LatheItems { get; }
 
     public IReadOnlyList<ManualBinaryOutputState> BinaryOutputs { get; }
 

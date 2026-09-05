@@ -7,8 +7,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:shared="clr-namespace:Desktop.App.Views.Shared"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:ui="clr-namespace:Desktop.App.Models.Ui"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <sys:Double x:Key="Size.ServoButton.Height">75</sys:Double>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BooleanAndMultiConverter x:Key="BooleanAndMultiConverter" />
 
@@ -21,7 +24,7 @@
         </Style>
 
         <Style x:Key="ManualRailButton" TargetType="ToggleButton">
-            <Setter Property="MinHeight" Value="60" />
+            <Setter Property="MinHeight" Value="75" />
             <Setter Property="Margin" Value="0,0,0,12" />
             <Setter Property="Padding" Value="18,12" />
             <Setter Property="FontSize" Value="{DynamicResource FontSize.Body}" />
@@ -53,8 +56,8 @@
             x:Key="OriginActionCard"
             BasedOn="{StaticResource SectionCard}"
             TargetType="Border">
-            <Setter Property="Margin" Value="0,0,16,16" />
-            <Setter Property="MinHeight" Value="200" />
+            <Setter Property="Margin" Value="0,0,12,12" />
+            <Setter Property="MinHeight" Value="180" />
             <Setter Property="Padding" Value="18" />
             <Setter Property="TextElement.FontFamily" Value="{DynamicResource FontFamily.App}" />
         </Style>
@@ -67,7 +70,7 @@
             <Setter Property="Margin" Value="0,0,8,8" />
             <Setter Property="Padding" Value="8,4" />
         </Style>
-        <DataTemplate x:Key="ManualCylinderCardTemplate">
+        <DataTemplate DataType="{x:Type ui:ManualCylinderState}">
             <Border
                 Width="380"
                 Margin="0,0,16,16"
@@ -126,7 +129,7 @@
             </Border>
         </DataTemplate>
 
-        <DataTemplate x:Key="ManualBinaryOutputCardTemplate">
+        <DataTemplate DataType="{x:Type ui:ManualBinaryOutputState}">
             <Border
                 Width="380"
                 Margin="0,0,16,16"
@@ -167,7 +170,7 @@
                 </StackPanel>
             </Border>
         </DataTemplate>
-        <DataTemplate x:Key="ManualLatheRunCardTemplate">
+        <DataTemplate DataType="{x:Type ui:ManualLatheRunState}">
             <Border
                 Width="380"
                 Margin="0,0,16,16"
@@ -259,7 +262,7 @@
                         <ItemsControl ItemsSource="{Binding OriginActions}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Columns="3" />
+                                    <UniformGrid Columns="4" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
@@ -340,7 +343,7 @@
                         <TextBlock
                             Margin="0,0,0,16"
                             Style="{StaticResource SectionTitleText}"
-                            Text="Điều Khiển Trục Motion (Trục X, Z, Trục Cấp Phôi, Bàn Xoay)" />
+                            Text="Điều Khiển Trục" />
                         <ItemsControl ItemsSource="{Binding Axes}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -412,7 +415,10 @@
                                                     </Ellipse>
                                                     <TextBlock Style="{StaticResource StatusDotLabel}" Text="Homing" />
                                                 </StackPanel>
-                                                <StackPanel Margin="0,0,14,0" Orientation="Horizontal">
+                                                <StackPanel
+                                                    Margin="0,0,14,0"
+                                                    Orientation="Horizontal"
+                                                    Visibility="{Binding HasLimits, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <Ellipse>
                                                         <Ellipse.Style>
                                                             <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
@@ -426,7 +432,7 @@
                                                     </Ellipse>
                                                     <TextBlock Style="{StaticResource StatusDotLabel}" Text="Limit −" />
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
+                                                <StackPanel Orientation="Horizontal" Visibility="{Binding HasLimits, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <Ellipse>
                                                         <Ellipse.Style>
                                                             <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
@@ -603,7 +609,7 @@
                             Margin="0,0,0,16"
                             Style="{StaticResource SectionTitleText}"
                             Text="Cụm Đầu Vào" />
-                        <ItemsControl ItemTemplate="{StaticResource ManualCylinderCardTemplate}" ItemsSource="{Binding InputCylinders}">
+                        <ItemsControl ItemsSource="{Binding InputCylinders}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />
@@ -616,20 +622,8 @@
                         <TextBlock
                             Margin="0,0,0,16"
                             Style="{StaticResource SectionTitleText}"
-                            Text="Cụm Tay Tool - Xy Lanh" />
-                        <ItemsControl ItemTemplate="{StaticResource ManualCylinderCardTemplate}" ItemsSource="{Binding ToolArmCylinders}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-
-                        <TextBlock
-                            Margin="0,16,0,16"
-                            Style="{StaticResource SectionTitleText}"
-                            Text="Cụm Tay Tool - Nam Châm &amp; Xì Khí" />
-                        <ItemsControl ItemTemplate="{StaticResource ManualBinaryOutputCardTemplate}" ItemsSource="{Binding ToolArmBinaryOutputs}">
+                            Text="Cụm Tay Tool" />
+                        <ItemsControl ItemsSource="{Binding ToolArmItems}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />
@@ -642,20 +636,8 @@
                         <TextBlock
                             Margin="0,0,0,16"
                             Style="{StaticResource SectionTitleText}"
-                            Text="Cụm Đầu Ra - Xy Lanh" />
-                        <ItemsControl ItemTemplate="{StaticResource ManualCylinderCardTemplate}" ItemsSource="{Binding OutputCylinders}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-
-                        <TextBlock
-                            Margin="0,16,0,16"
-                            Style="{StaticResource SectionTitleText}"
-                            Text="Cụm Đầu Ra - Nam Châm" />
-                        <ItemsControl ItemTemplate="{StaticResource ManualBinaryOutputCardTemplate}" ItemsSource="{Binding OutputBinaryOutputs}">
+                            Text="Cụm Đầu Ra" />
+                        <ItemsControl ItemsSource="{Binding OutputClusterItems}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />
@@ -668,20 +650,8 @@
                         <TextBlock
                             Margin="0,0,0,16"
                             Style="{StaticResource SectionTitleText}"
-                            Text="Chấu Kẹp Máy Tiện" />
-                        <ItemsControl ItemTemplate="{StaticResource ManualCylinderCardTemplate}" ItemsSource="{Binding LatheCylinders}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-
-                        <TextBlock
-                            Margin="0,16,0,16"
-                            Style="{StaticResource SectionTitleText}"
-                            Text="Khởi Động Máy Tiện" />
-                        <ItemsControl ItemTemplate="{StaticResource ManualLatheRunCardTemplate}" ItemsSource="{Binding LatheRunActions}">
+                            Text="Máy Tiện" />
+                        <ItemsControl ItemsSource="{Binding LatheItems}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />
