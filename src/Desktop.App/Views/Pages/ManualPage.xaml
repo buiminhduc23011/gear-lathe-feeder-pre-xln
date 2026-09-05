@@ -534,7 +534,7 @@
                                             <!--  ── Status dots: Homed · Homing · Lim− · Lim+ (cuối card) ──  -->
                                             <StackPanel
                                                 Margin="0,20,0,0"
-                                                HorizontalAlignment="Center"
+                                                HorizontalAlignment="Left"
                                                 Orientation="Horizontal">
                                                 <StackPanel Margin="0,0,16,0" Orientation="Horizontal">
                                                     <Ellipse>
