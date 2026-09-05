@@ -6,6 +6,7 @@
 dist_gear_xln/
 **/build/
 **/.tmp/
+*_wpftmp.csproj
 **/node_modules/
 
 # Visual Studio & IDE Caches
