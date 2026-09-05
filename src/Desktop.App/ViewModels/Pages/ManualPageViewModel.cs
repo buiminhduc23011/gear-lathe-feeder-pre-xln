@@ -61,8 +61,8 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         AxisZ = new ManualAxisState(
             "axis_z",
             "Trục Z",
-            "Trái (-)",
-            "Phải (+)",
+            "Xuống (-)",
+            "Lên (+)",
             PlcTagCatalog.Manual.MoveZLeft,
             PlcTagCatalog.Manual.MoveZRight,
             PlcTagCatalog.Manual.HomeZ,
