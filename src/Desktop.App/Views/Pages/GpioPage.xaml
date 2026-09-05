@@ -108,6 +108,7 @@
 
                     <ScrollViewer
                         Grid.Row="1"
+                        Style="{StaticResource IndustrialScrollViewer}"
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding IsInputTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                         <ItemsControl ItemsSource="{Binding Inputs}">
@@ -129,6 +130,7 @@
 
                     <ScrollViewer
                         Grid.Row="1"
+                        Style="{StaticResource IndustrialScrollViewer}"
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding IsOutputTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                         <ItemsControl ItemsSource="{Binding Outputs}">

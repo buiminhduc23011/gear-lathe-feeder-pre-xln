@@ -56,7 +56,7 @@
                 HorizontalScrollBarVisibility="Disabled"
                 VerticalScrollBarVisibility="{Binding BodyVerticalScrollBarVisibility, ElementName=Root}">
                 <ScrollViewer.Style>
-                    <Style TargetType="ScrollViewer">
+                    <Style TargetType="ScrollViewer" BasedOn="{StaticResource IndustrialScrollViewer}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding BodyVerticalScrollBarVisibility, ElementName=Root}" Value="Disabled">
                                 <Setter Property="Visibility" Value="Collapsed" />

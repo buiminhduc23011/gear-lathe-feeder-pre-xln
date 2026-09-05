@@ -48,6 +48,8 @@
         <Setter Property="FontSize" Value="{DynamicResource FontSize.Body}" />
     </Style>
 
+    <Style TargetType="ScrollViewer" BasedOn="{StaticResource IndustrialScrollViewer}" />
+
     <Style TargetType="ComboBox">
         <Setter Property="FontFamily" Value="{DynamicResource FontFamily.App}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSize.Body}" />
