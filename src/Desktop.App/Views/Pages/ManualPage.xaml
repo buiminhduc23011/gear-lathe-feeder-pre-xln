@@ -340,7 +340,7 @@
                         <TextBlock
                             Margin="0,0,0,16"
                             Style="{StaticResource SectionTitleText}"
-                            Text="Điều Khiển Trục Motion (Trục X, Z, Trục Cấp Phôi, Bàn Xoay)" />
+                            Text="Điều Khiển Trục" />
                         <ItemsControl ItemsSource="{Binding Axes}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -412,7 +412,10 @@
                                                     </Ellipse>
                                                     <TextBlock Style="{StaticResource StatusDotLabel}" Text="Homing" />
                                                 </StackPanel>
-                                                <StackPanel Margin="0,0,14,0" Orientation="Horizontal">
+                                                <StackPanel
+                                                    Margin="0,0,14,0"
+                                                    Orientation="Horizontal"
+                                                    Visibility="{Binding HasLimits, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <Ellipse>
                                                         <Ellipse.Style>
                                                             <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
@@ -426,7 +429,9 @@
                                                     </Ellipse>
                                                     <TextBlock Style="{StaticResource StatusDotLabel}" Text="Limit −" />
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
+                                                <StackPanel
+                                                    Orientation="Horizontal"
+                                                    Visibility="{Binding HasLimits, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <Ellipse>
                                                         <Ellipse.Style>
                                                             <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">

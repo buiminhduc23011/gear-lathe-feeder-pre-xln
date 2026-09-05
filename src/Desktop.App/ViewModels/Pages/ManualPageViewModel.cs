@@ -110,7 +110,8 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             PlcTagCatalog.Manual.IsHomedRotary,
             PlcTagCatalog.Alarms.RotaryNotAtHome,
             PlcTagCatalog.Alarms.RotaryPulseSlip,
-            PlcTagCatalog.Outputs.Y1_14);
+            PlcTagCatalog.Outputs.Y1_14,
+            hasLimits: false);
 
         AxisY = AxisZ;
 

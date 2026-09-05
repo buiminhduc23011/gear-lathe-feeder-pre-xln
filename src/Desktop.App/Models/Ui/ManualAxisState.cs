@@ -23,7 +23,8 @@ public partial class ManualAxisState : ObservableObject
         PlcTagDefinition isHomedTag,
         PlcTagDefinition negativeLimitAlarmTag,
         PlcTagDefinition positiveLimitAlarmTag,
-        PlcTagDefinition servoTag)
+        PlcTagDefinition servoTag,
+        bool hasLimits = true)
     {
         Key = key;
         DisplayName = displayName;
@@ -41,10 +42,13 @@ public partial class ManualAxisState : ObservableObject
         NegativeLimitAlarmTag = negativeLimitAlarmTag;
         PositiveLimitAlarmTag = positiveLimitAlarmTag;
         ServoTag = servoTag;
+        HasLimits = hasLimits;
 
         ManualSpeedInput = "0";
         MovePointInput = "0";
     }
+
+    public bool HasLimits { get; }
 
     public string Key { get; }
 
