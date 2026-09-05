@@ -378,7 +378,7 @@
                                                     <TextBlock
                                                         VerticalAlignment="Center"
                                                         Style="{StaticResource SectionSubtitleText}"
-                                                        Text="mm" />
+                                                        Text="{Binding PositionUnit}" />
                                                 </StackPanel>
                                             </Grid>
 
@@ -455,7 +455,7 @@
                                                 <TextBlock
                                                     VerticalAlignment="Center"
                                                     Style="{StaticResource ParameterLabel}"
-                                                    Text="Tốc độ (mm/s)" />
+                                                    Text="{Binding SpeedLabel}" />
                                                 <TextBox
                                                     Grid.Row="0"
                                                     Grid.Column="1"
@@ -496,7 +496,7 @@
                                                     Grid.Column="0"
                                                     VerticalAlignment="Center"
                                                     Style="{StaticResource ParameterLabel}"
-                                                    Text="Tới điểm (mm)" />
+                                                    Text="{Binding MovePointLabel}" />
                                                 <TextBox
                                                     Grid.Row="0"
                                                     Grid.Column="1"

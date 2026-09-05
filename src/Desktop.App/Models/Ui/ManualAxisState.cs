@@ -24,7 +24,9 @@ public partial class ManualAxisState : ObservableObject
         PlcTagDefinition negativeLimitAlarmTag,
         PlcTagDefinition positiveLimitAlarmTag,
         PlcTagDefinition servoTag,
-        bool hasLimits = true)
+        bool hasLimits = true,
+        string positionUnit = "mm",
+        string speedUnit = "mm/s")
     {
         Key = key;
         DisplayName = displayName;
@@ -43,12 +45,18 @@ public partial class ManualAxisState : ObservableObject
         PositiveLimitAlarmTag = positiveLimitAlarmTag;
         ServoTag = servoTag;
         HasLimits = hasLimits;
+        PositionUnit = positionUnit;
+        SpeedUnit = speedUnit;
 
         ManualSpeedInput = "0";
         MovePointInput = "0";
     }
 
     public bool HasLimits { get; }
+    public string PositionUnit { get; }
+    public string SpeedUnit { get; }
+    public string SpeedLabel => $"Tốc độ ({SpeedUnit})";
+    public string MovePointLabel => $"Tới điểm ({PositionUnit})";
 
     public string Key { get; }
 
