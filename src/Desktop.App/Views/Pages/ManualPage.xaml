@@ -522,18 +522,30 @@
                                                 </StackPanel>
                                             </Grid>
 
-                                            <!--  ── Button: Chạy tới điểm ──  -->
-                                            <Button
-                                                Margin="0,12,0,0"
-                                                Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding}"
-                                                Content="Chạy tới điểm"
-                                                Style="{StaticResource ButtonPrimary}" />
+                                            <!--  ── Buttons: Chạy tới điểm & Home (cùng 1 hàng) ──  -->
+                                            <UniformGrid Margin="0,12,0,0" Columns="2">
+                                                <Button
+                                                    Margin="0,0,6,0"
+                                                    Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="Chạy tới điểm"
+                                                    Style="{StaticResource ButtonPrimary}">
+                                                    <Button.MinWidth>0</Button.MinWidth>
+                                                </Button>
+                                                <Button
+                                                    Margin="6,0,0,0"
+                                                    Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding HomeTagName}"
+                                                    Content="Home"
+                                                    Style="{StaticResource ButtonSecondary}">
+                                                    <Button.MinWidth>0</Button.MinWidth>
+                                                </Button>
+                                            </UniformGrid>
 
-                                            <!--  ── Jog buttons: X− · Home · X+ ──  -->
-                                            <UniformGrid Margin="0,16,0,0" Columns="3">
+                                            <!--  ── Jog buttons: X− · X+ ──  -->
+                                            <UniformGrid Margin="0,12,0,0" Columns="2">
                                                 <controls:HoldToRunButton
-                                                    Margin="0,0,8,0"
+                                                    Margin="0,0,6,0"
                                                     Content="{Binding NegativeLabel}"
                                                     PressCommand="{Binding DataContext.StartJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     PressCommandParameter="{Binding NegativeJogTagName}"
@@ -558,15 +570,8 @@
                                                         </Style>
                                                     </controls:HoldToRunButton.Style>
                                                 </controls:HoldToRunButton>
-                                                <Button
-                                                    Margin="0,0,8,0"
-                                                    Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                    CommandParameter="{Binding HomeTagName}"
-                                                    Content="Home"
-                                                    Style="{StaticResource ButtonSecondary}">
-                                                    <Button.MinWidth>0</Button.MinWidth>
-                                                </Button>
                                                 <controls:HoldToRunButton
+                                                    Margin="6,0,0,0"
                                                     Content="{Binding PositiveLabel}"
                                                     PressCommand="{Binding DataContext.StartJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     PressCommandParameter="{Binding PositiveJogTagName}"
