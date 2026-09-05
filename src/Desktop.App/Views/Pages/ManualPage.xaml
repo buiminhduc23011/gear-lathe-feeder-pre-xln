@@ -12,6 +12,7 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <sys:Double x:Key="Size.ServoButton.Height">75</sys:Double>
+        <sys:Double x:Key="FontSize.ServoButton">18</sys:Double>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BooleanAndMultiConverter x:Key="BooleanAndMultiConverter" />
 
@@ -58,9 +59,9 @@
             x:Key="OriginActionCard"
             BasedOn="{StaticResource SectionCard}"
             TargetType="Border">
-            <Setter Property="Margin" Value="0,0,12,12" />
+            <Setter Property="Margin" Value="0,0,16,16" />
             <Setter Property="MinHeight" Value="180" />
-            <Setter Property="Padding" Value="18" />
+            <Setter Property="Padding" Value="20" />
             <Setter Property="TextElement.FontFamily" Value="{DynamicResource FontFamily.App}" />
         </Style>
 
@@ -354,7 +355,7 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Margin="0,0,12,12" Style="{StaticResource SectionCard}">
+                                    <Border Margin="0,0,18,18" Padding="20" Style="{StaticResource SectionCard}">
                                         <StackPanel>
 
                                             <!--  ── Header: tên trục + status dots + vị trí (cùng 1 hàng) ──  -->
@@ -522,22 +523,22 @@
                                                 </StackPanel>
                                             </Grid>
 
-                                            <!--  ── Buttons: Chạy tới điểm & Home (cùng 1 hàng) ──  -->
+                                            <!--  ── Buttons: Home & Chạy tới điểm (cùng 1 hàng) ──  -->
                                             <UniformGrid Margin="0,12,0,0" Columns="2">
                                                 <Button
                                                     Margin="0,0,6,0"
-                                                    Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                    CommandParameter="{Binding}"
-                                                    Content="Chạy tới điểm"
-                                                    Style="{StaticResource ButtonPrimary}">
-                                                    <Button.MinWidth>0</Button.MinWidth>
-                                                </Button>
-                                                <Button
-                                                    Margin="6,0,0,0"
                                                     Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding HomeTagName}"
                                                     Content="Home"
                                                     Style="{StaticResource ButtonSecondary}">
+                                                    <Button.MinWidth>0</Button.MinWidth>
+                                                </Button>
+                                                <Button
+                                                    Margin="6,0,0,0"
+                                                    Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="Chạy tới điểm"
+                                                    Style="{StaticResource ButtonPrimary}">
                                                     <Button.MinWidth>0</Button.MinWidth>
                                                 </Button>
                                             </UniformGrid>

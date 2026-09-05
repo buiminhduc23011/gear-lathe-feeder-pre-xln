@@ -58,7 +58,8 @@
     <sys:Double x:Key="Size.Header.Height">58</sys:Double>
     <sys:Double x:Key="Size.NavButton.Height">58</sys:Double>
     <sys:Double x:Key="Size.WindowButton">34</sys:Double>
-    <sys:Double x:Key="Size.ServoButton.Height">60</sys:Double>
+    <sys:Double x:Key="Size.ServoButton.Height">75</sys:Double>
+    <sys:Double x:Key="FontSize.ServoButton">18</sys:Double>
     <sys:Double x:Key="Size.StatusDot.Large">12</sys:Double>
     <sys:Double x:Key="Size.StatusDot.Tiny">8</sys:Double>
 
@@ -72,7 +73,7 @@
     <sys:Double x:Key="FontSize.Value">20</sys:Double>
 
     <Thickness x:Key="Padding.Panel">10</Thickness>
-    <Thickness x:Key="Padding.Card">10</Thickness>
+    <Thickness x:Key="Padding.Card">18</Thickness>
     <Thickness x:Key="Padding.Inner">12,8,12,8</Thickness>
     <Thickness x:Key="Padding.NavButton">16,12,16,12</Thickness>
     <Thickness x:Key="Padding.Badge">10,4,10,4</Thickness>

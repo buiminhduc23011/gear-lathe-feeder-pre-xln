@@ -12,7 +12,7 @@
         <Setter Property="MinWidth" Value="120" />
         <Setter Property="Padding" Value="18,10" />
         <Setter Property="FontFamily" Value="{DynamicResource FontFamily.App}" />
-        <Setter Property="FontSize" Value="{DynamicResource FontSize.Body}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSize.ServoButton}" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Background" Value="{DynamicResource Brush.Surface.Panel}" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
