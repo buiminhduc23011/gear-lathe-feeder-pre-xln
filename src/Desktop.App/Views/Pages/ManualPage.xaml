@@ -48,19 +48,6 @@
             <Setter Property="Margin" Value="5,0,0,0" />
         </Style>
 
-        <!--  Servo badge style  -->
-        <Style x:Key="ServoBadge" TargetType="Border">
-            <Setter Property="CornerRadius" Value="{DynamicResource Radius.Badge}" />
-            <Setter Property="Padding" Value="8,3" />
-            <Setter Property="Background" Value="{DynamicResource Brush.Status.IdleSurface}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Status.Idle}" />
-            <Setter Property="BorderThickness" Value="1" />
-        </Style>
-        <Style x:Key="ServoBadgeText" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{DynamicResource FontSize.Caption}" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{DynamicResource Brush.Status.Idle}" />
-        </Style>
 
         <Style
             x:Key="OriginActionCard"
@@ -365,54 +352,34 @@
                                     <Border Margin="0,0,12,0" Style="{StaticResource SectionCard}">
                                         <StackPanel>
 
-                                            <!--  ── Header: tên trục + vị trí + servo badge ──  -->
+                                            <!--  ── Header: tên trục + vị trí ──  -->
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <StackPanel>
-                                                    <TextBlock Style="{StaticResource SectionTitleText}" Text="{Binding DisplayName}" />
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock
-                                                            Margin="0,4,5,0"
-                                                            FontFamily="{DynamicResource FontFamily.Data}"
-                                                            FontSize="{DynamicResource FontSize.Value}"
-                                                            FontWeight="SemiBold"
-                                                            Foreground="{DynamicResource Brush.Text.Primary}"
-                                                            Text="{Binding CurrentPositionText}" />
-                                                        <TextBlock
-                                                            VerticalAlignment="Center"
-                                                            Style="{StaticResource SectionSubtitleText}"
-                                                            Text="mm" />
-                                                    </StackPanel>
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Style="{StaticResource SectionTitleText}"
+                                                    Text="{Binding DisplayName}" />
 
+                                                <StackPanel
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Horizontal">
+                                                    <TextBlock
+                                                        Margin="0,0,4,0"
+                                                        VerticalAlignment="Center"
+                                                        FontFamily="{DynamicResource FontFamily.Data}"
+                                                        FontSize="{DynamicResource FontSize.Value}"
+                                                        FontWeight="SemiBold"
+                                                        Foreground="{DynamicResource Brush.Text.Primary}"
+                                                        Text="{Binding CurrentPositionText}" />
+                                                    <TextBlock
+                                                        VerticalAlignment="Center"
+                                                        Style="{StaticResource SectionSubtitleText}"
+                                                        Text="mm" />
                                                 </StackPanel>
-
-                                                <!--  Servo ON/OFF badge  -->
-                                                <Border Grid.Column="1" VerticalAlignment="Top">
-                                                    <Border.Style>
-                                                        <Style BasedOn="{StaticResource ServoBadge}" TargetType="Border">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsServoOn}" Value="True">
-                                                                    <Setter Property="Background" Value="{StaticResource Brush.Status.RunningSurface}" />
-                                                                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Status.Running}" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Border.Style>
-                                                    <TextBlock Text="{Binding ServoText}">
-                                                        <TextBlock.Style>
-                                                            <Style BasedOn="{StaticResource ServoBadgeText}" TargetType="TextBlock">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsServoOn}" Value="True">
-                                                                        <Setter Property="Foreground" Value="{StaticResource Brush.Status.Running}" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBlock.Style>
-                                                    </TextBlock>
-                                                </Border>
                                             </Grid>
 
                                             <!--  ── Status dots: Homed · Homing · Lim− · Lim+ ──  -->
