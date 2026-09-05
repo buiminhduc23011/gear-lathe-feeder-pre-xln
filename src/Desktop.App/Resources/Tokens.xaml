@@ -58,7 +58,7 @@
     <sys:Double x:Key="Size.Header.Height">58</sys:Double>
     <sys:Double x:Key="Size.NavButton.Height">58</sys:Double>
     <sys:Double x:Key="Size.WindowButton">34</sys:Double>
-    <sys:Double x:Key="Size.ServoButton.Height">52</sys:Double>
+    <sys:Double x:Key="Size.ServoButton.Height">60</sys:Double>
     <sys:Double x:Key="Size.StatusDot.Large">12</sys:Double>
     <sys:Double x:Key="Size.StatusDot.Tiny">8</sys:Double>
 
