@@ -250,13 +250,45 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             PlcTagCatalog.Manual.OutputMagnetCylinderInSignal,
             PlcTagCatalog.Manual.OutputMagnetCylinderOutSignal);
 
-        Cylinders =
+        IntermediateClampCylinder = new ManualCylinderState(
+            "intermediate_clamp",
+            "XL Kẹp Cụm Trung Gian",
+            "Điều khiển xilanh kẹp cụm trung gian đi vào/đi ra.",
+            "Đi Vào",
+            "Đi Ra",
+            "Đã vào",
+            "Đã ra",
+            PlcTagCatalog.Manual.IntermediateClampIn,
+            PlcTagCatalog.Manual.IntermediateClampOut,
+            PlcTagCatalog.Manual.IntermediateClampInSignal,
+            PlcTagCatalog.Manual.IntermediateClampOutSignal);
+
+        InputCylinders =
         [
             ClampCartCylinder,
             LiftMotorCylinder,
             InputClampCylinder,
             InputFlipCylinder,
+        ];
+
+        ToolArmCylinders =
+        [
             RodalArmCylinder,
+            IntermediateClampCylinder,
+        ];
+
+        ToolArmBinaryOutputs =
+        [
+            new ManualBinaryOutputState("Nam Châm 1 Tay Tool", "Hút/nhả nam châm số 1 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet1, "Hút", "Nhả", "Đang hút", "Đang nhả"),
+            new ManualBinaryOutputState("Nam Châm 2 Tay Tool", "Hút/nhả nam châm số 2 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet2, "Hút", "Nhả", "Đang hút", "Đang nhả"),
+            new ManualBinaryOutputState("Nam Châm 3 Tay Tool", "Hút/nhả nam châm số 3 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet3, "Hút", "Nhả", "Đang hút", "Đang nhả"),
+            new ManualBinaryOutputState("Nam Châm 4 Tay Tool", "Hút/nhả nam châm số 4 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet4, "Hút", "Nhả", "Đang hút", "Đang nhả"),
+            new ManualBinaryOutputState("Xì Khí 1 Tay Tool 1", "Bật/tắt xì khí số 1 trên tay Tool 1.", PlcTagCatalog.Manual.ToolArmAir1, "Bật Khí", "Tắt Khí", "Đang xì", "Đã tắt"),
+            new ManualBinaryOutputState("Xì Khí 2 Tay Tool 1", "Bật/tắt xì khí số 2 trên tay Tool 1.", PlcTagCatalog.Manual.ToolArmAir2, "Bật Khí", "Tắt Khí", "Đang xì", "Đã tắt"),
+        ];
+
+        OutputCylinders =
+        [
             Lathe2FlipCylinder,
             Lathe2TransferCylinder,
             ProductOutCylinder,
@@ -264,16 +296,62 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             OutputMagnetCylinder,
         ];
 
+        OutputBinaryOutputs =
+        [
+            new ManualBinaryOutputState("Nam Châm 1 Cụm Output", "Hút/nhả nam châm số 1 tại cụm Output.", PlcTagCatalog.Manual.OutputMagnet1, "Hút", "Nhả", "Đang hút", "Đang nhả"),
+            new ManualBinaryOutputState("Nam Châm 2 Cụm Output", "Hút/nhả nam châm số 2 tại cụm Output.", PlcTagCatalog.Manual.OutputMagnet2, "Hút", "Nhả", "Đang hút", "Đang nhả"),
+        ];
+
+        Lathe1ChuckCylinder = new ManualCylinderState(
+            "lathe1_chuck",
+            "Chấu Kẹp Máy Tiện 1",
+            "Điều khiển kẹp và mở chấu kẹp máy tiện 1.",
+            "Kẹp Chấu",
+            "Mở Chấu",
+            "Đã kẹp",
+            "Đã mở",
+            PlcTagCatalog.Manual.Lathe1ClampChuck,
+            PlcTagCatalog.Manual.Lathe1UnclampChuck,
+            PlcTagCatalog.Manual.Lathe1ChuckClampedSignal,
+            PlcTagCatalog.Manual.Lathe1ChuckUnclampedSignal);
+
+        Lathe2ChuckCylinder = new ManualCylinderState(
+            "lathe2_chuck",
+            "Chấu Kẹp Máy Tiện 2",
+            "Điều khiển kẹp và mở chấu kẹp máy tiện 2.",
+            "Kẹp Chấu",
+            "Mở Chấu",
+            "Đã kẹp",
+            "Đã mở",
+            PlcTagCatalog.Manual.Lathe2ClampChuck,
+            PlcTagCatalog.Manual.Lathe2UnclampChuck,
+            PlcTagCatalog.Manual.Lathe2ChuckClampedSignal,
+            PlcTagCatalog.Manual.Lathe2ChuckUnclampedSignal);
+
+        LatheCylinders =
+        [
+            Lathe1ChuckCylinder,
+            Lathe2ChuckCylinder,
+        ];
+
+        LatheRunActions =
+        [
+            new ManualLatheRunState("Máy Tiện 1", "Lệnh chạy máy tiện 1 (nhấn nhả).", PlcTagCatalog.Manual.Lathe1Run, PlcTagCatalog.Manual.Lathe1RunningSignal),
+            new ManualLatheRunState("Máy Tiện 2", "Lệnh chạy máy tiện 2 (nhấn nhả).", PlcTagCatalog.Manual.Lathe2Run, PlcTagCatalog.Manual.Lathe2RunningSignal),
+        ];
+
+        Cylinders =
+        [
+            ..InputCylinders,
+            ..ToolArmCylinders,
+            ..OutputCylinders,
+            ..LatheCylinders,
+        ];
+
         BinaryOutputs =
         [
-            new ManualBinaryOutputState("Nam Châm 1 Tay Tool", "Hút/nhả nam châm số 1 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet1),
-            new ManualBinaryOutputState("Nam Châm 2 Tay Tool", "Hút/nhả nam châm số 2 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet2),
-            new ManualBinaryOutputState("Nam Châm 3 Tay Tool", "Hút/nhả nam châm số 3 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet3),
-            new ManualBinaryOutputState("Nam Châm 4 Tay Tool", "Hút/nhả nam châm số 4 trên tay Tool.", PlcTagCatalog.Manual.ToolArmMagnet4),
-            new ManualBinaryOutputState("Nam Châm 1 Cụm Output", "Hút/nhả nam châm số 1 tại cụm Output.", PlcTagCatalog.Manual.OutputMagnet1),
-            new ManualBinaryOutputState("Nam Châm 2 Cụm Output", "Hút/nhả nam châm số 2 tại cụm Output.", PlcTagCatalog.Manual.OutputMagnet2),
-            new ManualBinaryOutputState("Xì Khí 1 Tay Tool 1", "Bật/tắt xì khí số 1 trên tay Tool 1.", PlcTagCatalog.Manual.ToolArmAir1),
-            new ManualBinaryOutputState("Xì Khí 2 Tay Tool 1", "Bật/tắt xì khí số 2 trên tay Tool 1.", PlcTagCatalog.Manual.ToolArmAir2),
+            ..ToolArmBinaryOutputs,
+            ..OutputBinaryOutputs,
         ];
 
         OriginActions =
@@ -289,7 +367,12 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
         SelectOriginTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.Origin));
         SelectAxisTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.Axis));
+        SelectInputClusterTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.InputCluster));
+        SelectToolArmClusterTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.ToolArmCluster));
+        SelectOutputClusterTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.OutputCluster));
+        SelectLatheTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.Lathe));
         SelectCylinderTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.Cylinder));
+        RunLatheCommand = new AsyncRelayCommand<string?>(ExecutePulseAsync, CanExecuteOneShot);
         SelectMagnetTabCommand = new RelayCommand(() => SetSelectedTab(ManualTabType.Magnet));
         RunOneShotCommand = new AsyncRelayCommand<string?>(ExecuteOneShotAsync, CanExecuteOneShot);
         ActivateBinaryOutputCommand = new AsyncRelayCommand<string?>(ActivateBinaryOutputAsync, CanExecuteOneShot);
@@ -311,6 +394,20 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
     public IReadOnlyList<ManualAxisState> Axes { get; }
 
     public IReadOnlyList<ManualCylinderState> Cylinders { get; }
+
+    public IReadOnlyList<ManualCylinderState> InputCylinders { get; }
+
+    public IReadOnlyList<ManualCylinderState> ToolArmCylinders { get; }
+
+    public IReadOnlyList<ManualBinaryOutputState> ToolArmBinaryOutputs { get; }
+
+    public IReadOnlyList<ManualCylinderState> OutputCylinders { get; }
+
+    public IReadOnlyList<ManualBinaryOutputState> OutputBinaryOutputs { get; }
+
+    public IReadOnlyList<ManualCylinderState> LatheCylinders { get; }
+
+    public IReadOnlyList<ManualLatheRunState> LatheRunActions { get; }
 
     public IReadOnlyList<ManualBinaryOutputState> BinaryOutputs { get; }
 
@@ -346,6 +443,12 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     public ManualCylinderState OutputMagnetCylinder { get; }
 
+    public ManualCylinderState IntermediateClampCylinder { get; }
+
+    public ManualCylinderState Lathe1ChuckCylinder { get; }
+
+    public ManualCylinderState Lathe2ChuckCylinder { get; }
+
     public ManualCylinderState ToolClampCylinder => InputClampCylinder;
 
     public ManualCylinderState RotateCylinder => InputFlipCylinder;
@@ -358,7 +461,17 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     public IRelayCommand SelectAxisTabCommand { get; }
 
+    public IRelayCommand SelectInputClusterTabCommand { get; }
+
+    public IRelayCommand SelectToolArmClusterTabCommand { get; }
+
+    public IRelayCommand SelectOutputClusterTabCommand { get; }
+
+    public IRelayCommand SelectLatheTabCommand { get; }
+
     public IRelayCommand SelectCylinderTabCommand { get; }
+
+    public IAsyncRelayCommand<string?> RunLatheCommand { get; }
 
     public IRelayCommand SelectMagnetTabCommand { get; }
 
@@ -389,6 +502,18 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private bool isAxisTabSelected;
+
+    [ObservableProperty]
+    private bool isInputClusterTabSelected;
+
+    [ObservableProperty]
+    private bool isToolArmClusterTabSelected;
+
+    [ObservableProperty]
+    private bool isOutputClusterTabSelected;
+
+    [ObservableProperty]
+    private bool isLatheTabSelected;
 
     [ObservableProperty]
     private bool isCylinderTabSelected;
@@ -529,6 +654,10 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
     {
         IsOriginTabSelected = tabType == ManualTabType.Origin;
         IsAxisTabSelected = tabType == ManualTabType.Axis;
+        IsInputClusterTabSelected = tabType == ManualTabType.InputCluster;
+        IsToolArmClusterTabSelected = tabType == ManualTabType.ToolArmCluster;
+        IsOutputClusterTabSelected = tabType == ManualTabType.OutputCluster;
+        IsLatheTabSelected = tabType == ManualTabType.Lathe;
         IsCylinderTabSelected = tabType == ManualTabType.Cylinder;
         IsMagnetTabSelected = tabType == ManualTabType.Magnet;
     }
@@ -600,6 +729,11 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         foreach (var output in BinaryOutputs)
         {
             output.IsActive = ReadBool(output.CommandTag.Name);
+        }
+
+        foreach (var lathe in LatheRunActions)
+        {
+            lathe.IsRunning = ReadBool(lathe.RunningFeedbackTag.Name);
         }
 
         SyncOriginActions();
@@ -716,6 +850,26 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             action.IsActive = isActive;
             action.IsDone = isDone;
             action.IsCommandActive = isCommandActive;
+        }
+    }
+
+    private async Task ExecutePulseAsync(string? tagName)
+    {
+        if (!CanExecuteOneShot(tagName))
+        {
+            return;
+        }
+
+        try
+        {
+            await _plcService.WriteAsync(tagName!, true).ConfigureAwait(false);
+            await Task.Delay(300).ConfigureAwait(false);
+            await _plcService.WriteAsync(tagName!, false).ConfigureAwait(false);
+            await InvokeOnUiThreadAsync(() => SyncStatesFromCache(updateTimestamp: true));
+        }
+        catch (Exception exception)
+        {
+            await ShowErrorMessageAsync($"Không thể gửi lệnh xung {tagName}", exception).ConfigureAwait(false);
         }
     }
 
@@ -1021,11 +1175,5 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         return value.ToString("0.##");
     }
 
-    private enum ManualTabType
-    {
-        Origin,
-        Axis,
-        Cylinder,
-        Magnet,
-    }
+
 }

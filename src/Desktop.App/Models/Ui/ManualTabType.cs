@@ -4,6 +4,10 @@ public enum ManualTabType
 {
     Origin,
     Axis,
+    InputCluster,
+    ToolArmCluster,
+    OutputCluster,
+    Lathe,
     Cylinder,
     Magnet,
 }

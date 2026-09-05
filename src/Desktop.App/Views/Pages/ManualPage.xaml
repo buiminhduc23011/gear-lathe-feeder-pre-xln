@@ -80,6 +80,140 @@
             <Setter Property="Margin" Value="0,0,8,8" />
             <Setter Property="Padding" Value="8,4" />
         </Style>
+        <DataTemplate x:Key="ManualCylinderCardTemplate">
+            <Border
+                Width="380"
+                Margin="0,0,16,16"
+                Style="{StaticResource SectionCard}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleText}" Text="{Binding Title}" />
+                    <TextBlock
+                        Margin="0,6,0,0"
+                        Style="{StaticResource SectionSubtitleText}"
+                        Text="{Binding Subtitle}" />
+                    <!--  Feedback status dots  -->
+                    <StackPanel Margin="0,14,0,0" Orientation="Horizontal">
+                        <StackPanel Margin="0,0,18,0" Orientation="Horizontal">
+                            <Ellipse>
+                                <Ellipse.Style>
+                                    <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPrimaryFeedbackActive}" Value="True">
+                                                <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                            <TextBlock Style="{StaticResource StatusDotLabel}" Text="{Binding PrimaryFeedbackLabel}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse>
+                                <Ellipse.Style>
+                                    <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSecondaryFeedbackActive}" Value="True">
+                                                <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                            <TextBlock Style="{StaticResource StatusDotLabel}" Text="{Binding SecondaryFeedbackLabel}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <UniformGrid Margin="0,16,0,0" Columns="2">
+                        <Button
+                            Margin="0,0,10,0"
+                            Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding PrimaryCommandTagName}"
+                            Content="{Binding PrimaryActionLabel}"
+                            Style="{StaticResource ButtonPrimary}" />
+                        <Button
+                            Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding SecondaryCommandTagName}"
+                            Content="{Binding SecondaryActionLabel}"
+                            Style="{StaticResource ButtonSecondary}" />
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ManualBinaryOutputCardTemplate">
+            <Border
+                Width="380"
+                Margin="0,0,16,16"
+                Style="{StaticResource SectionCard}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleText}" Text="{Binding Title}" />
+                    <TextBlock
+                        Margin="0,6,0,0"
+                        Style="{StaticResource SectionSubtitleText}"
+                        Text="{Binding Subtitle}" />
+                    <StackPanel Margin="0,14,0,0" Orientation="Horizontal">
+                        <Ellipse>
+                            <Ellipse.Style>
+                                <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                            <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <TextBlock Style="{StaticResource StatusDotLabel}" Text="{Binding StatusText}" />
+                    </StackPanel>
+                    <UniformGrid Margin="0,16,0,0" Columns="2">
+                        <Button
+                            Margin="0,0,10,0"
+                            Command="{Binding DataContext.ActivateBinaryOutputCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding CommandTagName}"
+                            Content="{Binding ActiveActionLabel}"
+                            Style="{StaticResource ButtonPrimary}" />
+                        <Button
+                            Command="{Binding DataContext.DeactivateBinaryOutputCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            CommandParameter="{Binding CommandTagName}"
+                            Content="{Binding InactiveActionLabel}"
+                            Style="{StaticResource ButtonSecondary}" />
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="ManualLatheRunCardTemplate">
+            <Border
+                Width="380"
+                Margin="0,0,16,16"
+                Style="{StaticResource SectionCard}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionTitleText}" Text="{Binding Title}" />
+                    <TextBlock
+                        Margin="0,6,0,0"
+                        Style="{StaticResource SectionSubtitleText}"
+                        Text="{Binding Subtitle}" />
+                    <StackPanel Margin="0,14,0,0" Orientation="Horizontal">
+                        <Ellipse>
+                            <Ellipse.Style>
+                                <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                            <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <TextBlock Style="{StaticResource StatusDotLabel}" Text="{Binding StatusText}" />
+                    </StackPanel>
+                    <Button
+                        Margin="0,16,0,0"
+                        Command="{Binding DataContext.RunLatheCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        CommandParameter="{Binding CommandTagName}"
+                        Content="Chạy Máy Tiện"
+                        Style="{StaticResource ButtonPrimary}" />
+                </StackPanel>
+            </Border>
+        </DataTemplate>
     </UserControl.Resources>
 
     <shared:PageScaffold PageSubtitle="{Binding Subtitle}" PageTitle="{Binding Title}">
@@ -106,14 +240,24 @@
                             IsChecked="{Binding IsAxisTabSelected, Mode=OneWay}"
                             Style="{StaticResource ManualRailButton}" />
                         <ToggleButton
-                            Command="{Binding SelectCylinderTabCommand}"
-                            Content="Xy Lanh"
-                            IsChecked="{Binding IsCylinderTabSelected, Mode=OneWay}"
+                            Command="{Binding SelectInputClusterTabCommand}"
+                            Content="Cụm Đầu Vào"
+                            IsChecked="{Binding IsInputClusterTabSelected, Mode=OneWay}"
                             Style="{StaticResource ManualRailButton}" />
                         <ToggleButton
-                            Command="{Binding SelectMagnetTabCommand}"
-                            Content="Nam Châm / Xì Khí"
-                            IsChecked="{Binding IsMagnetTabSelected, Mode=OneWay}"
+                            Command="{Binding SelectToolArmClusterTabCommand}"
+                            Content="Cụm Tay Tool"
+                            IsChecked="{Binding IsToolArmClusterTabSelected, Mode=OneWay}"
+                            Style="{StaticResource ManualRailButton}" />
+                        <ToggleButton
+                            Command="{Binding SelectOutputClusterTabCommand}"
+                            Content="Cụm Đầu Ra"
+                            IsChecked="{Binding IsOutputClusterTabSelected, Mode=OneWay}"
+                            Style="{StaticResource ManualRailButton}" />
+                        <ToggleButton
+                            Command="{Binding SelectLatheTabCommand}"
+                            Content="Máy Tiện"
+                            IsChecked="{Binding IsLatheTabSelected, Mode=OneWay}"
                             Style="{StaticResource ManualRailButton}" />
                     </StackPanel>
                 </Border>
@@ -487,138 +631,97 @@
                         </ItemsControl>
                     </StackPanel>
 
-                    <StackPanel Visibility="{Binding IsCylinderTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel Visibility="{Binding IsInputClusterTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TextBlock
                             Margin="0,0,0,16"
                             Style="{StaticResource SectionTitleText}"
-                            Text="Xy Lanh" />
-                        <ItemsControl ItemsSource="{Binding Cylinders}">
+                            Text="Cụm Đầu Vào" />
+                        <ItemsControl ItemTemplate="{StaticResource ManualCylinderCardTemplate}" ItemsSource="{Binding InputCylinders}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border
-                                        Width="380"
-                                        Margin="0,0,16,16"
-                                        Style="{StaticResource SectionCard}">
-                                        <StackPanel>
-                                            <TextBlock Style="{StaticResource SectionTitleText}" Text="{Binding Title}" />
-                                            <TextBlock
-                                                Margin="0,6,0,0"
-                                                Style="{StaticResource SectionSubtitleText}"
-                                                Text="{Binding Subtitle}" />
-                                            <!--  Feedback status dots  -->
-                                            <StackPanel Margin="0,14,0,0" Orientation="Horizontal">
-                                                <StackPanel Margin="0,0,18,0" Orientation="Horizontal">
-                                                    <Ellipse>
-                                                        <Ellipse.Style>
-                                                            <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsPrimaryFeedbackActive}" Value="True">
-                                                                        <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Ellipse.Style>
-                                                    </Ellipse>
-                                                    <TextBlock Style="{StaticResource StatusDotLabel}" Text="{Binding PrimaryFeedbackLabel}" />
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Ellipse>
-                                                        <Ellipse.Style>
-                                                            <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsSecondaryFeedbackActive}" Value="True">
-                                                                        <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Ellipse.Style>
-                                                    </Ellipse>
-                                                    <TextBlock Style="{StaticResource StatusDotLabel}" Text="{Binding SecondaryFeedbackLabel}" />
-                                                </StackPanel>
-                                            </StackPanel>
-                                            <UniformGrid Margin="0,16,0,0" Columns="2">
-                                                <Button
-                                                    Margin="0,0,10,0"
-                                                    Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                    CommandParameter="{Binding PrimaryCommandTagName}"
-                                                    Content="{Binding PrimaryActionLabel}"
-                                                    Style="{StaticResource ButtonPrimary}" />
-                                                <Button
-                                                    Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                    CommandParameter="{Binding SecondaryCommandTagName}"
-                                                    Content="{Binding SecondaryActionLabel}"
-                                                    Style="{StaticResource ButtonSecondary}" />
-                                            </UniformGrid>
-
-                                        </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </StackPanel>
 
-                    <StackPanel Visibility="{Binding IsMagnetTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel Visibility="{Binding IsToolArmClusterTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TextBlock
                             Margin="0,0,0,16"
                             Style="{StaticResource SectionTitleText}"
-                            Text="Nam Châm / Xì Khí" />
-                        <ItemsControl ItemsSource="{Binding BinaryOutputs}">
+                            Text="Cụm Tay Tool - Xy Lanh" />
+                        <ItemsControl ItemTemplate="{StaticResource ManualCylinderCardTemplate}" ItemsSource="{Binding ToolArmCylinders}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border
-                                        Width="380"
-                                        Margin="0,0,16,16"
-                                        Style="{StaticResource SectionCard}">
-                                        <StackPanel>
-                                            <TextBlock Style="{StaticResource SectionTitleText}" Text="{Binding Title}" />
-                                            <TextBlock
-                                                Margin="0,6,0,0"
-                                                Style="{StaticResource SectionSubtitleText}"
-                                                Text="{Binding Subtitle}" />
-                                            <StackPanel Margin="0,14,0,0" Orientation="Horizontal">
-                                                <Ellipse>
-                                                    <Ellipse.Style>
-                                                        <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsActive}" Value="True">
-                                                                    <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Ellipse.Style>
-                                                </Ellipse>
-                                                <TextBlock Style="{StaticResource StatusDotLabel}" Text="{Binding StatusText}" />
-                                            </StackPanel>
-                                            <UniformGrid Margin="0,16,0,0" Columns="2">
-                                                <Button
-                                                    Margin="0,0,10,0"
-                                                    Command="{Binding DataContext.ActivateBinaryOutputCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                    CommandParameter="{Binding CommandTagName}"
-                                                    Content="Hút / Bật"
-                                                    Style="{StaticResource ButtonPrimary}" />
-                                                <Button
-                                                    Command="{Binding DataContext.DeactivateBinaryOutputCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                    CommandParameter="{Binding CommandTagName}"
-                                                    Content="Nhả / Tắt"
-                                                    Style="{StaticResource ButtonSecondary}" />
-                                            </UniformGrid>
-                                        </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock
+                            Margin="0,16,0,16"
+                            Style="{StaticResource SectionTitleText}"
+                            Text="Cụm Tay Tool - Nam Châm &amp; Xì Khí" />
+                        <ItemsControl ItemTemplate="{StaticResource ManualBinaryOutputCardTemplate}" ItemsSource="{Binding ToolArmBinaryOutputs}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
                         </ItemsControl>
                     </StackPanel>
 
+                    <StackPanel Visibility="{Binding IsOutputClusterTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock
+                            Margin="0,0,0,16"
+                            Style="{StaticResource SectionTitleText}"
+                            Text="Cụm Đầu Ra - Xy Lanh" />
+                        <ItemsControl ItemTemplate="{StaticResource ManualCylinderCardTemplate}" ItemsSource="{Binding OutputCylinders}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+                        <TextBlock
+                            Margin="0,16,0,16"
+                            Style="{StaticResource SectionTitleText}"
+                            Text="Cụm Đầu Ra - Nam Châm" />
+                        <ItemsControl ItemTemplate="{StaticResource ManualBinaryOutputCardTemplate}" ItemsSource="{Binding OutputBinaryOutputs}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding IsLatheTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock
+                            Margin="0,0,0,16"
+                            Style="{StaticResource SectionTitleText}"
+                            Text="Chấu Kẹp Máy Tiện" />
+                        <ItemsControl ItemTemplate="{StaticResource ManualCylinderCardTemplate}" ItemsSource="{Binding LatheCylinders}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+                        <TextBlock
+                            Margin="0,16,0,16"
+                            Style="{StaticResource SectionTitleText}"
+                            Text="Khởi Động Máy Tiện" />
+                        <ItemsControl ItemTemplate="{StaticResource ManualLatheRunCardTemplate}" ItemsSource="{Binding LatheRunActions}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </shared:PageScaffold.BodyContent>

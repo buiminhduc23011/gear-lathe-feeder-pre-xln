@@ -470,6 +470,12 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition OutputMagnetCylinderInSignal = CreateBit("manual.output_magnet_cylinder_in_signal", "M2084", "Xilanh trước nam châm cụm Output đã vào");
         public static readonly PlcTagDefinition OutputMagnetCylinderOutSignal = CreateBit("manual.output_magnet_cylinder_out_signal", "M2085", "Xilanh trước nam châm cụm Output đã ra");
 
+        // --- Xilanh kẹp cụm trung gian ---
+        public static readonly PlcTagDefinition IntermediateClampIn = CreateBit("manual.intermediate_clamp_in", "M2036", "Đi vào xilanh kẹp cụm trung gian");
+        public static readonly PlcTagDefinition IntermediateClampOut = CreateBit("manual.intermediate_clamp_out", "M2037", "Đi ra xilanh kẹp cụm trung gian");
+        public static readonly PlcTagDefinition IntermediateClampInSignal = CreateBit("manual.intermediate_clamp_in_signal", "M2086", "Xilanh kẹp cụm trung gian đã vào");
+        public static readonly PlcTagDefinition IntermediateClampOutSignal = CreateBit("manual.intermediate_clamp_out_signal", "M2087", "Xilanh kẹp cụm trung gian đã ra");
+
         // --- Tắt Còi ---
         public static readonly PlcTagDefinition BuzzerOff = CreateBit("manual.buzzer_off", "M2090", "Tắt Còi");
 
@@ -482,6 +488,23 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition OutputMagnet2 = CreateBit("manual.output_magnet_2", "M2096", "Nam châm 2 cụm Output");
         public static readonly PlcTagDefinition ToolArmAir1 = CreateBit("manual.tool_arm_air_1", "M2097", "Xì khí 1 tay Tool 1");
         public static readonly PlcTagDefinition ToolArmAir2 = CreateBit("manual.tool_arm_air_2", "M2098", "Xì khí 2 tay Tool 1");
+
+        // --- Máy Tiện 1 & 2 ---
+        public static readonly PlcTagDefinition Lathe1UnclampChuck = CreateBit("manual.lathe1_unclamp_chuck", "M2100", "Mở kẹp chấu cặp máy tiện 1");
+        public static readonly PlcTagDefinition Lathe1ClampChuck = CreateBit("manual.lathe1_clamp_chuck", "M2101", "Kẹp chấu cặp máy tiện 1");
+        public static readonly PlcTagDefinition Lathe1ChuckUnclampedSignal = CreateBit("manual.lathe1_chuck_unclamped_signal", "M2150", "Chấu cặp máy tiện 1 đã mở kẹp");
+        public static readonly PlcTagDefinition Lathe1ChuckClampedSignal = CreateBit("manual.lathe1_chuck_clamped_signal", "M2151", "Chấu cặp máy tiện 1 đã kẹp");
+
+        public static readonly PlcTagDefinition Lathe2UnclampChuck = CreateBit("manual.lathe2_unclamp_chuck", "M2102", "Mở kẹp chấu cặp máy tiện 2");
+        public static readonly PlcTagDefinition Lathe2ClampChuck = CreateBit("manual.lathe2_clamp_chuck", "M2103", "Kẹp chấu cặp máy tiện 2");
+        public static readonly PlcTagDefinition Lathe2ChuckUnclampedSignal = CreateBit("manual.lathe2_chuck_unclamped_signal", "M2152", "Chấu cặp máy tiện 2 đã mở kẹp");
+        public static readonly PlcTagDefinition Lathe2ChuckClampedSignal = CreateBit("manual.lathe2_chuck_clamped_signal", "M2153", "Chấu cặp máy tiện 2 đã kẹp");
+
+        public static readonly PlcTagDefinition Lathe1Run = CreateBit("manual.lathe1_run", "M2104", "Chạy máy tiện 1");
+        public static readonly PlcTagDefinition Lathe1RunningSignal = CreateBit("manual.lathe1_running_signal", "M2154", "Máy tiện 1 đang chạy");
+
+        public static readonly PlcTagDefinition Lathe2Run = CreateBit("manual.lathe2_run", "M2105", "Chạy máy tiện 2");
+        public static readonly PlcTagDefinition Lathe2RunningSignal = CreateBit("manual.lathe2_running_signal", "M2155", "Máy tiện 2 đang chạy");
 
         // --- Backward Compatibility Aliases ---
         public static readonly PlcTagDefinition MoveYLeft = MoveZLeft;
