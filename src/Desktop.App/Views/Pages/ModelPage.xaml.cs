@@ -45,11 +45,49 @@ public partial class ModelPage : UserControl
         }
     }
 
+    internal void SpeedInput_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key is Key.Enter or Key.Return)
+        {
+            if (sender is TextBox textBox && textBox.DataContext is ManualAxisState axis)
+            {
+                textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+                _viewModel.ApplyAxisSpeedCommand.Execute(axis);
+                var scope = FocusManager.GetFocusScope(textBox);
+                if (scope is not null)
+                {
+                    FocusManager.SetFocusedElement(scope, null);
+                }
+                Keyboard.ClearFocus();
+                e.Handled = true;
+            }
+        }
+    }
+
     internal void MovePointInput_LostFocus(object sender, RoutedEventArgs e)
     {
         if (sender is TextBox textBox && textBox.DataContext is ManualAxisState axis)
         {
             _viewModel.WriteMovePointValueCommand.Execute(axis);
+        }
+    }
+
+    internal void MovePointInput_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key is Key.Enter or Key.Return)
+        {
+            if (sender is TextBox textBox && textBox.DataContext is ManualAxisState axis)
+            {
+                textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+                _viewModel.WriteMovePointValueCommand.Execute(axis);
+                var scope = FocusManager.GetFocusScope(textBox);
+                if (scope is not null)
+                {
+                    FocusManager.SetFocusedElement(scope, null);
+                }
+                Keyboard.ClearFocus();
+                e.Handled = true;
+            }
         }
     }
 
