@@ -357,19 +357,91 @@
                                     <Border Margin="0,0,12,12" Style="{StaticResource SectionCard}">
                                         <StackPanel>
 
-                                            <!--  ── Header: tên trục + vị trí ──  -->
+                                            <!--  ── Header: tên trục + status dots + vị trí (cùng 1 hàng) ──  -->
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
+
+                                                <!--  Tên trục  -->
                                                 <TextBlock
+                                                    Grid.Column="0"
                                                     VerticalAlignment="Center"
                                                     Style="{StaticResource SectionTitleText}"
                                                     Text="{Binding DisplayName}" />
 
+                                                <!--  Status dots: Homed · Homing · Lim− · Lim+  -->
                                                 <StackPanel
                                                     Grid.Column="1"
+                                                    Margin="20,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Horizontal">
+                                                    <StackPanel Margin="0,0,14,0" Orientation="Horizontal">
+                                                        <Ellipse>
+                                                            <Ellipse.Style>
+                                                                <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsHomed}" Value="True">
+                                                                            <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Ellipse.Style>
+                                                        </Ellipse>
+                                                        <TextBlock Style="{StaticResource StatusDotLabel}" Text="Homed" />
+                                                    </StackPanel>
+                                                    <StackPanel Margin="0,0,14,0" Orientation="Horizontal">
+                                                        <Ellipse>
+                                                            <Ellipse.Style>
+                                                                <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsHoming}" Value="True">
+                                                                            <Setter Property="Fill" Value="{StaticResource Brush.Status.Warning}" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Ellipse.Style>
+                                                        </Ellipse>
+                                                        <TextBlock Style="{StaticResource StatusDotLabel}" Text="Homing" />
+                                                    </StackPanel>
+                                                    <StackPanel
+                                                        Margin="0,0,14,0"
+                                                        Orientation="Horizontal"
+                                                        Visibility="{Binding HasLimits, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                        <Ellipse>
+                                                            <Ellipse.Style>
+                                                                <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsNegativeLimitActive}" Value="True">
+                                                                            <Setter Property="Fill" Value="{StaticResource Brush.Status.Fault}" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Ellipse.Style>
+                                                        </Ellipse>
+                                                        <TextBlock Style="{StaticResource StatusDotLabel}" Text="Limit −" />
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding HasLimits, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                        <Ellipse>
+                                                            <Ellipse.Style>
+                                                                <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsPositiveLimitActive}" Value="True">
+                                                                            <Setter Property="Fill" Value="{StaticResource Brush.Status.Fault}" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Ellipse.Style>
+                                                        </Ellipse>
+                                                        <TextBlock Style="{StaticResource StatusDotLabel}" Text="Limit+" />
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <!--  Vị trí hiện tại  -->
+                                                <StackPanel
+                                                    Grid.Column="2"
                                                     VerticalAlignment="Center"
                                                     Orientation="Horizontal">
                                                     <TextBlock
@@ -386,69 +458,6 @@
                                                         Text="{Binding PositionUnit}" />
                                                 </StackPanel>
                                             </Grid>
-
-                                            <!--  ── Status dots: Homed · Homing · Lim− · Lim+ ──  -->
-                                            <StackPanel Margin="0,14,0,0" Orientation="Horizontal">
-                                                <StackPanel Margin="0,0,14,0" Orientation="Horizontal">
-                                                    <Ellipse>
-                                                        <Ellipse.Style>
-                                                            <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsHomed}" Value="True">
-                                                                        <Setter Property="Fill" Value="{StaticResource Brush.Status.Running}" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Ellipse.Style>
-                                                    </Ellipse>
-                                                    <TextBlock Style="{StaticResource StatusDotLabel}" Text="Homed" />
-                                                </StackPanel>
-                                                <StackPanel Margin="0,0,14,0" Orientation="Horizontal">
-                                                    <Ellipse>
-                                                        <Ellipse.Style>
-                                                            <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsHoming}" Value="True">
-                                                                        <Setter Property="Fill" Value="{StaticResource Brush.Status.Warning}" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Ellipse.Style>
-                                                    </Ellipse>
-                                                    <TextBlock Style="{StaticResource StatusDotLabel}" Text="Homing" />
-                                                </StackPanel>
-                                                <StackPanel
-                                                    Margin="0,0,14,0"
-                                                    Orientation="Horizontal"
-                                                    Visibility="{Binding HasLimits, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <Ellipse>
-                                                        <Ellipse.Style>
-                                                            <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsNegativeLimitActive}" Value="True">
-                                                                        <Setter Property="Fill" Value="{StaticResource Brush.Status.Fault}" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Ellipse.Style>
-                                                    </Ellipse>
-                                                    <TextBlock Style="{StaticResource StatusDotLabel}" Text="Limit −" />
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal" Visibility="{Binding HasLimits, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <Ellipse>
-                                                        <Ellipse.Style>
-                                                            <Style BasedOn="{StaticResource StatusDot}" TargetType="Ellipse">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsPositiveLimitActive}" Value="True">
-                                                                        <Setter Property="Fill" Value="{StaticResource Brush.Status.Fault}" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Ellipse.Style>
-                                                    </Ellipse>
-                                                    <TextBlock Style="{StaticResource StatusDotLabel}" Text="Limit+" />
-                                                </StackPanel>
-                                            </StackPanel>
 
                                             <!--  ── Inputs: Tốc độ & Tới điểm (title trên ô nhập, 2 ô nhập trên 1 dòng) ──  -->
                                             <Grid Margin="0,16,0,0">
