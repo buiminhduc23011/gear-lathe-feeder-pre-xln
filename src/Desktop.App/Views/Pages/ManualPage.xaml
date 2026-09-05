@@ -349,12 +349,12 @@
                         <ItemsControl ItemsSource="{Binding Axes}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Columns="4" />
+                                    <UniformGrid Columns="2" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Margin="0,0,12,0" Style="{StaticResource SectionCard}">
+                                    <Border Margin="0,0,12,12" Style="{StaticResource SectionCard}">
                                         <StackPanel>
 
                                             <!--  ── Header: tên trục + vị trí ──  -->

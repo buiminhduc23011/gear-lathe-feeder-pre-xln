@@ -56,7 +56,7 @@ public partial class ManualAxisState : ObservableObject
     public string PositionUnit { get; }
     public string SpeedUnit { get; }
     public string SpeedLabel => $"Tốc độ ({SpeedUnit})";
-    public string MovePointLabel => $"Tới điểm ({PositionUnit})";
+    public string MovePointLabel => $"Vị trí ({PositionUnit})";
 
     public string Key { get; }
 
