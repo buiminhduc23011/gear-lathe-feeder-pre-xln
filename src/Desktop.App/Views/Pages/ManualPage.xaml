@@ -355,7 +355,7 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Margin="0,0,18,18" Padding="20" Style="{StaticResource SectionCard}">
+                                    <Border Margin="0,0,24,24" Padding="26" Style="{StaticResource SectionCard}">
                                         <StackPanel>
 
                                             <!--  ── Header: tên trục + status dots + vị trí (cùng 1 hàng) ──  -->
@@ -460,11 +460,11 @@
                                                 </StackPanel>
                                             </Grid>
 
-                                            <!--  ── Inputs: Tốc độ & Tới điểm (title trên ô nhập, 2 ô nhập trên 1 dòng) ──  -->
-                                            <Grid Margin="0,16,0,0">
+                                            <!--  ── Inputs: Tốc độ & Vị trí (title trên ô nhập, 2 ô nhập trên 1 dòng) ──  -->
+                                            <Grid Margin="0,20,0,0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="12" />
+                                                    <ColumnDefinition Width="20" />
                                                     <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
 
@@ -495,7 +495,7 @@
                                                         Visibility="{Binding HasManualSpeedValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
                                                 </StackPanel>
 
-                                                <!--  Cột 2: Tới điểm  -->
+                                                <!--  Cột 2: Vị trí  -->
                                                 <StackPanel Grid.Column="2">
                                                     <TextBlock
                                                         Width="Auto"
@@ -524,9 +524,9 @@
                                             </Grid>
 
                                             <!--  ── Buttons: Home & Chạy tới điểm (cùng 1 hàng) ──  -->
-                                            <UniformGrid Margin="0,12,0,0" Columns="2">
+                                            <UniformGrid Margin="0,18,0,0" Columns="2">
                                                 <Button
-                                                    Margin="0,0,6,0"
+                                                    Margin="0,0,10,0"
                                                     Command="{Binding DataContext.RunOneShotCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding HomeTagName}"
                                                     Content="Home"
@@ -534,7 +534,7 @@
                                                     <Button.MinWidth>0</Button.MinWidth>
                                                 </Button>
                                                 <Button
-                                                    Margin="6,0,0,0"
+                                                    Margin="10,0,0,0"
                                                     Command="{Binding DataContext.MoveAxisToPointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}"
                                                     Content="Chạy tới điểm"
@@ -544,9 +544,9 @@
                                             </UniformGrid>
 
                                             <!--  ── Jog buttons: X− · X+ ──  -->
-                                            <UniformGrid Margin="0,12,0,0" Columns="2">
+                                            <UniformGrid Margin="0,16,0,0" Columns="2">
                                                 <controls:HoldToRunButton
-                                                    Margin="0,0,6,0"
+                                                    Margin="0,0,10,0"
                                                     Content="{Binding NegativeLabel}"
                                                     PressCommand="{Binding DataContext.StartJogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     PressCommandParameter="{Binding NegativeJogTagName}"
