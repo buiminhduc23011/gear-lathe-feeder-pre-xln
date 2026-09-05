@@ -22,8 +22,7 @@ public partial class SettingsPage : UserControl
             app.SettingsService,
             app.PlcParameterSettingsService,
             app.PlcParameterSyncService,
-            app.NotificationDialogService,
-            app.TrayConfigRepository);
+            app.NotificationDialogService);
         DataContext = _viewModel;
 
         Loaded += OnLoaded;

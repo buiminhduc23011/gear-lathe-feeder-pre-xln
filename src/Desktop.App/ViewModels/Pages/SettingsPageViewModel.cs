@@ -24,7 +24,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
     private readonly IPlcParameterSettingsService _plcParameterSettingsService;
     private readonly IPlcParameterSyncService _plcParameterSyncService;
     private readonly INotificationDialogService _notificationDialog;
-    private readonly ITrayConfigRepository _trayConfigRepository;
     private static readonly string[] SupportedPlcTypes = ["DVP", "AS"];
     private AppOptions _loadedOptions = new();
     private bool _isApplyingLoadedValues;
@@ -36,14 +35,12 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         ISettingsService settingsService,
         IPlcParameterSettingsService plcParameterSettingsService,
         IPlcParameterSyncService plcParameterSyncService,
-        INotificationDialogService notificationDialog,
-        ITrayConfigRepository trayConfigRepository)
+        INotificationDialogService notificationDialog)
     {
         _settingsService = settingsService ?? throw new ArgumentNullException(nameof(settingsService));
         _plcParameterSettingsService = plcParameterSettingsService ?? throw new ArgumentNullException(nameof(plcParameterSettingsService));
         _plcParameterSyncService = plcParameterSyncService ?? throw new ArgumentNullException(nameof(plcParameterSyncService));
         _notificationDialog = notificationDialog ?? throw new ArgumentNullException(nameof(notificationDialog));
-        _trayConfigRepository = trayConfigRepository ?? throw new ArgumentNullException(nameof(trayConfigRepository));
 
         DataTrayCartParameters.CollectionChanged += OnParameterCollectionChanged;
         DataMachineParameters.CollectionChanged += OnParameterCollectionChanged;
@@ -101,9 +98,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
     private bool isAgvSettingsTabSelected;
 
     [ObservableProperty]
-    private bool isTraySettingsTabSelected;
-
-    [ObservableProperty]
     private bool isBusy;
 
     [ObservableProperty]
@@ -131,17 +125,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private string agvKe2AutoCallRemainingBelow = "5";
-
-    // === TRAY TYPE CONFIG (chỉ 2 loại: Bé + Lớn) ===
-    [ObservableProperty] private string smallTrayRows = "5";
-    [ObservableProperty] private string smallTrayCols = "9";
-    [ObservableProperty] private string smallTrayRowOffset = "55";
-    [ObservableProperty] private string smallTrayColOffset = "55";
-
-    [ObservableProperty] private string largeTrayRows = "4";
-    [ObservableProperty] private string largeTrayCols = "8";
-    [ObservableProperty] private string largeTrayRowOffset = "68";
-    [ObservableProperty] private string largeTrayColOffset = "68";
 
     public ObservableCollection<EditablePlcParameterField> DataTrayCartParameters { get; } = [];
 
@@ -172,7 +155,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         await LoadMachineSettingsAsync(showFeedback: false);
         await ReloadParameterGroupAsync(PlcParameterGroups.DataTrayCart);
         await ReloadParameterGroupAsync(PlcParameterGroups.DataMachine);
-        await LoadTrayConfigsAsync();
     }
 
     partial void OnMachineNameChanged(string value)
@@ -325,7 +307,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = false;
         IsAgvSettingsTabSelected = false;
-        IsTraySettingsTabSelected = false;
     }
 
     [RelayCommand]
@@ -335,7 +316,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsDataTrayCartTabSelected = true;
         IsDataMachineTabSelected = false;
         IsAgvSettingsTabSelected = false;
-        IsTraySettingsTabSelected = false;
     }
 
     [RelayCommand]
@@ -345,7 +325,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = true;
         IsAgvSettingsTabSelected = false;
-        IsTraySettingsTabSelected = false;
     }
 
     [RelayCommand]
@@ -355,78 +334,6 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = false;
         IsAgvSettingsTabSelected = true;
-        IsTraySettingsTabSelected = false;
-    }
-
-    [RelayCommand]
-    private void SelectTraySettingsTab()
-    {
-        IsMachineSettingsTabSelected = false;
-        IsDataTrayCartTabSelected = false;
-        IsDataMachineTabSelected = false;
-        IsAgvSettingsTabSelected = false;
-        IsTraySettingsTabSelected = true;
-    }
-
-    // --- Tray type auto-fill removed (no longer per-position) ---
-
-    [RelayCommand]
-    private async Task SaveTrayConfigAsync()
-    {
-        try
-        {
-            await SaveTrayTypeConfigAsync(TraySize.Small, SmallTrayRows, SmallTrayCols, SmallTrayRowOffset, SmallTrayColOffset);
-            await SaveTrayTypeConfigAsync(TraySize.Large, LargeTrayRows, LargeTrayCols, LargeTrayRowOffset, LargeTrayColOffset);
-            await _notificationDialog.ShowSuccessAsync("Thành công", "Đã lưu cấu hình Tray.");
-        }
-        catch (Exception ex)
-        {
-            await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể lưu cấu hình Tray: {ex.Message}");
-        }
-    }
-
-    private async Task SaveTrayTypeConfigAsync(TraySize size, string rowsStr, string colsStr, string rowOffsetStr, string colOffsetStr)
-    {
-        if (!int.TryParse(rowsStr, out var rows)) rows = size == TraySize.Large ? 4 : 5;
-        if (!int.TryParse(colsStr, out var cols)) cols = size == TraySize.Large ? 8 : 9;
-        if (!float.TryParse(rowOffsetStr, out var rowOffset)) rowOffset = 55f;
-        if (!float.TryParse(colOffsetStr, out var colOffset)) colOffset = 55f;
-
-        await _trayConfigRepository.SaveAsync(new TrayConfig
-        {
-            Size = size,
-            Rows = rows,
-            Columns = cols,
-            RowOffset = rowOffset,
-            ColOffset = colOffset
-        });
-    }
-
-    private async Task LoadTrayConfigsAsync()
-    {
-        try
-        {
-            var configs = await _trayConfigRepository.GetAllAsync();
-            foreach (var config in configs)
-            {
-                var r = config.Rows.ToString();
-                var c = config.Columns.ToString();
-                var ro = config.RowOffset.ToString(CultureInfo.InvariantCulture);
-                var co = config.ColOffset.ToString(CultureInfo.InvariantCulture);
-
-                if (config.Size == TraySize.Small)
-                {
-                    SmallTrayRows = r; SmallTrayCols = c;
-                    SmallTrayRowOffset = ro; SmallTrayColOffset = co;
-                }
-                else if (config.Size == TraySize.Large)
-                {
-                    LargeTrayRows = r; LargeTrayCols = c;
-                    LargeTrayRowOffset = ro; LargeTrayColOffset = co;
-                }
-            }
-        }
-        catch { /* Use defaults */ }
     }
 
     [RelayCommand]

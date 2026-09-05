@@ -172,11 +172,6 @@
                         Content="Hệ thống AGV"
                         IsChecked="{Binding IsAgvSettingsTabSelected, Mode=OneWay}"
                         Style="{StaticResource SettingsSegmentButton}" />
-                    <ToggleButton
-                        Command="{Binding SelectTraySettingsTabCommand}"
-                        Content="Cài đặt Tray"
-                        IsChecked="{Binding IsTraySettingsTabSelected, Mode=OneWay}"
-                        Style="{StaticResource SettingsSegmentButton}" />
                 </StackPanel>
 
                 <StackPanel IsEnabled="{Binding IsEditable}" Visibility="{Binding IsMachineSettingsTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -478,81 +473,6 @@
                             Command="{Binding SaveCommand}"
                             Content="Lưu cấu hình"
                             Style="{StaticResource ButtonPrimary}" />
-                    </StackPanel>
-                </StackPanel>
-
-                <!-- Tray Settings Tab -->
-                <StackPanel Visibility="{Binding IsTraySettingsTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <TextBlock Margin="0,0,0,12" FontSize="12" Foreground="#64748B" TextWrapping="Wrap"
-                        Text="Cấu hình kích thước và khoảng cách cho từng loại tray. Loại bố trí kệ (2 bé / 2 lớn / bé-lớn / lớn-bé) do AGV gửi tự động." />
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <!-- Tray Bé -->
-                        <Border Grid.Column="0" Margin="0,0,6,0" Style="{StaticResource SectionCard}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource SectionTitleText}" Text="Tray Bé (Small)" />
-                                <TextBlock Margin="0,4,0,12" FontSize="11" Foreground="#94A3B8" Text="Mặc định: 5 hàng × 9 cột" />
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Style="{StaticResource ParameterLabel}" Text="Số hàng" />
-                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding SmallTrayRows, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock Grid.Row="1" Margin="0,8,0,0" Style="{StaticResource ParameterLabel}" Text="Số cột" />
-                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,8,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding SmallTrayCols, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock Grid.Row="2" Margin="0,8,0,0" Style="{StaticResource ParameterLabel}" Text="Offset hàng (mm)" />
-                                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,8,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding SmallTrayRowOffset, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock Grid.Row="3" Margin="0,8,0,0" Style="{StaticResource ParameterLabel}" Text="Offset cột (mm)" />
-                                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,8,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding SmallTrayColOffset, UpdateSourceTrigger=PropertyChanged}" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Tray Lớn -->
-                        <Border Grid.Column="1" Margin="6,0,0,0" Style="{StaticResource SectionCard}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource SectionTitleText}" Text="Tray Lớn (Large)" />
-                                <TextBlock Margin="0,4,0,12" FontSize="11" Foreground="#94A3B8" Text="Mặc định: 4 hàng × 8 cột" />
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Style="{StaticResource ParameterLabel}" Text="Số hàng" />
-                                    <TextBox Grid.Row="0" Grid.Column="1" Margin="0,6,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding LargeTrayRows, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock Grid.Row="1" Margin="0,8,0,0" Style="{StaticResource ParameterLabel}" Text="Số cột" />
-                                    <TextBox Grid.Row="1" Grid.Column="1" Margin="0,8,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding LargeTrayCols, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock Grid.Row="2" Margin="0,8,0,0" Style="{StaticResource ParameterLabel}" Text="Offset hàng (mm)" />
-                                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,8,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding LargeTrayRowOffset, UpdateSourceTrigger=PropertyChanged}" />
-                                    <TextBlock Grid.Row="3" Margin="0,8,0,0" Style="{StaticResource ParameterLabel}" Text="Offset cột (mm)" />
-                                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,8,0,0" Style="{StaticResource FilterToolbarTextBox}" Text="{Binding LargeTrayColOffset, UpdateSourceTrigger=PropertyChanged}" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-                    </Grid>
-
-                    <StackPanel Margin="0,12,0,0" Orientation="Horizontal">
-                        <Button Command="{Binding SaveTrayConfigCommand}" Content="Lưu cấu hình Tray" Style="{StaticResource ButtonPrimary}" />
                     </StackPanel>
                 </StackPanel>
 
