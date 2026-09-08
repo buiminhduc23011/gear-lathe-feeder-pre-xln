@@ -1,0 +1,104 @@
+<UserControl
+    x:Class="Desktop.App.Views.AlarmBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Border Margin="0,0,0,12">
+        <Border.Style>
+            <Style BasedOn="{StaticResource ShellPanel}" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource Brush.Status.RunningSurface}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Status.Running}" />
+                <Setter Property="Padding" Value="12,10" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding HasActiveAlarm}" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource Brush.Status.FaultSurface}" />
+                        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Status.Fault}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Border x:Name="StateBadge" VerticalAlignment="Center">
+                <Border.Style>
+                    <Style BasedOn="{StaticResource StatusBadge.Running}" TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HasActiveAlarm}" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource Brush.Status.Fault}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Status.Fault}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock Text="{Binding AlarmStateText}">
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource StatusBadgeText.Running}" TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasActiveAlarm}" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Inverse}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Border>
+
+            <Border
+                x:Name="Viewport"
+                Grid.Column="1"
+                Margin="14,0,14,0"
+                ClipToBounds="True"
+                SizeChanged="Viewport_OnSizeChanged">
+                <TextBlock
+                    x:Name="MarqueeText"
+                    FontSize="14"
+                    FontWeight="SemiBold"
+                    TargetUpdated="MarqueeText_OnTargetUpdated"
+                    Text="{Binding AlarmTickerText, NotifyOnTargetUpdated=True}"
+                    TextTrimming="None"
+                    TextWrapping="NoWrap">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{DynamicResource Brush.Status.Running}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasActiveAlarm}" Value="True">
+                                    <Setter Property="Foreground" Value="{DynamicResource Brush.Status.Fault}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                    <TextBlock.RenderTransform>
+                        <TranslateTransform />
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Border>
+
+            <TextBlock
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                FontFamily="{DynamicResource FontFamily.Data}"
+                FontWeight="Bold"
+                Text="{Binding ActiveAlarmCount, StringFormat='#{0}'}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="{DynamicResource Brush.Status.Running}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HasActiveAlarm}" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource Brush.Status.Fault}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+        </Grid>
+    </Border>
+</UserControl>

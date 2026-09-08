@@ -1,0 +1,19 @@
+{
+  "extends": "@react-native/typescript-config",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@sti/delta-plc": ["../Delta.Plc/src/index"],
+      "buffer": ["node_modules/buffer"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "__tests__/**/*.ts", "__tests__/**/*.tsx", "../Delta.Plc/src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "android",
+    "../Delta.Plc/src/cli/**/*.ts",
+    "../Delta.Plc/src/node.ts",
+    "../Delta.Plc/src/nodeTcpTransport.ts"
+  ]
+}

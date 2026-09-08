@@ -1,0 +1,108 @@
+<UserControl
+    x:Class="Desktop.App.Controls.TrayGridControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Desktop.App.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
+        <converters:JigTypeToBrushConverter x:Key="JigTypeToBrushConverter" />
+
+        <!-- Pulse animation for Picking state -->
+        <Storyboard x:Key="PulseAnimation" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetProperty="Opacity"
+                From="1.0"
+                To="0.4"
+                Duration="0:0:0.6"
+                AutoReverse="True" />
+        </Storyboard>
+
+        <!-- Slot item template -->
+        <DataTemplate x:Key="SlotTemplate">
+            <Border
+                Margin="1"
+                MinHeight="7"
+                CornerRadius="4">
+                <Border.ToolTip>
+                    <StackPanel MaxWidth="200">
+                        <TextBlock FontWeight="SemiBold" Text="{Binding Position, StringFormat='Vị trí {0}'}" />
+                    </StackPanel>
+                </Border.ToolTip>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="#E2E8F0" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Status}" Value="HasProduct">
+                                <Setter Property="Background" Value="{Binding JigType, Converter={StaticResource JigTypeToBrushConverter}}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Status}" Value="Picking">
+                                <Setter Property="Background" Value="{Binding JigType, Converter={StaticResource JigTypeToBrushConverter}}" />
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever">
+                                            <DoubleAnimation
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1.0"
+                                                To="0.4"
+                                                Duration="0:0:0.6"
+                                                AutoReverse="True" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Border
+        Background="#F8FAFC"
+        BorderBrush="#E2E8F0"
+        BorderThickness="1"
+        CornerRadius="8"
+        Padding="10,8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Tray label -->
+            <TextBlock
+                x:Name="TrayLabelText"
+                Grid.Row="0"
+                Margin="0,0,0,4"
+                FontSize="10"
+                FontWeight="SemiBold"
+                HorizontalAlignment="Center"
+                Foreground="#64748B"
+                Text="{Binding TrayLabel, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+
+            <!-- Grid of slots -->
+            <ItemsControl
+                x:Name="SlotsItemsControl"
+                Grid.Row="1"
+                ItemTemplate="{StaticResource SlotTemplate}"
+                ItemsSource="{Binding SlotStates, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid
+                            x:Name="SlotsGrid"
+                            Columns="{Binding GridColumns, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            Rows="{Binding GridRows, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                            <UniformGrid.LayoutTransform>
+                                <ScaleTransform ScaleY="-1" />
+                            </UniformGrid.LayoutTransform>
+                        </UniformGrid>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Grid>
+    </Border>
+</UserControl>

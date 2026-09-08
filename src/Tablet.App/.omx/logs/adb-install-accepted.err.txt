@@ -1,1 +1,0 @@
-C:\Users\ducbu\Documents\GitHub\casting-deburr-cleaning-machine\src\Tablet.App\android\app\build\outputs\apk\debug\app-debug.apk: 1 file pushed, 0 skipped. 74.9 MB/s (119098901 bytes in 1.517s)

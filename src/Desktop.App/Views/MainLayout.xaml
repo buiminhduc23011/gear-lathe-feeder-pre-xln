@@ -1,0 +1,28 @@
+<UserControl
+    x:Class="Desktop.App.Views.MainLayout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Desktop.App.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <hc:DialogContainer>
+        <Border Background="{DynamicResource Brush.Surface.Window}">
+            <Grid Margin="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <local:Header Grid.Row="0" />
+                <local:AlarmBar Grid.Row="1" />
+                <local:MainContent Grid.Row="2" Margin="0,0,0,12" />
+                <local:NavSidebar Grid.Row="3" />
+                <local:Footer Grid.Row="4" />
+            </Grid>
+        </Border>
+    </hc:DialogContainer>
+</UserControl>

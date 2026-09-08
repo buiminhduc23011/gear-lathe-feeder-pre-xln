@@ -1,0 +1,74 @@
+<UserControl
+    x:Class="Desktop.App.Views.Dialogs.ConfirmDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Desktop.App.ViewModels.Dialogs"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance vm:ConfirmDialogViewModel}"
+    Width="440">
+
+    <Border
+        CornerRadius="{DynamicResource Radius.Card}"
+        ClipToBounds="True"
+        BorderBrush="{DynamicResource Brush.Border.Default}"
+        BorderThickness="1">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Accent strip (Warning color for confirm) -->
+            <Border Grid.Column="0" Background="{DynamicResource Brush.Status.Warning}" />
+
+            <!-- Content area -->
+            <Border Grid.Column="1" Padding="20,18,20,18" Background="{DynamicResource Brush.Status.WarningSurface}">
+                <StackPanel>
+                    <!-- Icon + Title -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock
+                            Text="⚠️"
+                            FontSize="20"
+                            VerticalAlignment="Center"
+                            Margin="0,0,10,0" />
+                        <TextBlock
+                            Text="{Binding Title}"
+                            Style="{StaticResource SectionTitleText}"
+                            VerticalAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <!-- Message -->
+                    <TextBlock
+                        Margin="0,8,0,0"
+                        Text="{Binding Message}"
+                        Style="{StaticResource BodySecondaryText}"
+                        TextWrapping="Wrap" />
+
+                    <!-- Buttons -->
+                    <StackPanel
+                        Margin="0,20,0,0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                        <Button
+                            MinWidth="100"
+                            MinHeight="40"
+                            Margin="0,0,8,0"
+                            Content="Hủy"
+                            Command="{Binding CancelCommand}"
+                            Style="{StaticResource ButtonDefault}" />
+                        <Button
+                            MinWidth="100"
+                            MinHeight="40"
+                            Content="Xác Nhận"
+                            Command="{Binding ConfirmCommand}"
+                            Style="{StaticResource ButtonPrimary}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,97 @@
+@font-face {
+  font-family: "Inter";
+  src: url("./assets/fonts/InterVariable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.model-profile-modal .ant-modal-body {
+  padding: 12px 20px 4px;
+}
+
+.model-profile-modal .ant-modal-footer {
+  margin-top: 0;
+  padding-top: 10px;
+}
+
+.model-profile-form .ant-form-item {
+  min-width: 0;
+  margin-bottom: 7px;
+}
+
+.model-profile-form .ant-form-item-label {
+  padding: 0 0 2px;
+}
+
+.model-profile-form .ant-form-item-label > label {
+  height: auto;
+  color: #344054;
+  font-size: 12px;
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+
+.model-profile-fields-grid {
+  display: grid;
+  min-width: 0;
+  column-gap: 10px;
+  row-gap: 1px;
+}
+
+.model-profile-metadata-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.model-profile-fields-grid .ant-form-item-control-input {
+  min-height: 28px;
+}
+
+.model-profile-fields-break {
+  grid-column: 1 / -1;
+  height: 0;
+}
+
+@media (max-width: 900px) {
+  .model-profile-metadata-grid,
+  .model-profile-metadata-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .model-profile-modal .ant-modal-body {
+    padding-inline: 14px;
+  }
+
+  .model-profile-metadata-grid,
+  .model-profile-metadata-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 460px) {
+  .model-profile-metadata-grid,
+  .model-profile-metadata-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

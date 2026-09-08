@@ -1,0 +1,28 @@
+@Server.Api_HostAddress = http://localhost:5090
+
+### OpenAPI document
+GET {{Server.Api_HostAddress}}/openapi/v1.json
+
+### Upload a file
+# Replace the file path below if needed.
+POST {{Server.Api_HostAddress}}/api/files/upload
+Content-Type: multipart/form-data; boundary=---------------------------upload-boundary
+
+-----------------------------upload-boundary
+Content-Disposition: form-data; name="machineName"
+
+MAY-MAI-01
+-----------------------------upload-boundary
+Content-Disposition: form-data; name="manufacturer"
+
+SHIV
+-----------------------------upload-boundary
+Content-Disposition: form-data; name="sentAtUtc"
+
+2026-03-19T15:45:00Z
+-----------------------------upload-boundary
+Content-Disposition: form-data; name="file"; filename="sample-upload.txt"
+Content-Type: text/plain
+
+< ./sample-upload.txt
+-----------------------------upload-boundary--
