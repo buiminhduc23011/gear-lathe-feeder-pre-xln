@@ -103,32 +103,44 @@ public class AgvOrderData
     [JsonPropertyName("jigType")]
     public int JigType { get; set; }
 
-    [JsonPropertyName("inputThickness")]
-    public float? InputThickness { get; set; }
-
     [JsonPropertyName("jigHeightMm")]
     public float? JigHeightMm { get; set; }
 
     [JsonPropertyName("jigCapacity")]
     public int? JigCapacity { get; set; }
 
-    [JsonPropertyName("partHoverHeight")]
-    public float? PartHoverHeight { get; set; }
-
-    [JsonPropertyName("jigCenterOffset")]
-    public float? JigCenterOffset { get; set; }
-
-    [JsonPropertyName("jigDepthOffset")]
-    public float? JigDepthOffset { get; set; }
-
-    [JsonPropertyName("diameterOp1")]
-    public float? DiameterOp1 { get; set; }
-
     [JsonPropertyName("inputBlankDiameter")]
     public float? InputBlankDiameter { get; set; }
 
     [JsonPropertyName("op2ChuckSleeveDepth")]
     public float? Op2ChuckSleeveDepth { get; set; }
+
+    [JsonPropertyName("outerFinishedDiameter")]
+    public float? OuterFinishedDiameter { get; set; }
+
+    [JsonPropertyName("inputBlankThickness")]
+    public float? InputBlankThickness { get; set; }
+
+    [JsonPropertyName("op1TurnedThickness")]
+    public float? Op1TurnedThickness { get; set; }
+
+    [JsonPropertyName("finishedThickness")]
+    public float? FinishedThickness { get; set; }
+
+    [JsonPropertyName("pickDropZOffset")]
+    public float? PickDropZOffset { get; set; }
+
+    [JsonPropertyName("chuckStepDepth")]
+    public float? ChuckStepDepth { get; set; }
+
+    [JsonPropertyName("innerFinishedDiameter")]
+    public float? InnerFinishedDiameter { get; set; }
+
+    [JsonPropertyName("innerDiameterToGDiameterDistance")]
+    public float? InnerDiameterToGDiameterDistance { get; set; }
+
+    [JsonPropertyName("magnetCount")]
+    public int? MagnetCount { get; set; }
 
     [JsonPropertyName("status")]
     public string? Status { get; set; }

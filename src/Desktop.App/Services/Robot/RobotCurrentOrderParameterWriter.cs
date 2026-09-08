@@ -119,12 +119,17 @@ internal sealed class RobotCurrentOrderParameterWriter
 
     private static bool HasProfileSnapshot(AgvOrderData order)
     {
-        return order.PartHoverHeight.HasValue
-               || order.JigCenterOffset.HasValue
-               || order.JigDepthOffset.HasValue
-               || order.DiameterOp1.HasValue
-               || order.InputBlankDiameter.HasValue
-               || order.Op2ChuckSleeveDepth.HasValue;
+        return order.InputBlankDiameter.HasValue
+               || order.Op2ChuckSleeveDepth.HasValue
+               || order.OuterFinishedDiameter.HasValue
+               || order.InputBlankThickness.HasValue
+               || order.Op1TurnedThickness.HasValue
+               || order.FinishedThickness.HasValue
+               || order.PickDropZOffset.HasValue
+               || order.ChuckStepDepth.HasValue
+               || order.InnerFinishedDiameter.HasValue
+               || order.InnerDiameterToGDiameterDistance.HasValue
+               || order.MagnetCount.HasValue;
     }
 
     private static RobotProfileLineData BuildProfileLineDataFromSnapshot(AgvOrderData order)
@@ -132,10 +137,15 @@ internal sealed class RobotCurrentOrderParameterWriter
         return new RobotProfileLineData
         {
             JigType = order.JigType,
-            PartHoverHeight = order.PartHoverHeight ?? 0f,
-            JigCenterOffset = order.JigCenterOffset ?? 0f,
-            JigDepthOffset = order.JigDepthOffset ?? 0f,
-            DiameterOp1 = order.DiameterOp1 ?? 0f,
+            OuterFinishedDiameter = order.OuterFinishedDiameter ?? 0f,
+            InputBlankThickness = order.InputBlankThickness ?? 0f,
+            Op1TurnedThickness = order.Op1TurnedThickness ?? 0f,
+            FinishedThickness = order.FinishedThickness ?? 0f,
+            PickDropZOffset = order.PickDropZOffset ?? 0f,
+            ChuckStepDepth = order.ChuckStepDepth ?? 0f,
+            InnerFinishedDiameter = order.InnerFinishedDiameter ?? 0f,
+            InnerDiameterToGDiameterDistance = order.InnerDiameterToGDiameterDistance ?? 0f,
+            MagnetCount = order.MagnetCount ?? 0,
             InputBlankDiameter = order.InputBlankDiameter ?? 0f,
             Op2ChuckSleeveDepth = order.Op2ChuckSleeveDepth ?? 0f
         };

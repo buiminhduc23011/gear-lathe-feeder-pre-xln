@@ -819,7 +819,7 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
             var profileData = ResolveProfileData(o.ModelName, profileDataByModelName);
             var cartPositionIndex = ResolveCartPositionIndex(o);
             var jigType = profileData?.JigType ?? o.JigType;
-            var inputThickness = profileData?.InputBlankThickness ?? o.InputThickness;
+            var inputBlankThickness = profileData?.InputBlankThickness ?? o.InputThickness;
             var jigHeightMm = GetJigHeight(machine, jigType);
             return new
             {
@@ -831,15 +831,19 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
                 cartPositionIndex,
                 orderSequence = index + 1,
                 jigType,
-                inputThickness,
+                inputBlankThickness,
                 jigHeightMm,
-                jigCapacity = GetJigCapacity(jigHeightMm, inputThickness),
-                partHoverHeight = profileData?.PartHoverHeight,
-                jigCenterOffset = profileData?.JigCenterOffset,
-                jigDepthOffset = profileData?.JigDepthOffset,
-                diameterOp1 = profileData?.DiameterOp1,
+                jigCapacity = GetJigCapacity(jigHeightMm, inputBlankThickness),
                 inputBlankDiameter = profileData?.InputBlankDiameter,
                 op2ChuckSleeveDepth = profileData?.Op2ChuckSleeveDepth,
+                outerFinishedDiameter = profileData?.OuterFinishedDiameter,
+                op1TurnedThickness = profileData?.Op1TurnedThickness,
+                finishedThickness = profileData?.FinishedThickness,
+                pickDropZOffset = profileData?.PickDropZOffset,
+                chuckStepDepth = profileData?.ChuckStepDepth,
+                innerFinishedDiameter = profileData?.InnerFinishedDiameter,
+                innerDiameterToGDiameterDistance = profileData?.InnerDiameterToGDiameterDistance,
+                magnetCount = profileData?.MagnetCount,
                 status = (string?)null,
                 completedAtUtc = (DateTimeOffset?)null
             };
@@ -948,13 +952,17 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
     private sealed record ModelProfileData(
         int ProfileId,
         int JigType,
-        float InputBlankThickness,
-        float PartHoverHeight,
-        float JigCenterOffset,
-        float JigDepthOffset,
-        float? DiameterOp1,
         float? InputBlankDiameter,
-        float? Op2ChuckSleeveDepth);
+        float? Op2ChuckSleeveDepth,
+        float OuterFinishedDiameter,
+        float InputBlankThickness,
+        float Op1TurnedThickness,
+        float FinishedThickness,
+        float PickDropZOffset,
+        float ChuckStepDepth,
+        float InnerFinishedDiameter,
+        float InnerDiameterToGDiameterDistance,
+        int MagnetCount);
 
     private async Task<Dictionary<string, ModelProfileData>> LoadProfileDataByModelNameAsync(
         int machineId,
@@ -976,7 +984,7 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         var profiles = await _db.ModelProfiles
             .AsNoTracking()
             .Where(x => x.MachineId == machineId && !x.IsDeleted)
-            .Select(x => new { x.Id, x.ModelName, x.RobotData, x.Line1Data, x.Line2Data, x.DiameterOp1, x.InputBlankDiameter, x.Op2ChuckSleeveDepth })
+            .Select(x => new { x.Id, x.ModelName, x.RobotData, x.Line1Data, x.Line2Data, x.InputBlankDiameter, x.Op2ChuckSleeveDepth })
             .ToListAsync(cancellationToken);
 
         var missingRequestedModel = requestedModelNames
@@ -999,7 +1007,6 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
                 profile.Id,
                 profile.RobotData,
                 profile.Line1Data,
-                profile.DiameterOp1,
                 profile.InputBlankDiameter,
                 profile.Op2ChuckSleeveDepth);
         }
@@ -1035,7 +1042,6 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         int profileId,
         string? robotDataJson,
         string? lineDataJson,
-        float? diameterOp1,
         float? inputBlankDiameter,
         float? op2ChuckSleeveDepth)
     {
@@ -1047,13 +1053,17 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
             ReadIntOrDefault(robotData, "jigSupplyType") is var robotJigType && robotJigType > 0
                 ? robotJigType
                 : ReadIntOrDefault(lineData, "jigType"),
-            ReadFloatOrDefault(robotData, "inputBlankThickness"),
-            ReadFloatOrDefault(robotData, "jigProductHeight"),
-            ReadFloatOrDefault(robotData, "jigCenterOffset"),
-            ReadFloatOrDefault(robotData, "jigDepthOffset"),
-            diameterOp1,
             inputBlankDiameter,
-            op2ChuckSleeveDepth);
+            op2ChuckSleeveDepth,
+            ReadFloatOrDefault(robotData, "outerFinishedDiameter"),
+            ReadFloatOrDefault(robotData, "inputBlankThickness"),
+            ReadFloatOrDefault(robotData, "op1TurnedThickness"),
+            ReadFloatOrDefault(robotData, "finishedThickness"),
+            ReadFloatOrDefault(robotData, "pickDropZOffset"),
+            ReadFloatOrDefault(robotData, "chuckStepDepth"),
+            ReadFloatOrDefault(robotData, "innerFinishedDiameter"),
+            ReadFloatOrDefault(robotData, "innerDiameterToGDiameterDistance"),
+            ReadIntOrDefault(robotData, "magnetCount"));
     }
 
     private static Dictionary<string, JsonElement> ParseJsonObject(string? json)
@@ -1407,15 +1417,19 @@ public sealed class ShelfDeclarationService : IShelfDeclarationService
         public int? CartPositionIndex { get; set; }
         public int OrderSequence { get; set; }
         public int JigType { get; set; }
-        public float? InputThickness { get; set; }
+        public float? InputBlankThickness { get; set; }
         public float? JigHeightMm { get; set; }
         public int? JigCapacity { get; set; }
-        public float? PartHoverHeight { get; set; }
-        public float? JigCenterOffset { get; set; }
-        public float? JigDepthOffset { get; set; }
-        public float? DiameterOp1 { get; set; }
         public float? InputBlankDiameter { get; set; }
         public float? Op2ChuckSleeveDepth { get; set; }
+        public float? OuterFinishedDiameter { get; set; }
+        public float? Op1TurnedThickness { get; set; }
+        public float? FinishedThickness { get; set; }
+        public float? PickDropZOffset { get; set; }
+        public float? ChuckStepDepth { get; set; }
+        public float? InnerFinishedDiameter { get; set; }
+        public float? InnerDiameterToGDiameterDistance { get; set; }
+        public int? MagnetCount { get; set; }
         public string? Status { get; set; }
         public DateTimeOffset? CompletedAtUtc { get; set; }
     }
