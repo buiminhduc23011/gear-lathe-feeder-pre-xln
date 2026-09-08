@@ -539,12 +539,6 @@
                                                                 PreviewKeyDown="SpeedInput_PreviewKeyDown"
                                                                 Style="{StaticResource ManualNumericTextBox}"
                                                                 Text="{Binding ManualSpeedInput, UpdateSourceTrigger=PropertyChanged}" />
-                                                            <TextBlock
-                                                                Margin="0,4,0,0"
-                                                                FontSize="{DynamicResource FontSize.Caption}"
-                                                                Foreground="{DynamicResource Brush.Action.Danger}"
-                                                                Text="{Binding ManualSpeedValidationMessage}"
-                                                                Visibility="{Binding HasManualSpeedValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
                                                         </StackPanel>
 
                                                         <!--  Cột 2: Vị trí  -->
@@ -560,12 +554,6 @@
                                                                 PreviewKeyDown="MovePointInput_PreviewKeyDown"
                                                                 Style="{StaticResource ManualNumericTextBox}"
                                                                 Text="{Binding MovePointInput, UpdateSourceTrigger=PropertyChanged}" />
-                                                            <TextBlock
-                                                                Margin="0,4,0,0"
-                                                                FontSize="{DynamicResource FontSize.Caption}"
-                                                                Foreground="{DynamicResource Brush.Action.Danger}"
-                                                                Text="{Binding MovePointValidationMessage}"
-                                                                Visibility="{Binding HasMovePointValidationMessage, Converter={StaticResource BoolToVisibilityConverter}}" />
                                                         </StackPanel>
                                                     </Grid>
 

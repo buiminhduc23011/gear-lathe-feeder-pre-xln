@@ -361,6 +361,18 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition MomentZMax = CreateWord("data.moment_z_max", "D5193", PlcTagDataType.Int16, "Momen Z Max");
     }
 
+    public static class DataSafeCoordinates
+    {
+        public static readonly PlcTagDefinition SafeInputInnerX = CreateWord("data.safe_input_inner_x", "D21120", PlcTagDataType.Float, "Tọa độ An toàn Cụm Input Trục X Phía trong");
+        public static readonly PlcTagDefinition SafeLathe1OuterX = CreateWord("data.safe_lathe1_outer_x", "D21122", PlcTagDataType.Float, "Tọa độ An toàn Máy tiện 1 Trục X Phía ngoài");
+        public static readonly PlcTagDefinition SafeLathe1InnerX = CreateWord("data.safe_lathe1_inner_x", "D21124", PlcTagDataType.Float, "Tọa độ An toàn Máy tiện 1 Trục X Phía trong");
+        public static readonly PlcTagDefinition SafeLathe2OuterX = CreateWord("data.safe_lathe2_outer_x", "D21126", PlcTagDataType.Float, "Tọa độ An toàn Máy tiện 2 Trục X phía ngoài");
+        public static readonly PlcTagDefinition SafeLathe2InnerX = CreateWord("data.safe_lathe2_inner_x", "D21128", PlcTagDataType.Float, "Tọa độ An toàn Máy tiện 2 Trục X phía trong");
+        public static readonly PlcTagDefinition SafeOutputOuterX = CreateWord("data.safe_output_outer_x", "D21130", PlcTagDataType.Float, "Tọa độ An toàn đầu ra Trục X phía ngoài");
+        public static readonly PlcTagDefinition SafeOutputInnerX = CreateWord("data.safe_output_inner_x", "D21132", PlcTagDataType.Float, "Tọa độ An toàn đầu ra Trục X phía trong");
+        public static readonly PlcTagDefinition SafeLatheTravel = CreateWord("data.safe_lathe_travel", "D21134", PlcTagDataType.Float, "Tọa độ An toàn trên máy tiện");
+    }
+
 
     public static class Manual
     {
@@ -651,6 +663,7 @@ public static class PlcTagCatalog
         typeof(DataAutos),
         typeof(DataTrayCart),
         typeof(DataMachine),
+        typeof(DataSafeCoordinates),
         typeof(Manual),
         typeof(Alarms),
         typeof(PlcMessages));
@@ -664,6 +677,7 @@ public static class PlcTagCatalog
         typeof(DataAutos),
         typeof(DataTrayCart),
         typeof(DataMachine),
+        typeof(DataSafeCoordinates),
         typeof(Manual),
         typeof(PlcMessages));
 

@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using Desktop.App.Controls;
 
 namespace Desktop.App.Services;
@@ -204,8 +205,17 @@ public static class VirtualKeyboardManager
 
     private static void OnConfirmPressed()
     {
-        // Enter/Confirm = user is done with this field → suppress re-showing
-        // (same suppress logic as the ✕ close button)
+        var target = (UIElement?)_targetTextBox ?? _targetPasswordBox;
+        if (target is not null)
+        {
+            var scope = FocusManager.GetFocusScope(target);
+            if (scope is not null)
+            {
+                FocusManager.SetFocusedElement(scope, null);
+            }
+            Keyboard.ClearFocus();
+        }
+
         HideByUser();
     }
 }

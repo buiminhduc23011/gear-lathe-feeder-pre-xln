@@ -774,8 +774,27 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
             return;
         }
 
-        if (!axis.TryGetValidatedManualSpeed(out var speedValue, out _))
+        if (!axis.TryGetValidatedManualSpeed(out var speedValue, out var errorMessage))
         {
+            var previousValue = axis.SyncedManualSpeed;
+            axis.ResetManualSpeedToSynced();
+            await _notificationDialog.ShowWarningAsync(
+                "Tốc độ không hợp lệ",
+                $"{errorMessage}\n\nGiá trị của {axis.DisplayName} đã được đặt lại về: {ManualNumeric.Format(previousValue)} {axis.SpeedUnit}.").ConfigureAwait(false);
+            return;
+        }
+
+        if (!axis.IsManualSpeedDirty)
+        {
+            return;
+        }
+
+        if (!CanIssueCommands)
+        {
+            axis.ResetManualSpeedToSynced();
+            await _notificationDialog.ShowWarningAsync(
+                "Chưa thể ghi PLC",
+                $"Không thể ghi tốc độ cho {axis.DisplayName} vì mất kết nối PLC hoặc có liên động an toàn.\nGiá trị đã được đặt lại về: {ManualNumeric.Format(axis.SyncedManualSpeed)} {axis.SpeedUnit}.").ConfigureAwait(false);
             return;
         }
 
@@ -790,27 +809,45 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         }
         catch (Exception ex)
         {
+            axis.ResetManualSpeedToSynced();
             await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể ghi tốc độ cho {axis.DisplayName}: {ex.Message}");
         }
     }
 
     private bool CanApplyAxisSpeed(ManualAxisState? axis)
     {
-        return axis is not null
-            && CanIssueCommands
-            && !axis.HasManualSpeedValidationMessage;
+        return axis is not null;
     }
 
     [RelayCommand(CanExecute = nameof(CanWriteMovePointValue))]
     private async Task WriteMovePointValueAsync(ManualAxisState? axis)
     {
-        if (axis is null || !CanWriteMovePointValue(axis))
+        if (axis is null)
         {
             return;
         }
 
-        if (!axis.TryGetValidatedMovePoint(out var movePointValue, out _))
+        if (!axis.TryGetValidatedMovePoint(out var movePointValue, out var errorMessage))
         {
+            var previousValue = axis.SyncedMovePoint;
+            axis.ResetMovePointToSynced();
+            await _notificationDialog.ShowWarningAsync(
+                "Vị trí không hợp lệ",
+                $"{errorMessage}\n\nGiá trị của {axis.DisplayName} đã được đặt lại về: {ManualNumeric.Format(previousValue)} {axis.PositionUnit}.").ConfigureAwait(false);
+            return;
+        }
+
+        if (!axis.IsMovePointDirty)
+        {
+            return;
+        }
+
+        if (!CanIssueCommands)
+        {
+            axis.ResetMovePointToSynced();
+            await _notificationDialog.ShowWarningAsync(
+                "Chưa thể ghi PLC",
+                $"Không thể ghi vị trí cho {axis.DisplayName} vì mất kết nối PLC hoặc có liên động an toàn.\nGiá trị đã được đặt lại về: {ManualNumeric.Format(axis.SyncedMovePoint)} {axis.PositionUnit}.").ConfigureAwait(false);
             return;
         }
 
@@ -825,28 +862,31 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         }
         catch (Exception ex)
         {
+            axis.ResetMovePointToSynced();
             await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể ghi điểm chạy cho {axis.DisplayName}: {ex.Message}");
         }
     }
 
     private bool CanWriteMovePointValue(ManualAxisState? axis)
     {
-        return axis is not null
-            && CanIssueCommands
-            && !axis.HasMovePointValidationMessage;
+        return axis is not null;
     }
 
     [RelayCommand(CanExecute = nameof(CanMoveAxisToPoint))]
     private async Task MoveAxisToPointAsync(ManualAxisState? axis)
     {
-        if (axis is null)
+        if (axis is null || !CanMoveAxisToPoint(axis))
         {
             return;
         }
 
-        if (!axis.TryGetValidatedMovePoint(out var movePointValue, out _))
+        if (!axis.TryGetValidatedMovePoint(out var movePointValue, out var errorMessage))
         {
-            await _notificationDialog.ShowErrorAsync("Loi", $"Gia tri diem chay cua {axis.DisplayName} khong hop le.");
+            var previousValue = axis.SyncedMovePoint;
+            axis.ResetMovePointToSynced();
+            await _notificationDialog.ShowWarningAsync(
+                "Vị trí không hợp lệ",
+                $"{errorMessage}\n\nGiá trị của {axis.DisplayName} đã được đặt lại về: {ManualNumeric.Format(previousValue)} {axis.PositionUnit}.").ConfigureAwait(false);
             return;
         }
 
@@ -872,8 +912,7 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
             && CanIssueCommands
             && !axis.IsMoveToPointCommandActive
             && !axis.IsHomeCommandActive
-            && !axis.IsHoming
-            && !axis.HasMovePointValidationMessage;
+            && !axis.IsHoming;
     }
 
     [RelayCommand(CanExecute = nameof(CanIssueCommands))]

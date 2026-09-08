@@ -172,6 +172,11 @@
                         IsChecked="{Binding IsDataMachineTabSelected, Mode=OneWay}"
                         Style="{StaticResource SettingsSegmentButton}" />
                     <ToggleButton
+                        Command="{Binding SelectDataSafeCoordinatesTabCommand}"
+                        Content="Vùng an toàn"
+                        IsChecked="{Binding IsDataSafeCoordinatesTabSelected, Mode=OneWay}"
+                        Style="{StaticResource SettingsSegmentButton}" />
+                    <ToggleButton
                         Command="{Binding SelectAgvSettingsTabCommand}"
                         Content="Hệ thống AGV"
                         IsChecked="{Binding IsAgvSettingsTabSelected, Mode=OneWay}"
@@ -421,6 +426,25 @@
                     </Border>
                 </StackPanel>
 
+                <StackPanel IsEnabled="{Binding IsEditable}" Visibility="{Binding IsDataSafeCoordinatesTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Border Style="{StaticResource SectionCard.Subtle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Vùng an toàn" />
+                            <TextBlock
+                                Margin="0,8,0,0"
+                                Style="{StaticResource SectionSubtitleText}"
+                                Text="Cấu hình tọa độ vùng an toàn cho cụm Input, Máy tiện và Đầu ra." />
+
+                            <ItemsControl Margin="0,14,0,0" ItemTemplate="{StaticResource SettingsParameterItemTemplate}" ItemsSource="{Binding DataSafeCoordinatesParameters}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <primitives:UniformGrid Columns="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource ResponsiveColumnsConverter}}" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
 
                 <!-- AGV Settings Tab -->
                 <StackPanel IsEnabled="{Binding IsEditable}" Visibility="{Binding IsAgvSettingsTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">

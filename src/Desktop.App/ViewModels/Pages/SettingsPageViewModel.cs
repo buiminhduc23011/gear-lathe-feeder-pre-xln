@@ -45,6 +45,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
 
         DataTrayCartParameters.CollectionChanged += OnParameterCollectionChanged;
         DataMachineParameters.CollectionChanged += OnParameterCollectionChanged;
+        DataSafeCoordinatesParameters.CollectionChanged += OnParameterCollectionChanged;
         _plcParameterSyncService.SyncStatesChanged += OnSyncStatesChanged;
         AppSession.SessionChanged += OnSessionChanged;
 
@@ -94,6 +95,8 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private bool isDataMachineTabSelected;
 
+    [ObservableProperty]
+    private bool isDataSafeCoordinatesTabSelected;
 
     [ObservableProperty]
     private bool isAgvSettingsTabSelected;
@@ -131,6 +134,8 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
 
     public ObservableCollection<EditablePlcParameterField> DataMachineParameters { get; } = [];
 
+    public ObservableCollection<EditablePlcParameterField> DataSafeCoordinatesParameters { get; } = [];
+
 
     public bool HasValidationMessage => !string.IsNullOrWhiteSpace(ValidationMessage);
 
@@ -156,6 +161,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         await LoadMachineSettingsAsync(showFeedback: false);
         await ReloadParameterGroupAsync(PlcParameterGroups.DataTrayCart);
         await ReloadParameterGroupAsync(PlcParameterGroups.DataMachine);
+        await ReloadParameterGroupAsync(PlcParameterGroups.DataSafeCoordinates);
     }
 
     partial void OnMachineNameChanged(string value)
@@ -307,6 +313,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = true;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = false;
+        IsDataSafeCoordinatesTabSelected = false;
         IsAgvSettingsTabSelected = false;
     }
 
@@ -316,6 +323,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = true;
         IsDataMachineTabSelected = false;
+        IsDataSafeCoordinatesTabSelected = false;
         IsAgvSettingsTabSelected = false;
     }
 
@@ -325,6 +333,17 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = true;
+        IsDataSafeCoordinatesTabSelected = false;
+        IsAgvSettingsTabSelected = false;
+    }
+
+    [RelayCommand]
+    private void SelectDataSafeCoordinatesTab()
+    {
+        IsMachineSettingsTabSelected = false;
+        IsDataTrayCartTabSelected = false;
+        IsDataMachineTabSelected = false;
+        IsDataSafeCoordinatesTabSelected = true;
         IsAgvSettingsTabSelected = false;
     }
 
@@ -334,6 +353,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = false;
+        IsDataSafeCoordinatesTabSelected = false;
         IsAgvSettingsTabSelected = true;
     }
 
@@ -349,6 +369,12 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         await ReloadParameterGroupAsync(PlcParameterGroups.DataMachine);
     }
 
+    [RelayCommand]
+    private async Task ReloadDataSafeCoordinatesAsync()
+    {
+        await ReloadParameterGroupAsync(PlcParameterGroups.DataSafeCoordinates);
+    }
+
 
     public void Dispose()
     {
@@ -362,6 +388,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         _plcParameterSyncService.SyncStatesChanged -= OnSyncStatesChanged;
         DataTrayCartParameters.CollectionChanged -= OnParameterCollectionChanged;
         DataMachineParameters.CollectionChanged -= OnParameterCollectionChanged;
+        DataSafeCoordinatesParameters.CollectionChanged -= OnParameterCollectionChanged;
 
         foreach (var field in DataTrayCartParameters)
         {
@@ -369,6 +396,11 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         }
 
         foreach (var field in DataMachineParameters)
+        {
+            field.PropertyChanged -= OnParameterFieldPropertyChanged;
+        }
+
+        foreach (var field in DataSafeCoordinatesParameters)
         {
             field.PropertyChanged -= OnParameterFieldPropertyChanged;
         }
@@ -447,6 +479,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
             {
                 PlcParameterGroups.DataTrayCart => DataTrayCartParameters,
                 PlcParameterGroups.DataMachine => DataMachineParameters,
+                PlcParameterGroups.DataSafeCoordinates => DataSafeCoordinatesParameters,
                 _ => throw new ArgumentOutOfRangeException(nameof(groupName))
             };
             targetCollection.Clear();
@@ -710,6 +743,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         {
             ApplySyncStates(DataTrayCartParameters, e.SyncStates);
             ApplySyncStates(DataMachineParameters, e.SyncStates);
+            ApplySyncStates(DataSafeCoordinatesParameters, e.SyncStates);
         });
     }
 

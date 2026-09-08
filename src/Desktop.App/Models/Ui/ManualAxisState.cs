@@ -208,7 +208,6 @@ public partial class ManualAxisState : ObservableObject
         }
 
         IsManualSpeedDirty = !ManualNumeric.TryParse(value, out var parsedValue) || !ManualNumeric.AreClose(parsedValue, SyncedManualSpeed);
-        ValidateManualSpeedInput();
     }
 
     partial void OnMovePointInputChanged(string value)
@@ -219,7 +218,6 @@ public partial class ManualAxisState : ObservableObject
         }
 
         IsMovePointDirty = !ManualNumeric.TryParse(value, out var parsedValue) || !ManualNumeric.AreClose(parsedValue, SyncedMovePoint);
-        ValidateMovePointInput();
     }
 
     public void ApplyLimitProfile(AxisLimitProfile limitProfile)
@@ -227,8 +225,6 @@ public partial class ManualAxisState : ObservableObject
         LimitProfile = limitProfile ?? AxisLimitProfile.Unbounded;
         OnPropertyChanged(nameof(CanJogNegative));
         OnPropertyChanged(nameof(CanJogPositive));
-        ValidateManualSpeedInput();
-        ValidateMovePointInput();
     }
 
     public void ApplyObservedValues(
@@ -275,6 +271,20 @@ public partial class ManualAxisState : ObservableObject
     {
         SyncedMovePoint = value;
         SetInput(nameof(MovePointInput), ManualNumeric.Format(value));
+        IsMovePointDirty = false;
+        MovePointValidationMessage = string.Empty;
+    }
+
+    public void ResetManualSpeedToSynced()
+    {
+        SetInput(nameof(ManualSpeedInput), ManualNumeric.Format(SyncedManualSpeed));
+        IsManualSpeedDirty = false;
+        ManualSpeedValidationMessage = string.Empty;
+    }
+
+    public void ResetMovePointToSynced()
+    {
+        SetInput(nameof(MovePointInput), ManualNumeric.Format(SyncedMovePoint));
         IsMovePointDirty = false;
         MovePointValidationMessage = string.Empty;
     }
