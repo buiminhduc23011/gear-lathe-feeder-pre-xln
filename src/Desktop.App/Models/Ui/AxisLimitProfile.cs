@@ -12,7 +12,7 @@ public sealed record AxisLimitProfile(float? SpeedLimit, float? NegativeLimit, f
     public bool CanJogPositive(float currentPosition)
         => !PositiveLimit.HasValue || currentPosition < PositiveLimit.Value - Tolerance;
 
-    public bool TryValidateSpeed(float value, out string errorMessage)
+    public bool TryValidateSpeed(float value, out string errorMessage, string speedUnit = "mm/s")
     {
         if (value < 0f)
         {
@@ -22,7 +22,7 @@ public sealed record AxisLimitProfile(float? SpeedLimit, float? NegativeLimit, f
 
         if (SpeedLimit.HasValue && value > SpeedLimit.Value + Tolerance)
         {
-            errorMessage = $"Tốc độ phải nhỏ hơn hoặc bằng {ManualNumeric.Format(SpeedLimit.Value)} mm/s.";
+            errorMessage = $"Tốc độ phải nhỏ hơn hoặc bằng {ManualNumeric.Format(SpeedLimit.Value)} {speedUnit}.";
             return false;
         }
 
@@ -30,17 +30,17 @@ public sealed record AxisLimitProfile(float? SpeedLimit, float? NegativeLimit, f
         return true;
     }
 
-    public bool TryValidatePosition(float value, out string errorMessage)
+    public bool TryValidatePosition(float value, out string errorMessage, string positionUnit = "mm")
     {
         if (NegativeLimit.HasValue && value < NegativeLimit.Value - Tolerance)
         {
-            errorMessage = $"Giá trị phải nằm trong {DescribePositionRange()}.";
+            errorMessage = $"Giá trị phải nằm trong {DescribePositionRange(positionUnit)}.";
             return false;
         }
 
         if (PositiveLimit.HasValue && value > PositiveLimit.Value + Tolerance)
         {
-            errorMessage = $"Giá trị phải nằm trong {DescribePositionRange()}.";
+            errorMessage = $"Giá trị phải nằm trong {DescribePositionRange(positionUnit)}.";
             return false;
         }
 
@@ -48,10 +48,10 @@ public sealed record AxisLimitProfile(float? SpeedLimit, float? NegativeLimit, f
         return true;
     }
 
-    public string DescribePositionRange()
+    public string DescribePositionRange(string positionUnit = "mm")
     {
         var minText = NegativeLimit.HasValue ? ManualNumeric.Format(NegativeLimit.Value) : "-inf";
         var maxText = PositiveLimit.HasValue ? ManualNumeric.Format(PositiveLimit.Value) : "+inf";
-        return $"[{minText}; {maxText}] mm";
+        return $"[{minText}; {maxText}] {positionUnit}";
     }
 }

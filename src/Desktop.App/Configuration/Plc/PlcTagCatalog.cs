@@ -326,6 +326,8 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition LifterOffset = CreateWord("data.lifter_offset", "D21048", PlcTagDataType.Float, "Ofset tọa độ trục nâng");
         public static readonly PlcTagDefinition AxisXAutoSpeedWithPart = CreateWord("data.axis_x_auto_speed_with_part", "D21050", PlcTagDataType.Float, "Tốc độ chạy tự động trục X có hàng");
         public static readonly PlcTagDefinition AxisZDropPartSpeed = CreateWord("data.axis_z_drop_part_speed", "D21052", PlcTagDataType.Float, "Tốc độ Trục Z thả hàng khối V");
+        public static readonly PlcTagDefinition RotaryNegativeLimit = CreateWord("data.rotary_negative_limit", "D21054", PlcTagDataType.Float, "Limit bàn xoay -");
+        public static readonly PlcTagDefinition RotaryPositiveLimit = CreateWord("data.rotary_positive_limit", "D21056", PlcTagDataType.Float, "Limit bàn xoay +");
     }
 
     public static class DataMachine

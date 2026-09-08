@@ -288,7 +288,7 @@ public partial class ManualAxisState : ObservableObject
             return false;
         }
 
-        if (!LimitProfile.TryValidateSpeed(speedValue, out errorMessage))
+        if (!LimitProfile.TryValidateSpeed(speedValue, out errorMessage, SpeedUnit))
         {
             errorMessage = $"{DisplayName}: {errorMessage}";
             ManualSpeedValidationMessage = errorMessage;
@@ -308,7 +308,7 @@ public partial class ManualAxisState : ObservableObject
             return false;
         }
 
-        if (!LimitProfile.TryValidatePosition(movePointValue, out errorMessage))
+        if (!LimitProfile.TryValidatePosition(movePointValue, out errorMessage, PositionUnit))
         {
             errorMessage = $"{DisplayName}: {errorMessage}";
             MovePointValidationMessage = errorMessage;

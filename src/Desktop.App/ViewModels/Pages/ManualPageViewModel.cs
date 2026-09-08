@@ -111,7 +111,7 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             PlcTagCatalog.Alarms.RotaryNotAtHome,
             PlcTagCatalog.Alarms.RotaryPulseSlip,
             PlcTagCatalog.Outputs.Y1_14,
-            hasLimits: false,
+            hasLimits: true,
             positionUnit: "°",
             speedUnit: "Vòng/Phút");
 
@@ -397,7 +397,7 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         ActivateBinaryOutputCommand = new AsyncRelayCommand<string?>(ActivateBinaryOutputAsync, CanExecuteOneShot);
         DeactivateBinaryOutputCommand = new AsyncRelayCommand<string?>(DeactivateBinaryOutputAsync, CanExecuteOneShot);
         ApplyAxisSpeedCommand = new AsyncRelayCommand<ManualAxisState?>(ApplyAxisSpeedAsync, CanApplyAxisSpeed);
-        WriteMovePointValueCommand = new AsyncRelayCommand<ManualAxisState?>(WriteMovePointValueAsync, CanApplyAxisSpeed);
+        WriteMovePointValueCommand = new AsyncRelayCommand<ManualAxisState?>(WriteMovePointValueAsync, CanWriteMovePointValue);
         MoveAxisToPointCommand = new AsyncRelayCommand<ManualAxisState?>(MoveAxisToPointAsync, CanMoveAxisToPoint);
         StartJogCommand = new AsyncRelayCommand<string?>(StartJogAsync, CanStartJog);
         StopJogCommand = new AsyncRelayCommand<string?>(StopJogAsync, CanStopJog);
@@ -621,11 +621,11 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         EnsureAllJogTagsReleased();
     }
 
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
         if (_isInitialized || _isInitializing)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         _isInitializing = true;
@@ -633,6 +633,7 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         try
         {
             UpdateConnectionState(_plcService.IsConnected);
+            await LoadAxisLimitsAsync();
 
             foreach (var axis in Axes)
             {
@@ -647,8 +648,6 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         {
             _isInitializing = false;
         }
-
-        return Task.CompletedTask;
     }
 
     private static void PostToUiThread(Action action)
@@ -950,23 +949,24 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     private async Task ApplyAxisSpeedAsync(ManualAxisState? axis)
     {
-        if (!CanApplyAxisSpeed(axis))
+        if (axis is null || !CanApplyAxisSpeed(axis))
         {
             return;
         }
 
-        if (!float.TryParse(axis!.ManualSpeedInput, out var parsedValue) || parsedValue < 0)
+        if (!axis.TryGetValidatedManualSpeed(out var parsedValue, out _))
         {
-            axis.ManualSpeedValidationMessage = "Tốc độ phải là số lớn hơn hoặc bằng 0.";
             return;
         }
-
-        axis.ManualSpeedValidationMessage = string.Empty;
 
         try
         {
             await _plcService.WriteAsync(axis.ManualSpeedTag.Name, parsedValue).ConfigureAwait(false);
-            await InvokeOnUiThreadAsync(() => SyncStatesFromCache(updateTimestamp: true));
+            await InvokeOnUiThreadAsync(() =>
+            {
+                axis.MarkManualSpeedApplied(parsedValue);
+                SyncStatesFromCache(updateTimestamp: true);
+            });
         }
         catch (Exception exception)
         {
@@ -976,23 +976,24 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     private async Task WriteMovePointValueAsync(ManualAxisState? axis)
     {
-        if (!CanApplyAxisSpeed(axis))
+        if (axis is null || !CanWriteMovePointValue(axis))
         {
             return;
         }
 
-        if (!float.TryParse(axis!.MovePointInput, out var parsedValue))
+        if (!axis.TryGetValidatedMovePoint(out var parsedValue, out _))
         {
-            axis.MovePointValidationMessage = "Vị trí chạy điểm không hợp lệ.";
             return;
         }
-
-        axis.MovePointValidationMessage = string.Empty;
 
         try
         {
             await _plcService.WriteAsync(axis.MovePointTag.Name, parsedValue).ConfigureAwait(false);
-            await InvokeOnUiThreadAsync(() => SyncStatesFromCache(updateTimestamp: true));
+            await InvokeOnUiThreadAsync(() =>
+            {
+                axis.MarkMovePointApplied(parsedValue);
+                SyncStatesFromCache(updateTimestamp: true);
+            });
         }
         catch (Exception exception)
         {
@@ -1002,20 +1003,26 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     private async Task MoveAxisToPointAsync(ManualAxisState? axis)
     {
-        if (!CanMoveAxisToPoint(axis))
+        if (axis is null || !CanMoveAxisToPoint(axis))
         {
+            return;
+        }
+
+        if (!axis.TryGetValidatedMovePoint(out var parsedValue, out _))
+        {
+            await ShowErrorMessageAsync($"Giá trị điểm chạy của {axis.DisplayName} không hợp lệ.", new InvalidOperationException(axis.MovePointValidationMessage)).ConfigureAwait(false);
             return;
         }
 
         try
         {
-            if (float.TryParse(axis!.MovePointInput, out var parsedValue))
-            {
-                await _plcService.WriteAsync(axis.MovePointTag.Name, parsedValue).ConfigureAwait(false);
-            }
-
+            await _plcService.WriteAsync(axis.MovePointTag.Name, parsedValue).ConfigureAwait(false);
             await _plcService.WriteAsync(axis.MoveToPointTag.Name, true).ConfigureAwait(false);
-            await InvokeOnUiThreadAsync(() => SyncStatesFromCache(updateTimestamp: true));
+            await InvokeOnUiThreadAsync(() =>
+            {
+                axis.MarkMovePointApplied(parsedValue);
+                SyncStatesFromCache(updateTimestamp: true);
+            });
         }
         catch (Exception exception)
         {
@@ -1025,12 +1032,24 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
 
     private bool CanApplyAxisSpeed(ManualAxisState? axis)
     {
-        return CanIssueCommands && axis is not null;
+        return CanIssueCommands
+            && axis is not null
+            && !axis.HasManualSpeedValidationMessage;
+    }
+
+    private bool CanWriteMovePointValue(ManualAxisState? axis)
+    {
+        return CanIssueCommands
+            && axis is not null
+            && !axis.HasMovePointValidationMessage;
     }
 
     private bool CanMoveAxisToPoint(ManualAxisState? axis)
     {
-        return CanIssueCommands && axis is not null;
+        return CanIssueCommands
+            && axis is not null
+            && !axis.IsMoveToPointCommandActive
+            && !axis.HasMovePointValidationMessage;
     }
 
     private async Task StartJogAsync(string? tagName)
@@ -1138,7 +1157,11 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
             return;
         }
 
-        if (eventArgs.PropertyName is nameof(ManualAxisState.ManualSpeedInput) or nameof(ManualAxisState.MovePointInput))
+        if (eventArgs.PropertyName is nameof(ManualAxisState.ManualSpeedInput)
+            or nameof(ManualAxisState.MovePointInput)
+            or nameof(ManualAxisState.HasManualSpeedValidationMessage)
+            or nameof(ManualAxisState.HasMovePointValidationMessage)
+            or nameof(ManualAxisState.IsMoveToPointCommandActive))
         {
             RefreshCommandStates();
         }
@@ -1176,13 +1199,69 @@ public partial class ManualPageViewModel : ObservableObject, IDisposable
         var value = _plcService.GetValue<object?>(tagName, null);
         return value switch
         {
-            float floatValue => floatValue,
-            double doubleValue => (float)doubleValue,
-            int intValue => intValue,
-            short shortValue => shortValue,
-            long longValue => longValue,
-            _ => 0f,
+            float f => f,
+            double d => (float)d,
+            int i => i,
+            short s => s,
+            long l => l,
+            _ => 0f
         };
+    }
+
+    private async Task LoadAxisLimitsAsync()
+    {
+        try
+        {
+            var fields = await _plcParameterSettingsService.LoadGroupAsync(PlcParameterGroups.DataTrayCart).ConfigureAwait(false);
+            var fieldLookup = fields.ToDictionary(field => field.TagName, StringComparer.OrdinalIgnoreCase);
+
+            AxisX.ApplyLimitProfile(CreateAxisLimitProfile(
+                fieldLookup,
+                PlcTagCatalog.DataTrayCart.AxisXSpeedLimit.Name,
+                PlcTagCatalog.DataTrayCart.AxisXNegativeLimit.Name,
+                PlcTagCatalog.DataTrayCart.AxisXPositiveLimit.Name));
+
+            AxisZ.ApplyLimitProfile(CreateAxisLimitProfile(
+                fieldLookup,
+                PlcTagCatalog.DataTrayCart.AxisZSpeedLimit.Name,
+                PlcTagCatalog.DataTrayCart.AxisZNegativeLimit.Name,
+                PlcTagCatalog.DataTrayCart.AxisZPositiveLimit.Name));
+
+            AxisLifter.ApplyLimitProfile(CreateAxisLimitProfile(
+                fieldLookup,
+                PlcTagCatalog.DataTrayCart.LifterSpeedLimit.Name,
+                PlcTagCatalog.DataTrayCart.LifterBottomLimit.Name,
+                PlcTagCatalog.DataTrayCart.LifterTopLimit.Name));
+
+            AxisRotary.ApplyLimitProfile(CreateAxisLimitProfile(
+                fieldLookup,
+                PlcTagCatalog.DataTrayCart.RotarySpeedLimit.Name,
+                PlcTagCatalog.DataTrayCart.RotaryNegativeLimit.Name,
+                PlcTagCatalog.DataTrayCart.RotaryPositiveLimit.Name));
+        }
+        catch
+        {
+            // Ignore if loading fails
+        }
+    }
+
+    private static AxisLimitProfile CreateAxisLimitProfile(
+        IReadOnlyDictionary<string, EditablePlcParameterField> fieldLookup,
+        string speedTagName,
+        string negativeTagName,
+        string positiveTagName)
+    {
+        return new AxisLimitProfile(
+            ReadLimit(fieldLookup, speedTagName),
+            ReadLimit(fieldLookup, negativeTagName),
+            ReadLimit(fieldLookup, positiveTagName));
+    }
+
+    private static float? ReadLimit(IReadOnlyDictionary<string, EditablePlcParameterField> fieldLookup, string tagName)
+    {
+        return fieldLookup.TryGetValue(tagName, out var field) && ManualNumeric.TryParse(field.ValueText, out var value)
+            ? value
+            : null;
     }
 
     private static string FormatSingle(float value)

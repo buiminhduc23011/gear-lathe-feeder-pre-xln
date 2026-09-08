@@ -272,11 +272,16 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
             PlcTagCatalog.DataTrayCart.AxisXSpeedLimit.Name,
             PlcTagCatalog.DataTrayCart.AxisXNegativeLimit.Name,
             PlcTagCatalog.DataTrayCart.AxisXPositiveLimit.Name));
-        ApplyAxisLimit("axis_z", AxisZ, CreateAxisLimitProfile(
+        ApplyAxisLimit("axis_y", AxisY, CreateAxisLimitProfile(
             fieldLookup,
             PlcTagCatalog.DataTrayCart.AxisZSpeedLimit.Name,
             PlcTagCatalog.DataTrayCart.AxisZNegativeLimit.Name,
             PlcTagCatalog.DataTrayCart.AxisZPositiveLimit.Name));
+        ApplyAxisLimit("axis_z", AxisZ, CreateAxisLimitProfile(
+            fieldLookup,
+            PlcTagCatalog.DataTrayCart.LifterSpeedLimit.Name,
+            PlcTagCatalog.DataTrayCart.LifterBottomLimit.Name,
+            PlcTagCatalog.DataTrayCart.LifterTopLimit.Name));
 
         ValidateRobotFields();
     }
