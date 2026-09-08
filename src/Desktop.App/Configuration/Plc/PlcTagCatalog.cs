@@ -373,6 +373,24 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition SafeLatheTravel = CreateWord("data.safe_lathe_travel", "D21134", PlcTagDataType.Float, "Tọa độ An toàn trên máy tiện");
     }
 
+    public static class RobotTest
+    {
+        public static readonly PlcTagDefinition OuterFinishedDiameter = CreateWord("robot_test.outer_finished_diameter", "D5600", PlcTagDataType.Float, "Đường kính ngoài thành phẩm");
+        public static readonly PlcTagDefinition InputBlankThickness = CreateWord("robot_test.input_blank_thickness", "D5602", PlcTagDataType.Float, "Độ dày Phôi đầu vào");
+        public static readonly PlcTagDefinition Op1TurnedThickness = CreateWord("robot_test.op1_turned_thickness", "D5604", PlcTagDataType.Float, "Độ dày phôi sau tiện OP1");
+        public static readonly PlcTagDefinition FinishedThickness = CreateWord("robot_test.finished_thickness", "D5606", PlcTagDataType.Float, "Độ dày Phôi thành phẩm");
+        public static readonly PlcTagDefinition PickDropZOffset = CreateWord("robot_test.pick_drop_z_offset", "D5608", PlcTagDataType.Float, "Ofset tọa độ Z gắp thả hàng");
+        public static readonly PlcTagDefinition ChuckStepDepth = CreateWord("robot_test.chuck_step_depth", "D5610", PlcTagDataType.Float, "Chiều sâu bậc mâm cặp OP1");
+        public static readonly PlcTagDefinition MagnetCount = CreateWord("robot_test.magnet_count", "D5612", PlcTagDataType.Int16, "Số nam châm sử dụng");
+        public static readonly PlcTagDefinition JigSupplyType = CreateWord("robot_test.jig_supply_type", "D5614", PlcTagDataType.Int16, "Loại Jig cấp hàng");
+        public static readonly PlcTagDefinition InnerFinishedDiameter = CreateWord("robot_test.inner_finished_diameter", "D5616", PlcTagDataType.Float, "Đường kính trong phôi thành phẩm");
+        public static readonly PlcTagDefinition InnerDiameterToGDiameterDistance = CreateWord("robot_test.inner_diameter_to_g_distance", "D5618", PlcTagDataType.Float, "Khoảng cách đường kính trong đến đường kính G");
+        public static readonly PlcTagDefinition InputBlankDiameter = CreateWord("robot_test.input_blank_diameter", "D5620", PlcTagDataType.Float, "Đường kính phôi đầu vào");
+        public static readonly PlcTagDefinition Op2ChuckSleeveDepth = CreateWord("robot_test.op2_chuck_sleeve_depth", "D5622", PlcTagDataType.Float, "Chiều sâu bậc mâm cặp OP2");
+        public static readonly PlcTagDefinition RunTest = CreateBit("robot_test.run_test", "D5624.0", "Chạy kiểm tra");
+        public static readonly PlcTagDefinition CancelTest = CreateBit("robot_test.cancel_test", "D5624.1", "Hủy chạy kiểm tra");
+    }
+
 
     public static class Manual
     {
@@ -664,6 +682,7 @@ public static class PlcTagCatalog
         typeof(DataTrayCart),
         typeof(DataMachine),
         typeof(DataSafeCoordinates),
+        typeof(RobotTest),
         typeof(Manual),
         typeof(Alarms),
         typeof(PlcMessages));
@@ -678,6 +697,7 @@ public static class PlcTagCatalog
         typeof(DataTrayCart),
         typeof(DataMachine),
         typeof(DataSafeCoordinates),
+        typeof(RobotTest),
         typeof(Manual),
         typeof(PlcMessages));
 

@@ -185,12 +185,18 @@
                                 Grid.Column="0"
                                 Command="{Binding CreateNewModelCommand}"
                                 Content="+ Tạo mới"
+                                Height="36"
+                                MinWidth="0"
+                                Padding="8,0"
                                 Style="{StaticResource ButtonPrimary}" />
 
                             <Button
                                 Grid.Column="2"
                                 Command="{Binding DeleteModelCommand}"
-                                Content="Xóa">
+                                Content="Xóa"
+                                Height="36"
+                                MinWidth="0"
+                                Padding="8,0">
                                 <Button.Style>
                                     <Style BasedOn="{StaticResource ButtonDanger}" TargetType="Button">
                                         <Style.Triggers>
@@ -212,19 +218,18 @@
                             hc:InfoElement.Placeholder="Tìm Article ID..."
                             Style="{StaticResource FilterToolbarTextBox}"
                             Text="{Binding ModelFilterText, UpdateSourceTrigger=PropertyChanged}" />
-                        <ScrollViewer
+
+                        <ListBox
                             Grid.Row="3"
-                            MaxHeight="520"
                             Margin="0,12,0,0"
                             Padding="0,0,4,0"
-                            Style="{StaticResource IndustrialScrollViewer}"
-                            VerticalScrollBarVisibility="Auto">
-                            <ListBox
-                                Background="Transparent"
-                                BorderThickness="0"
-                                ItemContainerStyle="{StaticResource ModelListBoxItem}"
-                                ItemsSource="{Binding ModelsView}"
-                                SelectedItem="{Binding SelectedModel}">
+                            Background="Transparent"
+                            BorderThickness="0"
+                            ItemContainerStyle="{StaticResource ModelListBoxItem}"
+                            ItemsSource="{Binding ModelsView}"
+                            SelectedItem="{Binding SelectedModel}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel>
@@ -272,7 +277,6 @@
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
-                        </ScrollViewer>
                     </Grid>
                 </Border>
 
@@ -291,7 +295,7 @@
                         Background="{DynamicResource Brush.Border.Divider}" />
 
                     <!--  Left: Model fields  -->
-                    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                             <!--  Empty state  -->
                             <Border Padding="32">
@@ -372,7 +376,42 @@
                                                 Style="{StaticResource FilterToolbarComboBox}" />
                                         </StackPanel>
                                         </Grid>
-                                        <ItemsControl Margin="0,16,0,0" ItemsSource="{Binding RobotFields}">
+
+                                        <!--  Tiêu đề Thông số Robot + Nút Chạy/Hủy kiểm tra  -->
+                                        <Grid Margin="0,20,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                <TextBlock Style="{StaticResource SectionTitleText}" FontSize="15" Text="Thông số Robot" />
+                                                <TextBlock Margin="0,3,0,0" Style="{StaticResource SectionSubtitleText}" FontSize="11" Text="Dải thanh ghi chạy kiểm tra PLC (D5600 - D5624.1)" />
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal">
+                                                <Button
+                                                    Margin="0,0,8,0"
+                                                    Command="{Binding RunRobotTestCommand}"
+                                                    Content="Chạy kiểm tra"
+                                                    Style="{StaticResource FilterToolbarPrimaryButton}"
+                                                    Background="#16A34A"
+                                                    BorderBrush="#15803D"
+                                                    Foreground="{DynamicResource Brush.Text.Inverse}"
+                                                    Height="34"
+                                                    MinWidth="110"
+                                                    Padding="12,0" />
+                                                <Button
+                                                    Command="{Binding CancelRobotTestCommand}"
+                                                    Content="Hủy kiểm tra"
+                                                    Style="{StaticResource FilterToolbarDangerButton}"
+                                                    Height="34"
+                                                    MinWidth="100"
+                                                    Padding="12,0" />
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <ItemsControl Margin="0,4,0,0" ItemsSource="{Binding RobotFields}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <WrapPanel ItemWidth="270" />

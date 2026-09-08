@@ -33,9 +33,21 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
     private string? _activeJogTagName;
     private int? _resolvedMachineId;
 
-
-
-    // Tab state (control panel)
+    private static readonly (string Key, PlcTagDefinition Tag)[] RobotTestFieldMappings =
+    [
+        ("outerFinishedDiameter", PlcTagCatalog.RobotTest.OuterFinishedDiameter),
+        ("inputBlankThickness", PlcTagCatalog.RobotTest.InputBlankThickness),
+        ("op1TurnedThickness", PlcTagCatalog.RobotTest.Op1TurnedThickness),
+        ("finishedThickness", PlcTagCatalog.RobotTest.FinishedThickness),
+        ("pickDropZOffset", PlcTagCatalog.RobotTest.PickDropZOffset),
+        ("chuckStepDepth", PlcTagCatalog.RobotTest.ChuckStepDepth),
+        ("magnetCount", PlcTagCatalog.RobotTest.MagnetCount),
+        ("jigSupplyType", PlcTagCatalog.RobotTest.JigSupplyType),
+        ("innerFinishedDiameter", PlcTagCatalog.RobotTest.InnerFinishedDiameter),
+        ("innerDiameterToGDiameterDistance", PlcTagCatalog.RobotTest.InnerDiameterToGDiameterDistance),
+        ("inputBlankDiameter", PlcTagCatalog.RobotTest.InputBlankDiameter),
+        ("op2ChuckSleeveDepth", PlcTagCatalog.RobotTest.Op2ChuckSleeveDepth),
+    ];    // Tab state (control panel)
     [ObservableProperty] private bool _isAxisTabSelected = true;
     [ObservableProperty] private bool _isCylinderTabSelected;
 
@@ -100,6 +112,7 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
     //public bool CanIssueCommands => IsConnected;
     public bool CanIssueCommands => true;
     public bool HasModelSelected => SelectedModel is not null || IsCreatingNew;
+    public bool CanRunRobotTest => CanIssueCommands && HasModelSelected;
 
     /// <summary>True when the currently selected model is enabled (allowed to run in Auto mode).</summary>
     public bool IsSelectedModelEnabled => SelectedModel?.IsEnabled ?? false;
@@ -407,6 +420,7 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
     {
         IsConnected = connected;
         OnPropertyChanged(nameof(CanIssueCommands));
+        OnPropertyChanged(nameof(CanRunRobotTest));
         RefreshCommandStates();
     }
 
@@ -944,18 +958,193 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         }
     }
 
+    // ══ Robot Test Commands (D5600 - D5624.1) ══
+
+    [RelayCommand(CanExecute = nameof(CanRunRobotTest))]
+    private async Task RunRobotTestAsync()
+    {
+        if (!CanRunRobotTest)
+        {
+            return;
+        }
+
+        ValidateRobotFields();
+        var firstInvalid = RobotFields.FirstOrDefault(f => f.HasValidationMessage);
+        if (firstInvalid is not null)
+        {
+            await _notificationDialog.ShowWarningAsync(
+                "Thông số chưa hợp lệ",
+                $"{firstInvalid.Label}: {firstInvalid.ValidationMessage}");
+            return;
+        }
+
+        if (!TryBuildRobotTestWrites(out var writes, out var buildError))
+        {
+            await _notificationDialog.ShowWarningAsync(
+                "Dữ liệu kiểm tra chưa đủ",
+                buildError);
+            return;
+        }
+
+        try
+        {
+            // 1. Ghi 12 thông số xuống PLC (D5600 - D5622)
+            foreach (var (tag, val) in writes)
+            {
+                await _plcService.WriteAsync(tag.Name, val).ConfigureAwait(false);
+            }
+
+            // Đợi PLC cập nhật dữ liệu vào bộ đệm
+            await Task.Delay(150).ConfigureAwait(false);
+
+            // 2. Readback kiểm tra tính toàn vẹn
+            if (!VerifyRobotTestWrites(writes, out var verifyError))
+            {
+                await _notificationDialog.ShowErrorAsync(
+                    "Xác thực thông số thất bại",
+                    $"{verifyError}\nĐã dừng, không gửi xung kích hoạt kiểm tra.");
+                return;
+            }
+
+            // 3. Gửi xung chạy kiểm tra (D5624.0: RunTest = true -> 300ms -> false)
+            await _plcService.WriteAsync(PlcTagCatalog.RobotTest.RunTest.Name, true).ConfigureAwait(false);
+            await Task.Delay(300).ConfigureAwait(false);
+            await _plcService.WriteAsync(PlcTagCatalog.RobotTest.RunTest.Name, false).ConfigureAwait(false);
+
+            await _notificationDialog.ShowSuccessAsync(
+                "Chạy kiểm tra Robot",
+                "Đã ghi toàn bộ thông số test xuống PLC và gửi xung chạy kiểm tra thành công.");
+        }
+        catch (Exception ex)
+        {
+            await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể thực hiện chạy kiểm tra: {ex.Message}");
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanIssueCommands))]
+    private async Task CancelRobotTestAsync()
+    {
+        if (!CanIssueCommands)
+        {
+            return;
+        }
+
+        try
+        {
+            await _plcService.WriteAsync(PlcTagCatalog.RobotTest.CancelTest.Name, true).ConfigureAwait(false);
+            await Task.Delay(300).ConfigureAwait(false);
+            await _plcService.WriteAsync(PlcTagCatalog.RobotTest.CancelTest.Name, false).ConfigureAwait(false);
+
+            await _notificationDialog.ShowInfoAsync(
+                "Hủy chạy kiểm tra",
+                "Đã gửi lệnh hủy chạy kiểm tra Robot xuống PLC (D5624.1).");
+        }
+        catch (Exception ex)
+        {
+            await _notificationDialog.ShowErrorAsync("Lỗi", $"Không thể hủy chạy kiểm tra: {ex.Message}");
+        }
+    }
+
+    private bool TryBuildRobotTestWrites(out List<(PlcTagDefinition Tag, object Value)> writes, out string errorMessage)
+    {
+        writes = [];
+        var fieldMap = RobotFields.ToDictionary(f => f.Key, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var (key, tag) in RobotTestFieldMappings)
+        {
+            if (!fieldMap.TryGetValue(key, out var field) || string.IsNullOrWhiteSpace(field.ValueText))
+            {
+                var label = field?.Label ?? tag.Description;
+                errorMessage = $"Vui lòng nhập giá trị cho '{label}'.";
+                writes.Clear();
+                return false;
+            }
+
+            if (tag.DataType == PlcTagDataType.Int16)
+            {
+                if (!short.TryParse(field.ValueText.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var shortVal))
+                {
+                    errorMessage = $"Giá trị của '{field.Label}' phải là số nguyên.";
+                    writes.Clear();
+                    return false;
+                }
+                writes.Add((tag, shortVal));
+            }
+            else if (tag.DataType == PlcTagDataType.Float)
+            {
+                if (!float.TryParse(field.ValueText.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out var floatVal)
+                    && !float.TryParse(field.ValueText.Trim(), NumberStyles.Float, CultureInfo.GetCultureInfo("vi-VN"), out floatVal))
+                {
+                    errorMessage = $"Giá trị của '{field.Label}' phải là số thực.";
+                    writes.Clear();
+                    return false;
+                }
+                writes.Add((tag, floatVal));
+            }
+            else
+            {
+                errorMessage = $"Kiểu dữ liệu của tag '{tag.Name}' không được hỗ trợ để ghi test.";
+                writes.Clear();
+                return false;
+            }
+        }
+
+        errorMessage = string.Empty;
+        return true;
+    }
+
+    private bool VerifyRobotTestWrites(IReadOnlyList<(PlcTagDefinition Tag, object Value)> writes, out string errorMessage)
+    {
+        foreach (var (tag, expectedValue) in writes)
+        {
+            var actual = _plcService.GetValue<object?>(tag.Name, null);
+            if (actual is null)
+            {
+                errorMessage = $"Không đọc được dữ liệu kiểm tra từ PLC cho '{tag.Description}' ({tag.Address}).";
+                return false;
+            }
+
+            if (tag.DataType == PlcTagDataType.Int16)
+            {
+                var expectedShort = Convert.ToInt16(expectedValue, CultureInfo.InvariantCulture);
+                var actualShort = Convert.ToInt16(actual, CultureInfo.InvariantCulture);
+                if (expectedShort != actualShort)
+                {
+                    errorMessage = $"Giá trị đọc lại không khớp cho '{tag.Description}' ({tag.Address}): gửi {expectedShort}, đọc được {actualShort}.";
+                    return false;
+                }
+            }
+            else if (tag.DataType == PlcTagDataType.Float)
+            {
+                var expectedFloat = Convert.ToSingle(expectedValue, CultureInfo.InvariantCulture);
+                var actualFloat = Convert.ToSingle(actual, CultureInfo.InvariantCulture);
+                if (Math.Abs(expectedFloat - actualFloat) > 0.05f)
+                {
+                    errorMessage = $"Giá trị đọc lại không khớp cho '{tag.Description}' ({tag.Address}): gửi {expectedFloat}, đọc được {actualFloat}.";
+                    return false;
+                }
+            }
+        }
+
+        errorMessage = string.Empty;
+        return true;
+    }
+
     // ══ Partial hooks ══
 
     partial void OnIsConnectedChanged(bool value)
     {
         OnPropertyChanged(nameof(CanIssueCommands));
+        OnPropertyChanged(nameof(CanRunRobotTest));
         RefreshCommandStates();
     }
 
     partial void OnSelectedModelChanged(ModelProfileDto? value)
     {
         OnPropertyChanged(nameof(HasModelSelected));
+        OnPropertyChanged(nameof(CanRunRobotTest));
         OnPropertyChanged(nameof(IsSelectedModelEnabled));
+        RefreshCommandStates();
         if (value is not null && !IsCreatingNew)
         {
             ModelNameInput = value.ModelName;
@@ -968,6 +1157,8 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
     partial void OnIsCreatingNewChanged(bool value)
     {
         OnPropertyChanged(nameof(HasModelSelected));
+        OnPropertyChanged(nameof(CanRunRobotTest));
+        RefreshCommandStates();
     }
 
     partial void OnModelFilterTextChanged(string value)
@@ -1292,7 +1483,8 @@ public partial class ModelPageViewModel : ObservableObject, IDisposable
         WriteMovePointValueCommand.NotifyCanExecuteChanged();
         MoveAxisToPointCommand.NotifyCanExecuteChanged();
         RunOneShotCommand.NotifyCanExecuteChanged();
-
+        RunRobotTestCommand.NotifyCanExecuteChanged();
+        CancelRobotTestCommand.NotifyCanExecuteChanged();
     }
 
     private void OnAxisPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
