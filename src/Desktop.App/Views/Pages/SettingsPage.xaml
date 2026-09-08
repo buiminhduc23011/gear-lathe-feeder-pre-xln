@@ -79,6 +79,8 @@
             <Setter Property="Height" Value="34" />
             <Setter Property="Padding" Value="8,4" />
             <Setter Property="FontSize" Value="{DynamicResource FontSize.Caption}" />
+            <EventSetter Event="PreviewTextInput" Handler="NumericField_PreviewTextInput" />
+            <EventSetter Event="DataObject.Pasting" Handler="NumericField_Pasting" />
         </Style>
 
         <DataTemplate x:Key="SettingsParameterItemTemplate">
@@ -119,6 +121,8 @@
                         Margin="0,3,0,0"
                         VerticalAlignment="Center"
                         FontSize="14"
+                        LostFocus="ParameterValueInput_LostFocus"
+                        PreviewKeyDown="ParameterValueInput_PreviewKeyDown"
                         Style="{StaticResource SettingsParameterValueTextBox}"
                         Text="{Binding ValueText, Mode=TwoWay}" />
 

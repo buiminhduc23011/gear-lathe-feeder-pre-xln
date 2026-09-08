@@ -95,7 +95,25 @@ public sealed class PlcParameterSyncService : IPlcParameterSyncService
 
         _desiredValues[tagName] = typedValue;
         await _settingsService.UpsertAsync(tagName, typedValue, cancellationToken);
-        UpdateSyncState(tagName, EvaluateSyncState(tagName, typedValue));
+
+        if (_plcService.IsConnected)
+        {
+            try
+            {
+                await _plcService.WriteAsync(tagName, typedValue, cancellationToken);
+            }
+            catch
+            {
+                UpdateSyncState(tagName, false);
+                throw;
+            }
+        }
+
+        var isSynced = EvaluateSyncState(tagName, typedValue);
+        if (UpdateSyncState(tagName, isSynced))
+        {
+            RaiseSyncStatesChanged(new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase) { [tagName] = isSynced });
+        }
     }
 
     public void Dispose()

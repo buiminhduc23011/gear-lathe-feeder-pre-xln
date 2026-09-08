@@ -30,6 +30,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
     private bool _isApplyingParameterValues;
     private bool _isDisposed;
     private bool _isInitialized;
+    private readonly HashSet<string> _savingTagNames = new(StringComparer.OrdinalIgnoreCase);
 
     public SettingsPageViewModel(
         ISettingsService settingsService,
@@ -652,24 +653,35 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         await SaveParameterFieldAsync(field);
     }
 
-    private async Task SaveParameterFieldAsync(EditablePlcParameterField field)
+    [RelayCommand]
+    private async Task SaveParameterFieldAsync(EditablePlcParameterField? field)
     {
-        if (string.Equals(field.ValueText.Trim(), field.LastSavedValueText, StringComparison.Ordinal))
+        if (field is null)
         {
-            field.ValidationMessage = string.Empty;
-            field.IsSyncedWithPlc = _plcParameterSyncService.IsTagSynced(field.TagName);
             return;
         }
 
-        if (!PlcTagValueTextConverter.TryParse(field.Definition, field.ValueText, out var typedValue, out var errorMessage))
+        if (string.Equals(field.ValueText.Trim(), field.LastSavedValueText, StringComparison.Ordinal)
+            && field.IsSyncedWithPlc)
         {
-            field.ValidationMessage = errorMessage;
-            field.IsSyncedWithPlc = false;
+            field.ValidationMessage = string.Empty;
+            return;
+        }
+
+        if (!_savingTagNames.Add(field.TagName))
+        {
             return;
         }
 
         try
         {
+            if (!PlcTagValueTextConverter.TryParse(field.Definition, field.ValueText, out var typedValue, out var errorMessage))
+            {
+                field.ValidationMessage = errorMessage;
+                field.IsSyncedWithPlc = false;
+                return;
+            }
+
             field.ValidationMessage = string.Empty;
             await _plcParameterSyncService.SetDesiredValueAsync(field.TagName, typedValue);
 
@@ -685,6 +697,10 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
             _isApplyingParameterValues = false;
             field.ValidationMessage = $"Không thể lưu: {exception.Message}";
             field.IsSyncedWithPlc = false;
+        }
+        finally
+        {
+            _savingTagNames.Remove(field.TagName);
         }
     }
 
