@@ -139,12 +139,28 @@ public class AgvPositionState : INotifyPropertyChanged
     private bool _completionReported;
     private bool _completionAcknowledged;
     private bool _wasLoadingRequestedByPlc;
+    private bool _wasReloadModelRequestedByPlc;
+    private bool _isCancelOrderCompleted;
 
     /// <summary>Cờ đánh dấu PLC đã yêu cầu ghi lại dữ liệu (Rising Edge).</summary>
     public bool WasLoadingRequestedByPlc
     {
         get => _wasLoadingRequestedByPlc;
         set { if (_wasLoadingRequestedByPlc != value) { _wasLoadingRequestedByPlc = value; OnPropertyChanged(nameof(WasLoadingRequestedByPlc)); } }
+    }
+
+    /// <summary>Cờ đánh dấu PLC yêu cầu nạp lại Model (D5570.6 - Rising Edge).</summary>
+    public bool WasReloadModelRequestedByPlc
+    {
+        get => _wasReloadModelRequestedByPlc;
+        set { if (_wasReloadModelRequestedByPlc != value) { _wasReloadModelRequestedByPlc = value; OnPropertyChanged(nameof(WasReloadModelRequestedByPlc)); } }
+    }
+
+    /// <summary>Cờ báo PLC đã hoàn thành hủy order (D5571.2).</summary>
+    public bool IsCancelOrderCompleted
+    {
+        get => _isCancelOrderCompleted;
+        set { if (_isCancelOrderCompleted != value) { _isCancelOrderCompleted = value; OnPropertyChanged(nameof(IsCancelOrderCompleted)); } }
     }
 
     /// <summary>Loại bố trí tray do AGV gửi: 1=2 nhỏ, 2=2 lớn, 3=nhỏ dưới lớn trên, 4=lớn dưới nhỏ trên.</summary>
@@ -515,6 +531,7 @@ public class AgvBackgroundService : IDisposable
     {
         // 0. Proactively handle PLC request to rewrite parameters (Handshake: PLC sets IsLoading = True)
         await HandlePlcLoadingRequestAsync(state, isLoadingTag);
+        await HandlePlcReloadModelRequestAsync(state);
 
         // 1. Read PLC current-order progress, then project it to shelf-level quantities.
         var currentOrderQtyFromPlc = _plcService.GetValue<int>(orderQtyTag.Name);
@@ -525,6 +542,7 @@ public class AgvBackgroundService : IDisposable
         // 2. Read PLC Ready Flag (Machine ready for swap)
         state.IsPlcReady = _plcService.GetValue<bool>(readyTag.Name);
         var isOrderCompleted = _plcService.GetValue<bool>(PlcTagCatalog.DataAutos.CurrentOrderCompleted.Name);
+        state.IsCancelOrderCompleted = _plcService.GetValue<bool>(PlcTagCatalog.DataAutos.CancelOrderCompletedStatus.Name);
         var orderSequenceBeforeTransition = state.CurrentOrderSequence;
         var orderBeforeTransition = _declarationProgressTransition.ResolveCurrentOrder(state);
         AgvDeclarationProgressTransitionResult transitionResult;
@@ -716,6 +734,42 @@ public class AgvBackgroundService : IDisposable
         else
         {
             state.WasLoadingRequestedByPlc = false;
+        }
+    }
+
+    private async Task HandlePlcReloadModelRequestAsync(AgvPositionState state)
+    {
+        bool isReloadModelRequest = _plcService.GetValue<bool>(PlcTagCatalog.DataAutos.ReloadModelParametersCommand.Name);
+        if (isReloadModelRequest)
+        {
+            if (!state.WasReloadModelRequestedByPlc)
+            {
+                state.WasReloadModelRequestedByPlc = true;
+                Trace.WriteLine($"[AgvBackgroundService] Kệ {(int)state.Position}: PLC yêu cầu nạp lại thông số Model (ReloadModelParametersCommand = True).");
+
+                var currentOrder = _declarationProgressTransition.ResolveCurrentOrder(state);
+                if (currentOrder != null)
+                {
+                    try
+                    {
+                        await _currentOrderService.ReloadModelParametersAsync(state.Position, currentOrder);
+                        Trace.WriteLine($"[AgvBackgroundService] Kệ {(int)state.Position}: Đã nạp lại thông số Model thành công (D5570.6 -> Off, D5571.3 -> True).");
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine($"[AgvBackgroundService] Kệ {(int)state.Position}: Lỗi nạp lại thông số Model: {ex.Message}");
+                        state.WasReloadModelRequestedByPlc = false;
+                    }
+                }
+                else
+                {
+                    await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ReloadModelParametersCommand.Name, false);
+                }
+            }
+        }
+        else
+        {
+            state.WasReloadModelRequestedByPlc = false;
         }
     }
 

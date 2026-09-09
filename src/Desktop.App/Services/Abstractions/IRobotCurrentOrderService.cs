@@ -12,4 +12,6 @@ public interface IRobotCurrentOrderService
     Task SetProductionResultAcknowledgedAsync(AgvPosition machineSlot, bool acknowledged);
     Task ClearCurrentOrderAsync(AgvPosition machineSlot, bool setClearRequested = true, bool clearCompletedBit = true);
     Task SetShelfOrdersCompletedAsync(AgvPosition machineSlot, bool completed);
+    Task ReloadModelParametersAsync(AgvPosition machineSlot, AgvOrderData currentOrder);
+    Task SetPauseInspectAsync(bool pause);
 }

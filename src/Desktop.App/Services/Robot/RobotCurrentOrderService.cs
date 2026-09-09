@@ -54,4 +54,14 @@ internal sealed class RobotCurrentOrderService : IRobotCurrentOrderService
     {
         return _plcService.WriteAsync(PlcTagCatalog.DataAutos.ShelfOrdersCompleted.Name, completed);
     }
+
+    public Task ReloadModelParametersAsync(AgvPosition machineSlot, AgvOrderData currentOrder)
+    {
+        return _parameterWriter.ReloadModelParametersAsync(machineSlot, currentOrder);
+    }
+
+    public Task SetPauseInspectAsync(bool pause)
+    {
+        return _parameterWriter.SetPauseInspectAsync(pause);
+    }
 }

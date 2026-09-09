@@ -68,6 +68,8 @@ internal sealed class RobotCurrentOrderParameterWriter
 
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.CurrentPickIndex.Name, 1);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.OrderDataLoadCommand.Name, true);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.CurrentOrderLoadCompleted.Name, true);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ModelLoadCompletedCommand.Name, true);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ProductionResultAcknowledged.Name, false);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.CancelOrderCommand.Name, false);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ShelfOrdersCompleted.Name, false);
@@ -95,11 +97,40 @@ internal sealed class RobotCurrentOrderParameterWriter
 
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.CurrentPickIndex.Name, 0);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.OrderDataLoadCommand.Name, false);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.CurrentOrderLoadCompleted.Name, false);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ModelLoadCompletedCommand.Name, false);
         await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ProductionResultAcknowledged.Name, false);
         if (clearCompletedBit)
         {
             await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ShelfOrdersCompleted.Name, false);
         }
+    }
+
+    public async Task ReloadModelParametersAsync(AgvPosition machineSlot, AgvOrderData currentOrder)
+    {
+        ArgumentNullException.ThrowIfNull(currentOrder);
+
+        var profileLineData = HasProfileSnapshot(currentOrder)
+            ? await BuildSnapshotProfileLineDataForWriteAsync(currentOrder)
+            : await _jigTypeResolver.ResolveProfileLineDataForWriteAsync(machineSlot, currentOrder.ModelId, currentOrder.ModelName);
+
+        // Model parameter registers D5540 - D5556 and D5560 - D5563
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.OuterFinishedDiameter.Name, profileLineData.OuterFinishedDiameter);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InputBlankThickness.Name, profileLineData.InputBlankThickness);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.Op1TurnedThickness.Name, profileLineData.Op1TurnedThickness);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.FinishedThickness.Name, profileLineData.FinishedThickness);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.PickDropZOffset.Name, profileLineData.PickDropZOffset);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ChuckStepDepth.Name, profileLineData.ChuckStepDepth);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InnerFinishedDiameter.Name, profileLineData.InnerFinishedDiameter);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InnerDiameterToGDiameterDistance.Name, profileLineData.InnerDiameterToGDiameterDistance);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.MagnetCount.Name, profileLineData.MagnetCount);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.InputBlankDiameter.Name, profileLineData.InputBlankDiameter);
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.Op2ChuckSleeveDepth.Name, profileLineData.Op2ChuckSleeveDepth);
+
+        // Turn off D5570.6 (Khi load xong tự Off)
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ReloadModelParametersCommand.Name, false);
+        // Turn on D5571.3 (Load xong Model thì True cờ này lên, PLC nhận đc Data sẽ tự Hạ)
+        await _plcService.WriteAsync(PlcTagCatalog.DataAutos.ModelLoadCompletedCommand.Name, true);
     }
 
     public Task SetProductionResultAcknowledgedAsync(AgvPosition machineSlot, bool acknowledged)
@@ -110,6 +141,11 @@ internal sealed class RobotCurrentOrderParameterWriter
     public Task SetClearRequestedAsync(AgvPosition machineSlot, bool requested)
     {
         return _plcService.WriteAsync(PlcTagCatalog.DataAutos.CancelOrderCommand.Name, requested);
+    }
+
+    public Task SetPauseInspectAsync(bool pause)
+    {
+        return _plcService.WriteAsync(PlcTagCatalog.DataAutos.PauseInspectCommand.Name, pause);
     }
 
     public void AttachModelProfileApiClient(IModelProfileApiClient modelProfileApiClient)
