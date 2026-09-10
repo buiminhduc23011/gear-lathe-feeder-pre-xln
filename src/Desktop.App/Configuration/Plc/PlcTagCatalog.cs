@@ -588,6 +588,20 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition ErrorCode6 = CreateWord("alarm.error_code_6", "D5147", PlcTagDataType.Int16, "Mã Lỗi 6");
         public static readonly PlcTagDefinition ErrorCode7 = CreateWord("alarm.error_code_7", "D5148", PlcTagDataType.Int16, "Mã Lỗi 7");
 
+        // D5138 (Thêm mới 10/09/2026)
+        public static readonly PlcTagDefinition LatheOp1InterlockDoor = CreateBit("alarm.lathe_op1_interlock_door", "D5138.0", "Máy Tiện OP1 đang chế độ Interlock cửa");
+        public static readonly PlcTagDefinition LatheOp2InterlockDoor = CreateBit("alarm.lathe_op2_interlock_door", "D5138.1", "Máy Tiện OP2 đang chế độ Interlock cửa");
+        public static readonly PlcTagDefinition InputGroupManualMode = CreateBit("alarm.input_group_manual_mode", "D5138.2", "Cụm Input đang chế độ Bằng Tay");
+        public static readonly PlcTagDefinition InputGroupPaused = CreateBit("alarm.input_group_paused", "D5138.3", "Cụm Input đang tạm dừng");
+        public static readonly PlcTagDefinition OutputGroup1ManualMode = CreateBit("alarm.output_group_1_manual_mode", "D5138.4", "Cụm Output 1 đang chế độ Bằng Tay");
+        public static readonly PlcTagDefinition OutputGroup1Paused = CreateBit("alarm.output_group_1_paused", "D5138.5", "Cụm Output 1 đang tạm dừng");
+        public static readonly PlcTagDefinition OutputGroup2ManualMode = CreateBit("alarm.output_group_2_manual_mode", "D5138.6", "Cụm Output 2 đang chế độ Bằng Tay");
+        public static readonly PlcTagDefinition OutputGroup2Paused = CreateBit("alarm.output_group_2_paused", "D5138.7", "Cụm Output 2 đang tạm dừng");
+        public static readonly PlcTagDefinition Conveyor1ManualMode = CreateBit("alarm.conveyor_1_manual_mode", "D5138.8", "Cụm băng tải 1 đang chế độ Bằng Tay");
+        public static readonly PlcTagDefinition Conveyor1InputPaused = CreateBit("alarm.conveyor_1_input_paused", "D5138.9", "Cụm băng tải 1 Input đang tạm dừng");
+        public static readonly PlcTagDefinition Conveyor2ManualMode = CreateBit("alarm.conveyor_2_manual_mode", "D5138.10", "Cụm băng tải 2 đang chế độ Bằng Tay");
+        public static readonly PlcTagDefinition Conveyor2InputPaused = CreateBit("alarm.conveyor_2_input_paused", "D5138.11", "Cụm băng tải 2 Input đang tạm dừng");
+
         // D5140
         public static readonly PlcTagDefinition EStop = CreateBit("alarm.estop", "D5140.0", "Lỗi dừng khẩn cấp");
 
@@ -614,6 +628,10 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition ToolCheckSensor1 = CreateBit("alarm.tool_check_sensor_1", "D5142.9", "Lỗi cảm biến check hàng tool 1");
         public static readonly PlcTagDefinition ToolCheckSensor2 = CreateBit("alarm.tool_check_sensor_2", "D5142.10", "Lỗi cảm biến check hàng tool 2");
         public static readonly PlcTagDefinition ModelCollisionAtFlipPosition = CreateBit("alarm.model_collision_at_flip_position", "D5142.11", "Lỗi thông số Model va chạm vị trí đảo hàng");
+        public static readonly PlcTagDefinition XSafeZoneOverLimit = CreateBit("alarm.x_safe_zone_over_limit", "D5142.12", "Lỗi quá giới hạn vùng an toàn trục X");
+        public static readonly PlcTagDefinition ZSafeZoneOverLimit = CreateBit("alarm.z_safe_zone_over_limit", "D5142.13", "Lỗi quá giới hạn vùng an toàn trục Z");
+        public static readonly PlcTagDefinition FlipPositionClampTimeout = CreateBit("alarm.flip_position_clamp_timeout", "D5142.14", "Lỗi Timeout Xilanh kẹp vị trí đảo hàng");
+        public static readonly PlcTagDefinition FlipPositionUnclampTimeout = CreateBit("alarm.flip_position_unclamp_timeout", "D5142.15", "Lỗi Timeout Xilanh mở kẹp vị trí đảo hàng");
 
         // D5143
         public static readonly PlcTagDefinition LifterSoftLimitBottom = CreateBit("alarm.lifter_soft_limit_bottom", "D5143.0", "Lỗi giới hạn mềm dưới cụm nâng");
@@ -637,6 +655,9 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition InputClampTimeout = CreateBit("alarm.input_clamp_timeout", "D5144.9", "Lỗi Timout kẹp phôi cụm Input");
         public static readonly PlcTagDefinition InputUnclampTimeout = CreateBit("alarm.input_unclamp_timeout", "D5144.10", "Lỗi Timout mở kẹp phôi cụm Input");
         public static readonly PlcTagDefinition InputCheckSensorFault = CreateBit("alarm.input_check_sensor_fault", "D5144.11", "Lỗi cảm biến check hàng đầu vào");
+        public static readonly PlcTagDefinition MotorLiftTimeout = CreateBit("alarm.motor_lift_timeout", "D5144.12", "Lỗi TimeOut Nâng động cơ");
+        public static readonly PlcTagDefinition MotorLowerTimeout = CreateBit("alarm.motor_lower_timeout", "D5144.13", "Lỗi Timeout Hạ động cơ");
+        public static readonly PlcTagDefinition RotaryNotAtPosition = CreateBit("alarm.rotary_not_at_position", "D5144.14", "Lỗi bàn xoay chưa quay đúng vị trí");
 
         // Aliases for backward compatibility
         public static readonly PlcTagDefinition HumanInWorkingZone = EStop;
