@@ -172,6 +172,11 @@
                         IsChecked="{Binding IsDataMachineTabSelected, Mode=OneWay}"
                         Style="{StaticResource SettingsSegmentButton}" />
                     <ToggleButton
+                        Command="{Binding SelectDataInputGroupTabCommand}"
+                        Content="Thông số chạy cụm Input"
+                        IsChecked="{Binding IsDataInputGroupTabSelected, Mode=OneWay}"
+                        Style="{StaticResource SettingsSegmentButton}" />
+                    <ToggleButton
                         Command="{Binding SelectDataSafeCoordinatesTabCommand}"
                         Content="Vùng an toàn"
                         IsChecked="{Binding IsDataSafeCoordinatesTabSelected, Mode=OneWay}"
@@ -416,6 +421,26 @@
                                 Text="Vị trí tọa độ Master, OP1 và OP2." />
 
                             <ItemsControl Margin="0,14,0,0" ItemTemplate="{StaticResource SettingsParameterItemTemplate}" ItemsSource="{Binding DataMachineParameters}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <primitives:UniformGrid Columns="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource ResponsiveColumnsConverter}}" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel IsEnabled="{Binding IsEditable}" Visibility="{Binding IsDataInputGroupTabSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Border Style="{StaticResource SectionCard.Subtle}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SectionTitleText}" Text="Thông số chạy cụm Input" />
+                            <TextBlock
+                                Margin="0,8,0,0"
+                                Style="{StaticResource SectionSubtitleText}"
+                                Text="Cấu hình tọa độ cụm nâng và thông số Jig đầu vào." />
+
+                            <ItemsControl Margin="0,14,0,0" ItemTemplate="{StaticResource SettingsParameterItemTemplate}" ItemsSource="{Binding DataInputGroupParameters}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <primitives:UniformGrid Columns="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}, Converter={StaticResource ResponsiveColumnsConverter}}" />

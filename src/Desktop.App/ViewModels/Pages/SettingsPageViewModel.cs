@@ -45,6 +45,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
 
         DataTrayCartParameters.CollectionChanged += OnParameterCollectionChanged;
         DataMachineParameters.CollectionChanged += OnParameterCollectionChanged;
+        DataInputGroupParameters.CollectionChanged += OnParameterCollectionChanged;
         DataSafeCoordinatesParameters.CollectionChanged += OnParameterCollectionChanged;
         _plcParameterSyncService.SyncStatesChanged += OnSyncStatesChanged;
         AppSession.SessionChanged += OnSessionChanged;
@@ -96,6 +97,9 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
     private bool isDataMachineTabSelected;
 
     [ObservableProperty]
+    private bool isDataInputGroupTabSelected;
+
+    [ObservableProperty]
     private bool isDataSafeCoordinatesTabSelected;
 
     [ObservableProperty]
@@ -134,6 +138,8 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
 
     public ObservableCollection<EditablePlcParameterField> DataMachineParameters { get; } = [];
 
+    public ObservableCollection<EditablePlcParameterField> DataInputGroupParameters { get; } = [];
+
     public ObservableCollection<EditablePlcParameterField> DataSafeCoordinatesParameters { get; } = [];
 
 
@@ -161,6 +167,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         await LoadMachineSettingsAsync(showFeedback: false);
         await ReloadParameterGroupAsync(PlcParameterGroups.DataTrayCart);
         await ReloadParameterGroupAsync(PlcParameterGroups.DataMachine);
+        await ReloadParameterGroupAsync(PlcParameterGroups.DataInputGroup);
         await ReloadParameterGroupAsync(PlcParameterGroups.DataSafeCoordinates);
     }
 
@@ -313,6 +320,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = true;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = false;
+        IsDataInputGroupTabSelected = false;
         IsDataSafeCoordinatesTabSelected = false;
         IsAgvSettingsTabSelected = false;
     }
@@ -323,6 +331,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = true;
         IsDataMachineTabSelected = false;
+        IsDataInputGroupTabSelected = false;
         IsDataSafeCoordinatesTabSelected = false;
         IsAgvSettingsTabSelected = false;
     }
@@ -333,6 +342,18 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = true;
+        IsDataInputGroupTabSelected = false;
+        IsDataSafeCoordinatesTabSelected = false;
+        IsAgvSettingsTabSelected = false;
+    }
+
+    [RelayCommand]
+    private void SelectDataInputGroupTab()
+    {
+        IsMachineSettingsTabSelected = false;
+        IsDataTrayCartTabSelected = false;
+        IsDataMachineTabSelected = false;
+        IsDataInputGroupTabSelected = true;
         IsDataSafeCoordinatesTabSelected = false;
         IsAgvSettingsTabSelected = false;
     }
@@ -343,6 +364,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = false;
+        IsDataInputGroupTabSelected = false;
         IsDataSafeCoordinatesTabSelected = true;
         IsAgvSettingsTabSelected = false;
     }
@@ -353,6 +375,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         IsMachineSettingsTabSelected = false;
         IsDataTrayCartTabSelected = false;
         IsDataMachineTabSelected = false;
+        IsDataInputGroupTabSelected = false;
         IsDataSafeCoordinatesTabSelected = false;
         IsAgvSettingsTabSelected = true;
     }
@@ -367,6 +390,12 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
     private async Task ReloadDataMachineAsync()
     {
         await ReloadParameterGroupAsync(PlcParameterGroups.DataMachine);
+    }
+
+    [RelayCommand]
+    private async Task ReloadDataInputGroupAsync()
+    {
+        await ReloadParameterGroupAsync(PlcParameterGroups.DataInputGroup);
     }
 
     [RelayCommand]
@@ -388,6 +417,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         _plcParameterSyncService.SyncStatesChanged -= OnSyncStatesChanged;
         DataTrayCartParameters.CollectionChanged -= OnParameterCollectionChanged;
         DataMachineParameters.CollectionChanged -= OnParameterCollectionChanged;
+        DataInputGroupParameters.CollectionChanged -= OnParameterCollectionChanged;
         DataSafeCoordinatesParameters.CollectionChanged -= OnParameterCollectionChanged;
 
         foreach (var field in DataTrayCartParameters)
@@ -396,6 +426,11 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         }
 
         foreach (var field in DataMachineParameters)
+        {
+            field.PropertyChanged -= OnParameterFieldPropertyChanged;
+        }
+
+        foreach (var field in DataInputGroupParameters)
         {
             field.PropertyChanged -= OnParameterFieldPropertyChanged;
         }
@@ -479,6 +514,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
             {
                 PlcParameterGroups.DataTrayCart => DataTrayCartParameters,
                 PlcParameterGroups.DataMachine => DataMachineParameters,
+                PlcParameterGroups.DataInputGroup => DataInputGroupParameters,
                 PlcParameterGroups.DataSafeCoordinates => DataSafeCoordinatesParameters,
                 _ => throw new ArgumentOutOfRangeException(nameof(groupName))
             };
@@ -743,6 +779,7 @@ public partial class SettingsPageViewModel : ObservableObject, IDisposable
         {
             ApplySyncStates(DataTrayCartParameters, e.SyncStates);
             ApplySyncStates(DataMachineParameters, e.SyncStates);
+            ApplySyncStates(DataInputGroupParameters, e.SyncStates);
             ApplySyncStates(DataSafeCoordinatesParameters, e.SyncStates);
         });
     }

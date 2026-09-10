@@ -376,6 +376,15 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition SafeLatheTravel = CreateWord("data.safe_lathe_travel", "D21134", PlcTagDataType.Float, "Tọa độ An toàn trên máy tiện");
     }
 
+    public static class DataInputGroup
+    {
+        public static readonly PlcTagDefinition LifterJigOriginPosition = CreateWord("data.lifter_jig_origin_position", "D21150", PlcTagDataType.Float, "Tọa Độ Cụm nâng vị trí gốc Jig");
+        public static readonly PlcTagDefinition JigHeight = CreateWord("data.jig_height", "D21152", PlcTagDataType.Float, "Độ cao Jig");
+        public static readonly PlcTagDefinition LifterHighestPartRaisePosition = CreateWord("data.lifter_highest_part_raise_position", "D21154", PlcTagDataType.Float, "Tọa Độ Cụm nâng vị trí nâng phôi cao nhất");
+        public static readonly PlcTagDefinition LifterSafeRotaryTableTurnPosition = CreateWord("data.lifter_safe_rotary_table_turn_position", "D21156", PlcTagDataType.Float, "Tọa độ Cụm nâng an toàn xoay bàn xoay");
+    }
+
+
     public static class RobotTest
     {
         public static readonly PlcTagDefinition OuterFinishedDiameter = CreateWord("robot_test.outer_finished_diameter", "D5600", PlcTagDataType.Float, "Đường kính ngoài thành phẩm");
@@ -706,6 +715,7 @@ public static class PlcTagCatalog
         typeof(DataTrayCart),
         typeof(DataMachine),
         typeof(DataSafeCoordinates),
+        typeof(DataInputGroup),
         typeof(DataMomen),
         typeof(RobotTest),
         typeof(Manual),
@@ -722,6 +732,7 @@ public static class PlcTagCatalog
         typeof(DataTrayCart),
         typeof(DataMachine),
         typeof(DataSafeCoordinates),
+        typeof(DataInputGroup),
         typeof(RobotTest),
         typeof(Manual),
         typeof(PlcMessages));

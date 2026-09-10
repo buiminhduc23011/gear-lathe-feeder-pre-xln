@@ -5,12 +5,14 @@ public static class PlcParameterGroups
     public const string DataTrayCart = "DataTrayCart";
     public const string DataMachine = "DataMachine";
     public const string DataSafeCoordinates = "DataSafeCoordinates";
+    public const string DataInputGroup = "DataInputGroup";
 
     public static IReadOnlyList<string> All { get; } =
     [
         DataTrayCart,
         DataMachine,
         DataSafeCoordinates,
+        DataInputGroup,
     ];
 
     public static IReadOnlyList<PlcTagDefinition> GetTags(string groupName)
@@ -20,6 +22,7 @@ public static class PlcParameterGroups
             DataTrayCart => DataTrayCartTags,
             DataMachine => DataMachineTags,
             DataSafeCoordinates => DataSafeCoordinatesTags,
+            DataInputGroup => DataInputGroupTags,
             _ => throw new ArgumentOutOfRangeException(nameof(groupName), groupName, "Unknown PLC parameter group."),
         };
     }
@@ -44,6 +47,12 @@ public static class PlcParameterGroups
             return true;
         }
 
+        if (DataInputGroupTagNames.Contains(tagName))
+        {
+            groupName = DataInputGroup;
+            return true;
+        }
+
         groupName = string.Empty;
         return false;
     }
@@ -53,6 +62,8 @@ public static class PlcParameterGroups
     private static IReadOnlySet<string> DataMachineTagNames { get; } = CollectTagNames(typeof(PlcTagCatalog.DataMachine));
 
     private static IReadOnlySet<string> DataSafeCoordinatesTagNames { get; } = CollectTagNames(typeof(PlcTagCatalog.DataSafeCoordinates));
+
+    private static IReadOnlySet<string> DataInputGroupTagNames { get; } = CollectTagNames(typeof(PlcTagCatalog.DataInputGroup));
 
     private static IReadOnlyList<PlcTagDefinition> DataTrayCartTags { get; } =
         PlcTagCatalog.All
@@ -70,6 +81,12 @@ public static class PlcParameterGroups
         PlcTagCatalog.All
             .Where(static tag => tag is not null)
             .Where(tag => DataSafeCoordinatesTagNames.Contains(tag!.Name))
+            .ToArray();
+
+    private static IReadOnlyList<PlcTagDefinition> DataInputGroupTags { get; } =
+        PlcTagCatalog.All
+            .Where(static tag => tag is not null)
+            .Where(tag => DataInputGroupTagNames.Contains(tag!.Name))
             .ToArray();
 
     private static IReadOnlySet<string> CollectTagNames(Type groupType)
