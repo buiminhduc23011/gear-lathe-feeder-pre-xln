@@ -353,8 +353,11 @@ public static class PlcTagCatalog
         public static readonly PlcTagDefinition InputGripperSafeRaiseDistance = CreateWord("data.input_gripper_safe_raise_distance", "D21094", PlcTagDataType.Float, "Khoảng cách an toàn đi lên so với tay gắp cụm Input");
         public static readonly PlcTagDefinition MagnetDiameter = CreateWord("data.magnet_diameter", "D21096", PlcTagDataType.Float, "Đường kính nam châm");
         public static readonly PlcTagDefinition OutputMagnetProductSafeDropDistance = CreateWord("data.output_magnet_product_safe_drop_distance", "D21098", PlcTagDataType.Float, "Khoảng cách mặt sản phẩm với nam châm đầu ra an toàn xuống");
+    }
 
-        // --- Momen status readouts (Image 2) ---
+    public static class DataMomen
+    {
+        // --- Momen status readouts (D5190 - D5193: Chỉ khai báo PLC define, không đưa vào Cài đặt) ---
         public static readonly PlcTagDefinition MomentXMin = CreateWord("data.moment_x_min", "D5190", PlcTagDataType.Int16, "Momen X Min");
         public static readonly PlcTagDefinition MomentXMax = CreateWord("data.moment_x_max", "D5191", PlcTagDataType.Int16, "Momen X Max");
         public static readonly PlcTagDefinition MomentZMin = CreateWord("data.moment_z_min", "D5192", PlcTagDataType.Int16, "Momen Z Min");
@@ -703,6 +706,7 @@ public static class PlcTagCatalog
         typeof(DataTrayCart),
         typeof(DataMachine),
         typeof(DataSafeCoordinates),
+        typeof(DataMomen),
         typeof(RobotTest),
         typeof(Manual),
         typeof(Alarms),

@@ -413,7 +413,7 @@
                             <TextBlock
                                 Margin="0,8,0,0"
                                 Style="{StaticResource SectionSubtitleText}"
-                                Text="Vị trí tọa độ Master, OP1, OP2 và thông số Momen." />
+                                Text="Vị trí tọa độ Master, OP1 và OP2." />
 
                             <ItemsControl Margin="0,14,0,0" ItemTemplate="{StaticResource SettingsParameterItemTemplate}" ItemsSource="{Binding DataMachineParameters}">
                                 <ItemsControl.ItemsPanel>
